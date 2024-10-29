@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "MyGameGameMode.h"
-#include "MyGameCharacter.h"
+#include "Host/MixHost.h"
 #include "UObject/ConstructorHelpers.h"
 
 AMyGameGameMode::AMyGameGameMode()

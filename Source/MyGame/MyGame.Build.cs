@@ -8,12 +8,14 @@ public class MyGame : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "EnhancedInput" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "EnhancedInput", "Slate", "SlateCore" });
 
         PublicIncludePaths.AddRange(new string[]
         {
             "MyGame",
             "MyGame/Character",
+            "MyGame/DataTable",
+            "MyGame/Subsystem",
         });
     }
 }

@@ -7,7 +7,7 @@
 #include "MixUISubsystem.generated.h"
 
 /**
- * 
+ * 该类暂时不起作用
  */
 UCLASS(Blueprintable, BlueprintType)
 class MYGAME_API UMixUISubsystem : public UGameInstanceSubsystem
@@ -26,7 +26,8 @@ public:
     void BpDeInitialize();
 
 public:
-	UFUNCTION()
-    void Test();
+/*
+	UFUNCTION(BlueprintImplementableEvent, Category = "UI")
+    void UpdateInventory();*/
 
 };

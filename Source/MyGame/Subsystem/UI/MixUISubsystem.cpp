@@ -7,7 +7,7 @@ void UMixUISubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	Super::Initialize(Collection);
 
 	// Collection.InitializeDependency(UMixInventorySubsystem::StaticClass());
-	GetGameInstance()->GetSubsystem<UMixInventorySubsystem>()->OnInventoryUpdated.AddDynamic(this, &ThisClass::Test);
+	// GetGameInstance()->GetSubsystem<UMixInventorySubsystem>()->OnInventoryUpdated.AddDynamic(this, &ThisClass::UpdateInventory);
 	BpInitialize();
 }
 
@@ -18,7 +18,8 @@ void UMixUISubsystem::Deinitialize()
 	BpDeInitialize();
 }
 
-void UMixUISubsystem::Test()
+/*
+void UMixUISubsystem::UpdateInventory()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Mix Test"));
-}
+}*/

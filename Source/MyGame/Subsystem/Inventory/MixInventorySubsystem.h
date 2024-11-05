@@ -47,15 +47,20 @@ public:
 	void Deinitialize() override;
 
 public:
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMixOnInventoryUpdated, int32, TID);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMixOnInventoryUpdated, bool, bAdd);
 	UPROPERTY(BlueprintAssignable)
     FMixOnInventoryUpdated OnInventoryUpdated;
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void InventoryTestBtn();
+	void InventoryTestAddBtn();
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void InventoryTestRemoveBtn();
 
 	void AddItem(TSharedPtr<FMixItem> Item);
+
+	void RemoveItem(TSharedPtr<FMixItem> Item);
 
 public:
 	// 读表ItemData信息
@@ -66,8 +71,15 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Inventory")
 	TMap<int32, TObjectPtr<UMixInventoryItem>> InventoryItems;
 
+	// 当前占格位
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Inventory")
+	TSet<int32> CurPosIdxes;
+
 	// 新入背包的格子位置
 	int32 NextPosIdx = 0;
+
+	// 格子数量
+	const int32 KSlotNum = 6;
 
 	// Test
 	int32 Cnt = 1;

@@ -28,7 +28,7 @@ void UMixInventorySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	}
 }
 
-void UMixInventorySubsystem::InventoryTestBtn()
+void UMixInventorySubsystem::InventoryTestAddBtn()
 {
     TSharedPtr<FMixItem> Item = MakeShared<FMixItem>();
     Item->XID = Cnt;
@@ -36,7 +36,9 @@ void UMixInventorySubsystem::InventoryTestBtn()
     const FString ContextString(TEXT("Item Data Context"));
     UDataTable* ItemDataTable = LoadObject<UDataTable>(nullptr, TEXT("/Script/Engine.DataTable'/Game/MixGame/UI/Inventory/Data/DT_Item.DT_Item'"));
     if (!ensure(ItemDataTable)) return;
+
 	const FMixItemData* ItemData = ItemDataTable->FindRow<FMixItemData>(FName(FString::Printf(TEXT("%d"), Cnt)), ContextString);
+    if (!ensure(ItemData)) return;
 	Item->ItemData = ItemData;
 
     // 模拟添加第1、2件物品
@@ -44,9 +46,32 @@ void UMixInventorySubsystem::InventoryTestBtn()
     Cnt++;
 }
 
+void UMixInventorySubsystem::InventoryTestRemoveBtn()
+{
+    Cnt--;
+    TSharedPtr<FMixItem> Item = MakeShared<FMixItem>();
+    Item->XID = Cnt;
+
+    const FString ContextString(TEXT("Item Data Context"));
+    UDataTable* ItemDataTable = LoadObject<UDataTable>(nullptr, TEXT("/Script/Engine.DataTable'/Game/MixGame/UI/Inventory/Data/DT_Item.DT_Item'"));
+    if (!ensure(ItemDataTable)) return;
+
+    const FMixItemData* ItemData = ItemDataTable->FindRow<FMixItemData>(FName(FString::Printf(TEXT("%d"), Cnt)), ContextString);
+    if (!ensure(ItemData)) return;
+    Item->ItemData = ItemData;
+
+    // 模拟添加第1、2件物品
+    RemoveItem(Item);
+}
+
 void UMixInventorySubsystem::AddItem(TSharedPtr<FMixItem> Item)
 {
+    // 不能超过格子总数
+    if (!ensure(NextPosIdx < KSlotNum)) return;
+    if (!ensure(InventoryItems.Num() < KSlotNum)) return;
+
     if (!ensure(Item.IsValid())) return;
+    if (!ensure(Item->ItemData)) return;
     int32 TID = Item->ItemData->TID;
 
     if (InventoryItems.Contains(TID))
@@ -57,13 +82,41 @@ void UMixInventorySubsystem::AddItem(TSharedPtr<FMixItem> Item)
     else
     {
         TObjectPtr<UMixInventoryItem> NewInventoryItem = NewObject<UMixInventoryItem>();
+        
+        // 因为Remove位置的不确定性，每次重新计算NextPosIdx的位置
+		NextPosIdx = 0;
+        for (int32 Idx = 0; Idx < KSlotNum; Idx++)
+        {
+            if (CurPosIdxes.Contains(Idx))
+            {
+                NextPosIdx++;
+            }
+            else
+            {
+                break;
+            }
+        }
+
 		NewInventoryItem->Init(TID, 1, NextPosIdx);
 		InventoryItems.Add(TID, NewInventoryItem);
-        NextPosIdx++;
+        CurPosIdxes.Add(NextPosIdx);
     }
 
-    // 暂传一个参数测试
-    OnInventoryUpdated.Broadcast(100);
+    OnInventoryUpdated.Broadcast(true);
+}
+
+void UMixInventorySubsystem::RemoveItem(TSharedPtr<FMixItem> Item)
+{
+    if (!ensure(Item.IsValid())) return;
+    if (!ensure(Item->ItemData)) return;
+    int32 TID = Item->ItemData->TID;
+
+    if (!ensure(InventoryItems.Contains(TID))) return;
+    if (!ensure(InventoryItems[TID])) return;
+
+    CurPosIdxes.Remove(InventoryItems[TID]->PosIdx);
+    InventoryItems.Remove(TID);
+    OnInventoryUpdated.Broadcast(false);
 }
 
 void UMixInventorySubsystem::Deinitialize()
@@ -71,5 +124,7 @@ void UMixInventorySubsystem::Deinitialize()
     Super::Deinitialize();
 
     InventoryItems.Empty();
+    CurPosIdxes.Empty();
+	NextPosIdx = 0;
     Cnt = 1;
 }

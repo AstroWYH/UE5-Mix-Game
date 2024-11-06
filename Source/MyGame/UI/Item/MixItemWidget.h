@@ -15,16 +15,19 @@ class MYGAME_API UMixItemWidget : public UUserWidget
 	GENERATED_BODY()
 	
 public:
-/*
-	FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-
-	FReply NativeOnMouseButtonUp(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-
-	FReply NativeOnMouseMove(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;*/
+	void NativeConstruct();
 
 	void NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation) override;
 
+	void NativeOnDragEnter(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
+
+	bool NativeOnDragOver(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
+
+	void NativeOnDragLeave(const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
+
 	bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
+
+	void NativeOnDragCancelled(const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
 
 	FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 
@@ -36,11 +39,16 @@ public:
 	int32 PosIdx = -1;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ItemWidget")
+	int32 ItemTID = -1;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ItemWidget")
 	TWeakObjectPtr<UUserWidget> OwnerWidget;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ItemWidget")
+	TWeakObjectPtr<class UUniformGridPanel> OwnerGrid;
+
 private:
-/*
-	FVector2D DragStartPosition;  // 物品开始拖动时的位置
-	FVector2D DragOffset;         // 鼠标与物品的位置偏差*/
+	int32 KNumRows = 2;
+	int32 KNumColumns = 3;
 
 };

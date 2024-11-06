@@ -9,7 +9,7 @@
 #include "MixData.h"
 #include "MixInventorySubsystem.generated.h"
 
-class FMixItem;
+class UMixItem;
 class UMixInventoryItem;
 
 UCLASS(BlueprintType)
@@ -58,9 +58,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void InventoryTestRemoveBtn();
 
-	void AddItem(TSharedPtr<FMixItem> Item);
+	void AddItem(TObjectPtr<UMixItem> Item, int32 PosIdx = -1);
 
-	void RemoveItem(TSharedPtr<FMixItem> Item);
+	void RemoveItem(int32 TID);
 
 public:
 	// 读表ItemData信息
@@ -71,16 +71,20 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Inventory")
 	TMap<int32, TObjectPtr<UMixInventoryItem>> InventoryItems;
 
+	// 通过Pos查询TID
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Inventory")
+	TMap<int32, int32> PosToTIDMap;
+
 	// 当前占格位
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Inventory")
 	TSet<int32> CurPosIdxes;
 
 	// 新入背包的格子位置
-	int32 NextPosIdx = 0;
+	int32 SavePosIdx = 0;
 
 	// 格子数量
 	const int32 KSlotNum = 6;
 
 	// Test
-	int32 Cnt = 1;
+	int32 Cnt = 0;
 };

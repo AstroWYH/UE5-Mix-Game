@@ -15,7 +15,7 @@ void UMixItemWidget::NativeConstruct()
 
 void UMixItemWidget::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation)
 {
-	if (ItemTID == -1) return;
+// 	if (ItemTID == -1) return;
 
 	Super::NativeOnDragDetected(InGeometry, InMouseEvent, OutOperation);
 
@@ -46,7 +46,7 @@ void UMixItemWidget::NativeOnDragLeave(const FDragDropEvent& InDragDropEvent, UD
 
 bool UMixItemWidget::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
-	if (ItemTID == -1) return false;
+// 	if (ItemTID == -1) return false;
 
 	if (!ensure(OwnerWidget.IsValid())) return Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
 	OwnerGrid = Cast<UUniformGridPanel>(OwnerWidget->WidgetTree->FindWidget(FName(TEXT("Grid"))));
@@ -74,7 +74,7 @@ bool UMixItemWidget::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEv
 
 void UMixItemWidget::NativeOnDragCancelled(const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
-	if (ItemTID == -1) return;
+// 	if (ItemTID == -1) return;
 
 	UMixInventorySubsystem* InventorySys = GetGameInstance()->GetSubsystem<UMixInventorySubsystem>();
 	TObjectPtr<UMixItem> Item = NewObject<UMixItem>();

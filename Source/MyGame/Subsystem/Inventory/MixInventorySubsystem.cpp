@@ -40,6 +40,7 @@ void UMixInventorySubsystem::InventoryTestAddBtn()
 
     TObjectPtr<UMixItem> Item = NewObject<UMixItem>();
     Item->TID = TestTID;
+    if (!ensure(AllItemsCfg.Contains(TestTID))) return;
     Item->ItemCfg = AllItemsCfg[TestTID];
 
     // 模拟添加第1、2件物品

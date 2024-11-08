@@ -15,8 +15,6 @@ void UMixItemWidget::NativeConstruct()
 
 void UMixItemWidget::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation)
 {
-// 	if (ItemTID == -1) return;
-
 	Super::NativeOnDragDetected(InGeometry, InMouseEvent, OutOperation);
 
 	UDragDropOperation* DragDropOpr = NewObject<UDragDropOperation>(GetTransientPackage());
@@ -25,8 +23,7 @@ void UMixItemWidget::NativeOnDragDetected(const FGeometry& InGeometry, const FPo
 	DragDropOpr->Pivot = EDragPivot::CenterCenter;
 	OutOperation = DragDropOpr;
 
-	UMixInventorySubsystem* InventorySys = GetGameInstance()->GetSubsystem<UMixInventorySubsystem>();
-	InventorySys->RemoveItem(ItemTID);
+	SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UMixItemWidget::NativeOnDragEnter(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
@@ -46,10 +43,16 @@ void UMixItemWidget::NativeOnDragLeave(const FDragDropEvent& InDragDropEvent, UD
 
 bool UMixItemWidget::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
-// 	if (ItemTID == -1) return false;
+	return Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
+}
 
-	if (!ensure(OwnerWidget.IsValid())) return Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
-	OwnerGrid = Cast<UUniformGridPanel>(OwnerWidget->WidgetTree->FindWidget(FName(TEXT("Grid"))));
+void UMixItemWidget::NativeOnDragCancelled(const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
+{
+// 	if (!ensure(OwnerWidget.IsValid())) return Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
+// 	OwnerGrid = Cast<UUniformGridPanel>(OwnerWidget->WidgetTree->FindWidget(FName(TEXT("Grid"))));
+
+	Super::NativeOnDragCancelled(InDragDropEvent, InOperation);
+	if (!ensure(OwnerGrid.IsValid())) return;
 
 	FVector2D MousePosition = InDragDropEvent.GetScreenSpacePosition();
 	FVector2D GridMousePosition = OwnerGrid->GetCachedGeometry().AbsoluteToLocal(MousePosition);
@@ -60,29 +63,39 @@ bool UMixItemWidget::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEv
 
 	int32 Row = FMath::FloorToInt(GridMousePosition.Y / CellHeight);
 	int32 Col = FMath::FloorToInt(GridMousePosition.X / CellWidth);
-	int32 NewPosIdx = Row * KNumColumns + Col;
+	int32 CurMousePosIdx = Row * KNumColumns + Col;
 
 	UMixInventorySubsystem* InventorySys = GetGameInstance()->GetSubsystem<UMixInventorySubsystem>();
+
+	TSet<int32> AllPosIdx{ 0,1,2,3,4,5 };
+	// 拖到原格子松手 || 拖到外部空间松手 
+	if (CurMousePosIdx == PosIdx || !AllPosIdx.Contains(CurMousePosIdx))
+	{
+		SetVisibility(ESlateVisibility::Visible);
+	}
+	// 拖到其他空格子松手
+	else if (!InventorySys->CurPosIdxes.Contains(CurMousePosIdx))
+	{
+
+	}
+	// 拖到其他非空格子松手
+	else if (InventorySys->CurPosIdxes.Contains(CurMousePosIdx))
+	{
+
+	}
+
 	InventorySys->RemoveItem(ItemTID);
 	TObjectPtr<UMixItem> Item = NewObject<UMixItem>();
 	Item->TID = ItemTID;
 	Item->ItemCfg = InventorySys->AllItemsCfg[ItemTID];
-	InventorySys->AddItem(Item, NewPosIdx);
+	InventorySys->AddItem(Item, CurMousePosIdx);
 
-	return Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
-}
+// 	UMixInventorySubsystem* InventorySys = GetGameInstance()->GetSubsystem<UMixInventorySubsystem>();
+// 	TObjectPtr<UMixItem> Item = NewObject<UMixItem>();
+// 	Item->TID = ItemTID;
+// 	Item->ItemCfg = InventorySys->AllItemsCfg[ItemTID];
+// 	InventorySys->AddItem(Item, PosIdx);
 
-void UMixItemWidget::NativeOnDragCancelled(const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
-{
-// 	if (ItemTID == -1) return;
-
-	UMixInventorySubsystem* InventorySys = GetGameInstance()->GetSubsystem<UMixInventorySubsystem>();
-	TObjectPtr<UMixItem> Item = NewObject<UMixItem>();
-	Item->TID = ItemTID;
-	Item->ItemCfg = InventorySys->AllItemsCfg[ItemTID];
-	InventorySys->AddItem(Item, PosIdx);
-
-	Super::NativeOnDragCancelled(InDragDropEvent, InOperation);
 }
 
 FReply UMixItemWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)

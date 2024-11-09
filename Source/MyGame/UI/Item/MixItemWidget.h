@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "MixInventoryWidget.h"
 #include "MixItemWidget.generated.h"
 
 /**
@@ -15,8 +16,11 @@ class MYGAME_API UMixItemWidget : public UUserWidget
 	GENERATED_BODY()
 	
 public:
-	void NativeConstruct();
+	void NativeConstruct() override;
 
+	void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+
+public:
 	void NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation) override;
 
 	void NativeOnDragEnter(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
@@ -42,7 +46,7 @@ public:
 	int32 ItemTID = -1;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ItemWidget")
-	TWeakObjectPtr<UUserWidget> OwnerWidget;
+	TWeakObjectPtr<class UMixInventoryWidget> OwnerWidget;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ItemWidget")
 	TWeakObjectPtr<class UUniformGridPanel> OwnerGrid;

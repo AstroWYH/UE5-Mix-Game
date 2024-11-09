@@ -62,6 +62,8 @@ public:
 
 	void RemoveItem(int32 TID);
 
+	void ExchangeItem(int32 OldPosIdx, int32 NewPosIdx);
+
 public:
 	// 读表ItemData信息
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Inventory")
@@ -78,9 +80,6 @@ public:
 	// 当前占格位
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Inventory")
 	TSet<int32> CurPosIdxes;
-
-	// 新入背包的格子位置
-	int32 SavePosIdx = 0;
 
 	// 格子数量
 	const int32 KSlotNum = 6;

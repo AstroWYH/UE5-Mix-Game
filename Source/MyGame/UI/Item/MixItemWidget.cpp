@@ -7,18 +7,54 @@
 #include "Blueprint/WidgetTree.h"
 #include "Inventory/MixInventorySubsystem.h"
 #include "Inventory/MixItem.h"
+#include "Components/Image.h"
+#include "Framework/Application/SlateApplication.h"
 
 void UMixItemWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 }
 
+void UMixItemWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+/*
+	FVector2D MousePosition = FSlateApplication::Get().GetCursorPos();
+	FVector2D GridMousePosition = OwnerGrid->GetCachedGeometry().AbsoluteToLocal(MousePosition);
+	FVector2D GirdSize = OwnerGrid->GetCachedGeometry().GetLocalSize();
+
+	float CellWidth = GirdSize.X / KNumColumns;
+	float CellHeight = GirdSize.Y / KNumRows;
+
+	int32 Row = FMath::FloorToInt(GridMousePosition.Y / CellHeight);
+	int32 Col = FMath::FloorToInt(GridMousePosition.X / CellWidth);
+	int32 MousePosIdx = Row * KNumColumns + Col;
+
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,
+			FString::Printf(TEXT("MousePosition: (X=%.2f, Y=%.2f), GridMousePosition: (X=%.2f, Y=%.2f), GridSize: (X=%.2f, Y=%.2f), CellWidth: %.2f, CellHeight: %.2f, Row: %d, Col: %d, MousePosIdx: %d"),
+				MousePosition.X, MousePosition.Y,
+				GridMousePosition.X, GridMousePosition.Y,
+				GirdSize.X, GirdSize.Y,
+				CellWidth, CellHeight,
+				Row, Col, MousePosIdx));
+	}*/
+}
+
 void UMixItemWidget::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation)
 {
 	Super::NativeOnDragDetected(InGeometry, InMouseEvent, OutOperation);
 
+	UMixInventorySubsystem* InventorySys = GetGameInstance()->GetSubsystem<UMixInventorySubsystem>();
+	if (!ensure(InventorySys->AllItemsCfg.Contains(ItemTID))) return;
+	if (!ensure(InventorySys->AllItemsCfg[ItemTID])) return;
+
+	UImage* DragImage = NewObject<UImage>(this);
+	UTexture2D* DragTexture = InventorySys->AllItemsCfg[ItemTID]->Icon;
+	DragImage->SetBrushFromTexture(DragTexture);
+
 	UDragDropOperation* DragDropOpr = NewObject<UDragDropOperation>(GetTransientPackage());
-	DragDropOpr->DefaultDragVisual = this;
+	DragDropOpr->DefaultDragVisual = DragImage;
 	DragDropOpr->Payload = this;
 	DragDropOpr->Pivot = EDragPivot::CenterCenter;
 	OutOperation = DragDropOpr;
@@ -48,9 +84,6 @@ bool UMixItemWidget::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEv
 
 void UMixItemWidget::NativeOnDragCancelled(const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
-// 	if (!ensure(OwnerWidget.IsValid())) return Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
-// 	OwnerGrid = Cast<UUniformGridPanel>(OwnerWidget->WidgetTree->FindWidget(FName(TEXT("Grid"))));
-
 	Super::NativeOnDragCancelled(InDragDropEvent, InOperation);
 	if (!ensure(OwnerGrid.IsValid())) return;
 
@@ -63,39 +96,33 @@ void UMixItemWidget::NativeOnDragCancelled(const FDragDropEvent& InDragDropEvent
 
 	int32 Row = FMath::FloorToInt(GridMousePosition.Y / CellHeight);
 	int32 Col = FMath::FloorToInt(GridMousePosition.X / CellWidth);
-	int32 CurMousePosIdx = Row * KNumColumns + Col;
+	int32 MousePosIdx = Row * KNumColumns + Col;
+
+	bool bCrossBorder = false;
+	if (Row < 0 || Row >= KNumRows || Col < 0 || Col >= KNumColumns)
+	{
+		bCrossBorder = true;
+	}
 
 	UMixInventorySubsystem* InventorySys = GetGameInstance()->GetSubsystem<UMixInventorySubsystem>();
-
 	TSet<int32> AllPosIdx{ 0,1,2,3,4,5 };
+	if (!ensure(OwnerWidget.IsValid())) return;
+
 	// 拖到原格子松手 || 拖到外部空间松手 
-	if (CurMousePosIdx == PosIdx || !AllPosIdx.Contains(CurMousePosIdx))
+	if (MousePosIdx == PosIdx || !AllPosIdx.Contains(MousePosIdx) || bCrossBorder)
 	{
 		SetVisibility(ESlateVisibility::Visible);
 	}
 	// 拖到其他空格子松手
-	else if (!InventorySys->CurPosIdxes.Contains(CurMousePosIdx))
+	else if (!InventorySys->CurPosIdxes.Contains(MousePosIdx))
 	{
-
+		OwnerWidget->DragToOtherEmptySlot(ItemTID, PosIdx, MousePosIdx);
 	}
 	// 拖到其他非空格子松手
-	else if (InventorySys->CurPosIdxes.Contains(CurMousePosIdx))
+	else if (InventorySys->CurPosIdxes.Contains(MousePosIdx))
 	{
-
+		OwnerWidget->DragToExchange(PosIdx, MousePosIdx);
 	}
-
-	InventorySys->RemoveItem(ItemTID);
-	TObjectPtr<UMixItem> Item = NewObject<UMixItem>();
-	Item->TID = ItemTID;
-	Item->ItemCfg = InventorySys->AllItemsCfg[ItemTID];
-	InventorySys->AddItem(Item, CurMousePosIdx);
-
-// 	UMixInventorySubsystem* InventorySys = GetGameInstance()->GetSubsystem<UMixInventorySubsystem>();
-// 	TObjectPtr<UMixItem> Item = NewObject<UMixItem>();
-// 	Item->TID = ItemTID;
-// 	Item->ItemCfg = InventorySys->AllItemsCfg[ItemTID];
-// 	InventorySys->AddItem(Item, PosIdx);
-
 }
 
 FReply UMixItemWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)

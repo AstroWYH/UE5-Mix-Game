@@ -69,7 +69,6 @@ void UMixInventorySubsystem::InventoryTestRemoveBtn()
 void UMixInventorySubsystem::AddItem(TObjectPtr<UMixItem> Item, int32 PosIdx)
 {
     // 不能超过格子总数
-    if (!ensure(SavePosIdx < KSlotNum)) return;
     if (!ensure(InventoryItems.Num() < KSlotNum)) return;
 
     if (!ensure(Item)) return;
@@ -83,12 +82,13 @@ void UMixInventorySubsystem::AddItem(TObjectPtr<UMixItem> Item, int32 PosIdx)
     else
     {
         TObjectPtr<UMixInventoryItem> NewInventoryItem = NewObject<UMixInventoryItem>();
-        
+        int32 SavePosIdx = 0;
+
         // 自动安排升序第1个空位存放
         if (PosIdx == -1)
         {
             // 因为Remove位置的不确定性，每次重新计算SavePosIdx的位置
-            SavePosIdx = 0;
+ 
             for (int32 Idx = 0; Idx < KSlotNum; Idx++)
             {
                 if (CurPosIdxes.Contains(Idx))
@@ -127,6 +127,30 @@ void UMixInventorySubsystem::RemoveItem(int32 TID)
     OnInventoryUpdated.Broadcast(false);
 }
 
+void UMixInventorySubsystem::ExchangeItem(int32 OldPosIdx, int32 NewPosIdx)
+{
+    if (!ensure(CurPosIdxes.Contains(OldPosIdx))) return;
+    if (!ensure(CurPosIdxes.Contains(NewPosIdx))) return;
+    if (!ensure(PosToTIDMap.Contains(OldPosIdx))) return;
+    if (!ensure(PosToTIDMap.Contains(NewPosIdx))) return;
+
+    int32 OldTID = PosToTIDMap[OldPosIdx];
+    int32 NewTID = PosToTIDMap[NewPosIdx];
+
+	TObjectPtr<UMixInventoryItem>& OldInventoryItem = InventoryItems.FindOrAdd(OldTID);
+    if (!ensure(OldInventoryItem)) return;
+    OldInventoryItem->PosIdx = NewPosIdx;
+
+    TObjectPtr<UMixInventoryItem>& NewInventoryItem = InventoryItems.FindOrAdd(NewTID);
+    if (!ensure(NewInventoryItem)) return;
+    NewInventoryItem->PosIdx = OldPosIdx;
+
+    PosToTIDMap[OldPosIdx] = NewTID;
+    PosToTIDMap[NewPosIdx] = OldTID;
+
+    OnInventoryUpdated.Broadcast(false);
+}
+
 void UMixInventorySubsystem::Deinitialize()
 {
     Super::Deinitialize();
@@ -134,6 +158,5 @@ void UMixInventorySubsystem::Deinitialize()
     InventoryItems.Empty();
     CurPosIdxes.Empty();
     PosToTIDMap.Empty();
-	SavePosIdx = 0;
     Cnt = 1;
 }

@@ -9,7 +9,7 @@
 #include "MixHost.generated.h"
 
 UCLASS(config=Game)
-class AMixHost : public AMixCharacter
+class MYGAME_API AMixHost : public AMixCharacter
 {
 	GENERATED_BODY()
 

@@ -64,6 +64,8 @@ protected:
 private:
 	void InitMouseCursor();
 
+	FVector GetMouseClickFloorPosition();
+
 private:
 	const TCHAR* CursorDefaultPath = TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/MixGame/UI/MouseCursor/CursorDefault.CursorDefault_C'");
 	const TCHAR* CursorAttackPath = TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/MixGame/UI/MouseCursor/CursorAttack.CursorAttack_C'");

@@ -11,6 +11,6 @@ class MYGAME_API UMixCharacterAttackComponent : public UActorComponent
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Attack")
-	virtual void Attack();
+	virtual void Attack(FVector MouseClickPos);
 
 };

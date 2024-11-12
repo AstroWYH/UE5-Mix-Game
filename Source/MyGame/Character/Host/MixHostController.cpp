@@ -10,6 +10,7 @@
 #include "Blueprint\WidgetLayoutLibrary.h"
 #include "Kismet\GameplayStatics.h"
 #include "Character\Host\MixHost.h"
+#include "Engine\EngineTypes.h"
 
 void AMixHostController::Move(const FInputActionValue& Value)
 {
@@ -136,12 +137,8 @@ void AMixHostController::Attack(const FInputActionValue& Value)
 	bPrepareAttack = true;
 }
 
-void AMixHostController::RightClick(const FInputActionValue& Value)
+FVector AMixHostController::GetMouseClickFloorPosition()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("right mouse click")));
-
-	SetMouseCursorWidget(EMouseCursor::Default, CursorDefaultWidget);
-
 	// 这里只能用GetMousePositionOnViewport()，结果才正确
 	FVector2D MousePosition = UWidgetLayoutLibrary::GetMousePositionOnViewport(GetWorld());
 	float Scale = UWidgetLayoutLibrary::GetViewportScale(GetWorld());
@@ -153,9 +150,19 @@ void AMixHostController::RightClick(const FInputActionValue& Value)
 
 	TArray<AActor*> IgnoreActors;
 	FHitResult HitResult;
-	UKismetSystemLibrary::LineTraceSingle(GetWorld(), CameraWorldPosition, CamerToMouseWorldDirection * 10000 + CameraWorldPosition, TraceTypeQuery1, false, IgnoreActors, EDrawDebugTrace::Persistent, HitResult, true, FLinearColor::Green);
+	// DefaultEngine.ini配置了编辑器里新增的Cfg，ECC_GameTraceChannel2对应WalkFloor的ObjType
+	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes{ UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel2) };
+	UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), CameraWorldPosition, CamerToMouseWorldDirection * 10000 + CameraWorldPosition, ObjectTypes, false, IgnoreActors, EDrawDebugTrace::None, HitResult, true, FLinearColor::Green);
 
-	WalkPosition = FVector(HitResult.Location.X, HitResult.Location.Y, 100);
+	return FVector(HitResult.Location.X, HitResult.Location.Y, 100);
+}
+
+void AMixHostController::RightClick(const FInputActionValue& Value)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("right mouse click")));
+
+	SetMouseCursorWidget(EMouseCursor::Default, CursorDefaultWidget);
+	WalkPosition = GetMouseClickFloorPosition();
 }
 
 void AMixHostController::LeftClick(const FInputActionValue& Value)
@@ -170,6 +177,6 @@ void AMixHostController::LeftClick(const FInputActionValue& Value)
 		UMixCharacterAttackComponent* AttackComponent = Host->FindComponentByClass<UMixCharacterAttackComponent>();
 		if (!ensure(AttackComponent)) return;
 
-		AttackComponent->Attack();
+		AttackComponent->Attack(GetMouseClickFloorPosition());
 	}
 }

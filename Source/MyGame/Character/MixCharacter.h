@@ -19,11 +19,4 @@ class MYGAME_API AMixCharacter : public ACharacter
 public:
 	AMixCharacter(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
-public:
-	UPROPERTY(Category=Character, VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
-	TObjectPtr<UMixCharacterHealthComponent> CharacterHealthComponent;
-
-	UPROPERTY(Category=Character, VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
-	TObjectPtr<UMixCharacterAttackComponent> CharacterAttackComponent;
-
 };

@@ -6,17 +6,25 @@
 #include "Algo/MinElement.h"
 #include "GameFramework\CharacterMovementComponent.h"
 #include "Character\Host\MixHostController.h"
+#include "Engine\AssetManager.h"
+#include "Ammo\Host\MixHostAmmo.h"
 
-UMixHostAttackComponent::UMixHostAttackComponent()
+UMixHostAttackComponent::UMixHostAttackComponent(const FObjectInitializer& ObjectInitializer /*= FObjectInitializer::Get()*/)
+	: Super(ObjectInitializer)
 {
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
+void UMixHostAttackComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	Host = Cast<AMixHost>(GetOwner());
+	if (!ensure(Host.IsValid())) return;
+}
+
 TWeakObjectPtr<AMixBatman> UMixHostAttackComponent::SelectTarget()
 {
-	AMixHost* Host = Cast<AMixHost>(GetOwner());
-	if (!ensure(Host)) return nullptr;
-
 	FVector HostPos = Host->GetActorLocation();
 	FVector HostPosPoint = FVector(HostPos.X, HostPos.Y, 100);
 
@@ -33,40 +41,14 @@ TWeakObjectPtr<AMixBatman> UMixHostAttackComponent::SelectTarget()
 	// 	}
 
 	TWeakObjectPtr<AMixBatman>* ClosestBatman = Algo::MinElementBy(BatmanInRange,
-		[HostPosPoint](const TWeakObjectPtr<AMixBatman> Batman)
+		[this](const TWeakObjectPtr<AMixBatman> Batman)
 		{
-			return FVector::Distance(HostPosPoint, Batman->GetActorLocation());
+			return FVector::Distance(LastMouseClickPos, Batman->GetActorLocation());
 		}
 	);
 
 	if (!ensure(ClosestBatman)) return nullptr;
 	return *ClosestBatman;
-}
-
-void UMixHostAttackComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	AMixHost* Host = Cast<AMixHost>(GetOwner());
-	if (!ensure(Host)) return;
-
-	if (bIsRotating)
-	{
-		float RotationTime = 0.3f;
-		float TotalYawDifference = FMath::Fmod(TargetRotation.Yaw - HostRotation.Yaw + 180.0f, 360.0f) - 180.0f;
-
-		float YawPerFrame = TotalYawDifference / (RotationTime / GetWorld()->GetDeltaSeconds());
-		FRotator NewRotation = Host->GetActorRotation();
-		NewRotation.Yaw += YawPerFrame;
-		Host->SetActorRotation(NewRotation);
-
-		float RotationDifference = FMath::Abs(FMath::Fmod(TargetRotation.Yaw - NewRotation.Yaw + 180.0f, 360.0f) - 180.0f);
-		if (RotationDifference <= 6.0f)
-		{
-			Host->SetActorRotation(TargetRotation);
-			bIsRotating = false;
-		}
-	}
 }
 
 void UMixHostAttackComponent::Attack(FVector MouseClickPos)
@@ -75,9 +57,6 @@ void UMixHostAttackComponent::Attack(FVector MouseClickPos)
 	BatmanInRange.Empty();
 
 	// 获取范围内敌方单位
-	AMixHost* Host = Cast<AMixHost>(GetOwner());
-	if (!ensure(Host)) return;
-
 	FVector StartPos = Host->GetActorLocation();
 	FVector EndPos = Host->GetActorLocation();
 	TArray<AActor*> ActorsToIgnore;
@@ -96,6 +75,7 @@ void UMixHostAttackComponent::Attack(FVector MouseClickPos)
 
 		BatmanInRange.Add(Batman);
     }
+
 	// 范围内没有敌方单位，拒绝攻击
 	if (BatmanInRange.IsEmpty()) return;
 
@@ -107,44 +87,85 @@ void UMixHostAttackComponent::Attack(FVector MouseClickPos)
 	AMixHostController* HostController = Cast<AMixHostController>(Host->GetController());
 	if (!ensure(HostController)) return;
 	HostController->WalkPosition = Host->GetActorLocation();
-	// Host->GetCharacterMovement()->StopMovementImmediately();
 
 	// 面向目标旋转
-	bIsRotating = true;
-
-// 	使用定时器旋转角色朝向敌方单位，会造成抖动，挪到Tick()解决
-// 	FVector HostLocation = Host->GetActorLocation();
-// 	FRotator HostRotation = Host->GetActorRotation();
-// 	FVector TargetLocation = SelectBatman->GetActorLocation();
-// 	FRotator TargetRotation = (TargetLocation - HostLocation).Rotation();
-// 
-// 	float RotationTime = 0.3f;
-// 	float TotalYawDifference = FMath::Fmod(TargetRotation.Yaw - HostRotation.Yaw + 180.0f, 360.0f) - 180.0f;
-// 
-// 	GetWorld()->GetTimerManager().SetTimer(RotationHandle, [this, Host, HostRotation, TargetRotation, RotationTime, TotalYawDifference]()
-// 		{
-// 			float YawPerFrame = TotalYawDifference / (RotationTime / GetWorld()->GetDeltaSeconds());
-// 			float DeltaTime = GetWorld()->GetDeltaSeconds();
-// 			FRotator NewRotation = Host->GetActorRotation();
-// 			NewRotation.Yaw += YawPerFrame / 10;
-// 			Host->SetActorRotation(NewRotation);
-// 
-// 			float RotationDifference = FMath::Abs(FMath::Fmod(TargetRotation.Yaw - NewRotation.Yaw + 180.0f, 360.0f) - 180.0f);
-// 
-// 			if (RotationDifference <= 1.0f)
-// 			{
-// 				GetWorld()->GetTimerManager().ClearTimer(RotationHandle);
-// 			}
-// 		}, GetWorld()->GetDeltaSeconds() / 10, true);
-
-// 	HostLocation = Host->GetActorLocation();
-// 	HostRotation = Host->GetActorRotation();
-// 	TargetLocation = SelectBatman->GetActorLocation();
-// 	TargetRotation = (TargetLocation - HostLocation).Rotation();
-
 	HostLocation = Host->GetActorLocation();
 	HostRotation = FRotator(0.0f, Host->GetActorRotation().Yaw, 0.0f);
 	TargetLocation = SelectBatman->GetActorLocation();
-	TargetRotation = FRotator(0.0f, (TargetLocation - HostLocation).Rotation().Yaw, 0.0f);
+	LookAtRotation = FRotator(0.0f, (TargetLocation - HostLocation).Rotation().Yaw, 0.0f);
+
+	// 用于确保朝角度较小的方向旋转
+	TotalYawDifference = FMath::Fmod(LookAtRotation.Yaw - HostRotation.Yaw + 180.0f, 360.0f) - 180.0f;
+	YawPerFrame = TotalYawDifference / (KRotationTime / GetWorld()->GetDeltaSeconds());
+
+	bIsRotating = true;
+
+	//  定时器SetActorRotation存在相机抖动的问题，放到Tick执行
+	// 	GetWorld()->GetTimerManager().SetTimer(RotationHandle, [this, Host, HostRotation, TargetRotation, RotationTime, TotalYawDifference]()
+	// 		{
+	// 			float YawPerFrame = TotalYawDifference / (RotationTime / GetWorld()->GetDeltaSeconds());
+	// 			float DeltaTime = GetWorld()->GetDeltaSeconds();
+	// 			FRotator NewRotation = Host->GetActorRotation();
+	// 			NewRotation.Yaw += YawPerFrame / 10;
+	// 			Host->SetActorRotation(NewRotation);
+	// 
+	// 			float RotationDifference = FMath::Abs(FMath::Fmod(TargetRotation.Yaw - NewRotation.Yaw + 180.0f, 360.0f) - 180.0f);
+	// 
+	// 			if (RotationDifference <= 1.0f)
+	// 			{
+	// 				GetWorld()->GetTimerManager().ClearTimer(RotationHandle);
+	// 			}
+	// 		}, GetWorld()->GetDeltaSeconds() / 10, true);
 }
 
+void UMixHostAttackComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	if (bIsRotating)
+	{
+		FRotator HostNewRotation = FRotator(0.0f, Host->GetActorRotation().Yaw + YawPerFrame, 0.0f);
+		Host->SetActorRotation(HostNewRotation);
+
+		float RotationDiff = FMath::Abs(FMath::Fmod(LookAtRotation.Yaw - HostNewRotation.Yaw + 180.0f, 360.0f) - 180.0f);
+		if (RotationDiff <= 6.0f)
+		{
+			// 最后获取Host最新应该的朝向，用于矫正
+			FRotator FinalFixRotation = FRotator(0.0f, (SelectBatman->GetActorLocation() - Host->GetActorLocation()).Rotation().Yaw, 0.0f);
+			Host->SetActorRotation(FinalFixRotation);
+			bIsRotating = false;
+
+			PlayAttackMontage();
+		}
+	}
+}
+
+void UMixHostAttackComponent::PlayAttackMontage()
+{
+	FStreamableManager& StreamableManager = UAssetManager::GetStreamableManager();
+	StreamableManager.RequestAsyncLoad(AttackMontagePath, FStreamableDelegate::CreateLambda([this]()
+		{
+			UAnimMontage* AttackAnimMontage = Cast<UAnimMontage>(AttackMontagePath.TryLoad());
+			if (!ensure(AttackAnimMontage)) return;
+
+			Host->PlayAnimMontage(AttackAnimMontage);
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("play attack montage")));
+		}));
+}
+
+void UMixHostAttackComponent::AttackSpawn()
+{
+	// 资源加载存在多种方式，一般资源类，可以采取LoadObject（同步），采取FStreamableManager.RequestAsyncLoad（异步）
+	// 蓝图类，也可以采取FStreamableManager.RequestAsyncLoad（异步），也可以采取TSubClassOf()的存放，然后同步或异步加载
+	FStreamableManager& StreamableManager = UAssetManager::GetStreamableManager();
+	StreamableManager.RequestAsyncLoad(ArrowAmmoPath, FStreamableDelegate::CreateLambda([this]()
+		{
+			UClass* ArrowAmmoClass = Cast<UClass>(ArrowAmmoPath.TryLoad());
+			if (!ensure(ArrowAmmoClass)) return;
+		
+			FTransform BowEmitterTransform = Host->GetMesh()->GetSocketTransform("BowEmitterSocket");
+			FActorSpawnParameters SpawnParams;
+			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+			AMixHostAmmo* SpawnedActor = GetWorld()->SpawnActor<AMixHostAmmo>(ArrowAmmoClass, BowEmitterTransform, SpawnParams);
+		}));
+}

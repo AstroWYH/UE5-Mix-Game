@@ -11,6 +11,7 @@
 #include "Kismet\GameplayStatics.h"
 #include "Character\Host\MixHost.h"
 #include "Engine\EngineTypes.h"
+#include "Character\Host\MixHostAttackComponent.h"
 
 void AMixHostController::Move(const FInputActionValue& Value)
 {
@@ -163,6 +164,12 @@ void AMixHostController::RightClick(const FInputActionValue& Value)
 
 	SetMouseCursorWidget(EMouseCursor::Default, CursorDefaultWidget);
 	WalkPosition = GetMouseClickFloorPosition();
+
+	// 打断角色旋转朝向敌方单位
+	UMixHostAttackComponent* HostAttackComponent = Host->FindComponentByClass<UMixHostAttackComponent>();
+	if (!ensure(HostAttackComponent)) return;
+
+	HostAttackComponent->bIsRotating = false;
 }
 
 void AMixHostController::LeftClick(const FInputActionValue& Value)
@@ -174,9 +181,9 @@ void AMixHostController::LeftClick(const FInputActionValue& Value)
 		bPrepareAttack = false;
 		SetMouseCursorWidget(EMouseCursor::Default, CursorDefaultWidget);
 
-		UMixCharacterAttackComponent* AttackComponent = Host->FindComponentByClass<UMixCharacterAttackComponent>();
-		if (!ensure(AttackComponent)) return;
+		UMixHostAttackComponent* HostAttackComponent = Host->FindComponentByClass<UMixHostAttackComponent>();
+		if (!ensure(HostAttackComponent)) return;
 
-		AttackComponent->Attack(GetMouseClickFloorPosition());
+		HostAttackComponent->Attack(GetMouseClickFloorPosition());
 	}
 }

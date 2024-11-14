@@ -15,16 +15,21 @@ public:
 	// Sets default values for this actor's properties
 	AMixHostAmmo();
 
-protected:
+public:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Host Ammo")
-    TWeakObjectPtr<class UProjectileMovementComponent> ProjectileMovementComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Host Ammo", meta = (AllowPrivateAccess = "true"))
+    TObjectPtr<class UFloatingPawnMovement> FloatingPawnMovement;
 
+public:
+	TWeakObjectPtr<AActor> Target;
+
+	TWeakObjectPtr<AActor> Shooter;
+
+	FTimerHandle DestroyTimerHandle;
 };

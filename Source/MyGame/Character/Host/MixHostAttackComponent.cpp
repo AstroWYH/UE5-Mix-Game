@@ -63,7 +63,7 @@ void UMixHostAttackComponent::Attack(FVector MouseClickPos)
 	TArray<FHitResult> OutHits;
 	// DefaultEngine.ini配置了编辑器里新增的Cfg，ECC_GameTraceChannel1对应Enemy的ObjType
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes{ UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel1) };
-	UKismetSystemLibrary::SphereTraceMultiForObjects(GetWorld(), StartPos, EndPos, AttackRange, ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::Persistent, OutHits, true);
+	UKismetSystemLibrary::SphereTraceMultiForObjects(GetWorld(), StartPos, EndPos, AttackRange, ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::None, OutHits, true);
 
     for (const FHitResult& Hit : OutHits)
     {
@@ -165,7 +165,16 @@ void UMixHostAttackComponent::AttackSpawn()
 		
 			FTransform BowEmitterTransform = Host->GetMesh()->GetSocketTransform("BowEmitterSocket");
 			FActorSpawnParameters SpawnParams;
+			SpawnParams.Instigator = Host.Get();
 			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+			SpawnParams.CustomPreSpawnInitalization = [this](AActor* SpawnedActor)
+				{
+					AMixHostAmmo* HostAmmo = Cast<AMixHostAmmo>(SpawnedActor);
+					if (!ensure(HostAmmo)) return;
+
+					HostAmmo->Target = SelectBatman;
+					HostAmmo->Shooter = Host;
+				};
 			AMixHostAmmo* SpawnedActor = GetWorld()->SpawnActor<AMixHostAmmo>(ArrowAmmoClass, BowEmitterTransform, SpawnParams);
 		}));
 }

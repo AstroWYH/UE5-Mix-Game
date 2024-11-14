@@ -2,7 +2,8 @@
 
 
 #include "MixHostAmmo.h"
-#include "GameFramework\ProjectileMovementComponent.h"
+#include "GameFramework\FloatingPawnMovement.h"
+#include "TimerManager.h"
 
 // Sets default values
 AMixHostAmmo::AMixHostAmmo()
@@ -10,16 +11,18 @@ AMixHostAmmo::AMixHostAmmo()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
-	ProjectileMovementComponent->InitialSpeed = 1000.0f;
-	ProjectileMovementComponent->ProjectileGravityScale = 0.0f;
+	FloatingPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingPawnMovement"));
 }
 
 // Called when the game starts or when spawned
 void AMixHostAmmo::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	GetWorld()->GetTimerManager().SetTimer(DestroyTimerHandle, [this]()
+		{
+			Destroy();
+		}, 10.0f, false);
 }
 
 // Called every frame

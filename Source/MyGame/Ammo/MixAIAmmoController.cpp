@@ -1,0 +1,29 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "Ammo/MixAIAmmoController.h"
+#include "Ammo\Host\MixHostAmmo.h"
+
+void AMixAIAmmoController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// 此时无法获取Pawn，因为SpawnActor<AMixAIAmmoController>的过程中，会执行AMixAIAmmoController::BeginPlay()
+	// 而此时还没OnPossess(Pawn)
+}
+
+void AMixAIAmmoController::OnPossess(APawn* InPawn)
+{
+    Super::OnPossess(InPawn);
+
+	Ammo = Cast<AMixHostAmmo>(GetPawn());
+	if (!ensure(Ammo.IsValid())) return;
+	if (!ensure(Ammo->Target.IsValid())) return;
+
+	// Ammo->Target如果不在CustomPreSpawnInitalization设置，则此处获取不到
+	 MoveToActor(Ammo->Target.Get(), 5.0f);
+
+// 	FVector TargetLocation = Ammo->Target->GetActorLocation();
+// 	TargetLocation.Z += 50.0f;
+// 	MoveToLocation(TargetLocation, 5.0f);
+}

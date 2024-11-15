@@ -4,6 +4,9 @@
 #include "MixHostAmmo.h"
 #include "GameFramework\FloatingPawnMovement.h"
 #include "TimerManager.h"
+#include "Character\Batman\MixBatman.h"
+#include "Components\BoxComponent.h"
+#include "Ammo\MixAIAmmoController.h"
 
 // Sets default values
 AMixHostAmmo::AMixHostAmmo()
@@ -22,7 +25,13 @@ void AMixHostAmmo::BeginPlay()
 	GetWorld()->GetTimerManager().SetTimer(DestroyTimerHandle, [this]()
 		{
 			Destroy();
-		}, 10.0f, false);
+		}, 2.0f, false);
+
+	UBoxComponent* ArrowBox = FindComponentByClass<UBoxComponent>();
+	if (!ensure(ArrowBox)) return;
+
+	ArrowBox->OnComponentBeginOverlap.AddDynamic(this, &AMixHostAmmo::HitTarget);
+
 }
 
 // Called every frame
@@ -32,3 +41,14 @@ void AMixHostAmmo::Tick(float DeltaTime)
 
 }
 
+void AMixHostAmmo::HitTarget(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("OtherActor: %s"), *OtherActor->GetName()));
+
+	AMixBatman* Batman = Cast<AMixBatman>(OtherActor);
+	if (!ensure(Batman)) return;
+
+	AttachToComponent(Batman->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "ArrowHit");
+	AMixAIAmmoController* AmmoController = Cast<AMixAIAmmoController>(GetController());
+	AmmoController->bCanLaunch = false;
+}

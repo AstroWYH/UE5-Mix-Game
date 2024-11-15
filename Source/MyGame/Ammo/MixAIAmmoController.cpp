@@ -21,9 +21,17 @@ void AMixAIAmmoController::OnPossess(APawn* InPawn)
 	if (!ensure(Ammo->Target.IsValid())) return;
 
 	// Ammo->Target如果不在CustomPreSpawnInitalization设置，则此处获取不到
-	 MoveToActor(Ammo->Target.Get(), 5.0f);
+	// 使用MoveToActor无法和敌方单位产生碰撞
+	// MoveToActor(Ammo->Target.Get(), 0.0f);
+	bCanLaunch = true;
 
-// 	FVector TargetLocation = Ammo->Target->GetActorLocation();
-// 	TargetLocation.Z += 50.0f;
-// 	MoveToLocation(TargetLocation, 5.0f);
+}
+
+void AMixAIAmmoController::Tick(float DeltaTime)
+{
+	if (bCanLaunch)
+	{
+		FVector TargetLocation = Ammo->Target->GetActorLocation();
+		MoveToLocation(TargetLocation, 1.0f);
+	}
 }

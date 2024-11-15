@@ -29,6 +29,8 @@ public:
      UFUNCTION(BlueprintCallable, Category = "Host Attack Component")
      void AttackSpawn();
 
+     void SetAttackRangeHidden(bool bHidden);
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Host Attack Component")
     TWeakObjectPtr<class AMixHost> Host;

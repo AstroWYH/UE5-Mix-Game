@@ -17,10 +17,15 @@ class MYGAME_API AMixAIAmmoController : public AAIController
 public:
 	void BeginPlay() override;
 
+	void Tick(float DeltaTime) override;
+
 	void OnPossess(APawn* InPawn) override;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Host Controller")
 	TWeakObjectPtr<class AMixHostAmmo> Ammo;
+
+public:
+	bool bCanLaunch = false;
 
 };

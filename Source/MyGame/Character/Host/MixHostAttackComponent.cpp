@@ -63,7 +63,7 @@ void UMixHostAttackComponent::Attack(FVector MouseClickPos)
 	TArray<FHitResult> OutHits;
 	// DefaultEngine.ini配置了编辑器里新增的Cfg，ECC_GameTraceChannel1对应Enemy的ObjType
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes{ UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel1) };
-	UKismetSystemLibrary::SphereTraceMultiForObjects(GetWorld(), StartPos, EndPos, AttackRange, ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::None, OutHits, true);
+	UKismetSystemLibrary::CapsuleTraceMultiForObjects(GetWorld(), StartPos, EndPos, AttackRange, 1000.0f, ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::None, OutHits, true);
 
     for (const FHitResult& Hit : OutHits)
     {
@@ -149,7 +149,7 @@ void UMixHostAttackComponent::PlayAttackMontage()
 			if (!ensure(AttackAnimMontage)) return;
 
 			Host->PlayAnimMontage(AttackAnimMontage);
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("play attack montage")));
+// 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("play attack montage")));
 		}));
 }
 
@@ -177,4 +177,20 @@ void UMixHostAttackComponent::AttackSpawn()
 				};
 			AMixHostAmmo* SpawnedActor = GetWorld()->SpawnActor<AMixHostAmmo>(ArrowAmmoClass, BowEmitterTransform, SpawnParams);
 		}));
+}
+
+void UMixHostAttackComponent::SetAttackRangeHidden(bool bHidden)
+{
+	TArray<UActorComponent*> TaggedComponents = Host->GetComponentsByTag(UActorComponent::StaticClass(), "AttackRangeComponent");
+	for (UActorComponent* AttackRangeComponent : TaggedComponents)
+	{
+		if (!ensure(AttackRangeComponent)) continue;
+		UStaticMeshComponent* AttackRangeMeshComponent = Cast<UStaticMeshComponent>(AttackRangeComponent);
+		if (!ensure(AttackRangeMeshComponent)) continue;
+
+		UE_LOG(LogTemp, Warning, TEXT("Found component with tag %s"), *AttackRangeComponent->GetName());
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Found component with tag %s"), *AttackRangeComponent->GetName()));
+
+		AttackRangeMeshComponent->SetHiddenInGame(bHidden);
+	}
 }

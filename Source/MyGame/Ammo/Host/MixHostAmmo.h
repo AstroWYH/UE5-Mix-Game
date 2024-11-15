@@ -23,6 +23,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
+	UFUNCTION(BlueprintCallable, Category = "Host Ammo")
+	void HitTarget(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Host Ammo", meta = (AllowPrivateAccess = "true"))
     TObjectPtr<class UFloatingPawnMovement> FloatingPawnMovement;
 

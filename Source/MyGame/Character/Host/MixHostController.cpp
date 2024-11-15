@@ -136,6 +136,11 @@ void AMixHostController::Attack(const FInputActionValue& Value)
 {
 	SetMouseCursorWidget(EMouseCursor::Default, CursorAttackWidget);
 	bPrepareAttack = true;
+
+	UMixHostAttackComponent* HostAttackComponent = Host->FindComponentByClass<UMixHostAttackComponent>();
+	if (!ensure(HostAttackComponent)) return;
+
+	HostAttackComponent->SetAttackRangeHidden(false);
 }
 
 FVector AMixHostController::GetMouseClickFloorPosition()
@@ -160,7 +165,7 @@ FVector AMixHostController::GetMouseClickFloorPosition()
 
 void AMixHostController::RightClick(const FInputActionValue& Value)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("right mouse click")));
+// 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("right mouse click")));
 
 	SetMouseCursorWidget(EMouseCursor::Default, CursorDefaultWidget);
 	WalkPosition = GetMouseClickFloorPosition();
@@ -170,11 +175,13 @@ void AMixHostController::RightClick(const FInputActionValue& Value)
 	if (!ensure(HostAttackComponent)) return;
 
 	HostAttackComponent->bIsRotating = false;
+
+	HostAttackComponent->SetAttackRangeHidden(true);
 }
 
 void AMixHostController::LeftClick(const FInputActionValue& Value)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("left mouse click")));
+// 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("left mouse click")));
 
 	if (bPrepareAttack)
 	{
@@ -185,5 +192,6 @@ void AMixHostController::LeftClick(const FInputActionValue& Value)
 		if (!ensure(HostAttackComponent)) return;
 
 		HostAttackComponent->Attack(GetMouseClickFloorPosition());
+		HostAttackComponent->SetAttackRangeHidden(true);
 	}
 }

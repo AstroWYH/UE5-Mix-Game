@@ -22,16 +22,15 @@ void AMixHostAmmo::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetWorld()->GetTimerManager().SetTimer(DestroyTimerHandle, [this]()
-		{
-			Destroy();
-		}, 2.0f, false);
-
 	UBoxComponent* ArrowBox = FindComponentByClass<UBoxComponent>();
 	if (!ensure(ArrowBox)) return;
 
 	ArrowBox->OnComponentBeginOverlap.AddDynamic(this, &AMixHostAmmo::HitTarget);
 
+	GetWorld()->GetTimerManager().SetTimer(DestroyTimerHandle, [this]()
+		{
+			Destroy();
+		}, 2.0f, false);
 }
 
 // Called every frame
@@ -43,7 +42,7 @@ void AMixHostAmmo::Tick(float DeltaTime)
 
 void AMixHostAmmo::HitTarget(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("OtherActor: %s"), *OtherActor->GetName()));
+// 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("OtherActor: %s"), *OtherActor->GetName()));
 
 	AMixBatman* Batman = Cast<AMixBatman>(OtherActor);
 	if (!ensure(Batman)) return;

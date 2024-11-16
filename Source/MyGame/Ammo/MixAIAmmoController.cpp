@@ -29,6 +29,8 @@ void AMixAIAmmoController::OnPossess(APawn* InPawn)
 
 void AMixAIAmmoController::Tick(float DeltaTime)
 {
+	Super::Tick(DeltaTime);
+
 	if (bCanLaunch)
 	{
 		FVector TargetLocation = Ammo->Target->GetActorLocation();

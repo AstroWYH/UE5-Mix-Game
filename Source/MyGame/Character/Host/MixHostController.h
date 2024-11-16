@@ -17,6 +17,12 @@ class MYGAME_API AMixHostController : public APlayerController
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	class UNiagaraSystem* FXCursor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	class UNiagaraSystem* FXCursorAttack;
+
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputMappingContext* DefaultMappingContext;

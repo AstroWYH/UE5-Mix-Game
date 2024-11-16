@@ -13,4 +13,11 @@ class MYGAME_API AMixBatman : public AMixCharacter
 {
 	GENERATED_BODY()
 
+public:
+	AMixBatman();
+
+public:
+	UPROPERTY(Category=Character, VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
+	TObjectPtr<class UMixBatmanAttackComponent> BatmanAttackComponent;
+
 };

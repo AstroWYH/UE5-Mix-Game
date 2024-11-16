@@ -73,17 +73,17 @@ void AMixHostController::SetupInputComponent()
 
 void AMixHostController::BeginPlay()
 {
-	// À¶Í¼ÖĞµÄEvent BeginPlayÊÂ¼ş»áÔÚC++µÄBeginPlay±»µ÷ÓÃÊ±´¥·¢
-	// Èç¹û²»µ÷ÓÃÕâ¾ä£¬ÔòÀ¶Í¼µÄEventBegin()²»»á±»µ÷ÓÃ
+	// è“å›¾ä¸­çš„Event BeginPlayäº‹ä»¶ä¼šåœ¨C++çš„BeginPlayè¢«è°ƒç”¨æ—¶è§¦å‘
+	// å¦‚æœä¸è°ƒç”¨è¿™å¥ï¼Œåˆ™è“å›¾çš„EventBegin()ä¸ä¼šè¢«è°ƒç”¨
 	Super::BeginPlay();
 
-	// ³õÊ¼»¯ÔöÇ¿ÊäÈëDefaultMappingContext
+	// åˆå§‹åŒ–å¢å¼ºè¾“å…¥DefaultMappingContext
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
 		Subsystem->AddMappingContext(DefaultMappingContext, 0);
 	}
 
-	// ³õÊ¼»¯Êó±êÍ¼Ïñ
+	// åˆå§‹åŒ–é¼ æ ‡å›¾åƒ
 	InitMouseCursor();
 
 	Host = Cast<AMixHost>(GetPawn());
@@ -100,7 +100,7 @@ void AMixHostController::Tick(float DeltaSeconds)
 // 	FVector HostPosPoint = FVector(HostPos.X, HostPos.Y, 100);
 // 	float Distance = FVector::Distance(HostPosPoint, WalkPosition);
 // 
-// 	// 20ºÜÖØÒª£¬Èç¹ûÊÇ5£¬¾Í»áÒ»Ö±Ïë×ßµ½5ÒÔÄÚ²ÅÍ£Ö¹£¬¾Í»áÒ»Ö±×Ô¶¯×ªÏò£¬ÒòÎª5 is hard, 20 is relax
+// 	// 20å¾ˆé‡è¦ï¼Œå¦‚æœæ˜¯5ï¼Œå°±ä¼šä¸€ç›´æƒ³èµ°åˆ°5ä»¥å†…æ‰åœæ­¢ï¼Œå°±ä¼šä¸€ç›´è‡ªåŠ¨è½¬å‘ï¼Œå› ä¸º5 is hard, 20 is relax
 // 	if (Distance > 20)
 // 	{
 // 		bIsWalking = true;
@@ -115,7 +115,7 @@ void AMixHostController::Tick(float DeltaSeconds)
 
 void AMixHostController::InitMouseCursor()
 {
-	// ´´½¨Ä¬ÈÏÊó±êÍ¼Ïñ
+	// åˆ›å»ºé»˜è®¤é¼ æ ‡å›¾åƒ
 	CursorDefaultClass = FindObject<UClass>(nullptr, CursorDefaultPath);
 	if (!CursorDefaultClass.Get())
 	{
@@ -124,7 +124,7 @@ void AMixHostController::InitMouseCursor()
 	CursorDefaultWidget = UUserWidget::CreateWidgetInstance(*this, CursorDefaultClass, TEXT("CursorDefault"));
 	SetMouseCursorWidget(EMouseCursor::Default, CursorDefaultWidget);
 
-	// ´´½¨¹¥»÷Êó±êÍ¼Ïñ
+	// åˆ›å»ºæ”»å‡»é¼ æ ‡å›¾åƒ
 	CursorAttackClass = FindObject<UClass>(nullptr, CursorAttackPath);
 	if (!CursorAttackClass.Get())
 	{
@@ -138,7 +138,7 @@ void AMixHostController::Attack(const FInputActionValue& Value)
 	SetMouseCursorWidget(EMouseCursor::Default, CursorAttackWidget);
 	bPrepareAttack = true;
 
-	UMixHostAttackComponent* HostAttackComponent = Host->FindComponentByClass<UMixHostAttackComponent>();
+	UMixHostAttackComponent* HostAttackComponent = Cast<UMixHostAttackComponent>(Host->CharacterAttackComponent2);
 	if (!ensure(HostAttackComponent)) return;
 
 	HostAttackComponent->SetAttackRangeHidden(false);
@@ -146,7 +146,7 @@ void AMixHostController::Attack(const FInputActionValue& Value)
 
 FVector AMixHostController::GetMouseClickFloorPosition()
 {
-// 	// ÕâÀïÖ»ÄÜÓÃGetMousePositionOnViewport()£¬½á¹û²ÅÕıÈ·
+// 	// è¿™é‡Œåªèƒ½ç”¨GetMousePositionOnViewport()ï¼Œç»“æœæ‰æ­£ç¡®
 // 	FVector2D MousePosition = UWidgetLayoutLibrary::GetMousePositionOnViewport(GetWorld());
 // 	float Scale = UWidgetLayoutLibrary::GetViewportScale(GetWorld());
 // 	FVector2D ScreenMousePosition = MousePosition * Scale;
@@ -157,7 +157,7 @@ FVector AMixHostController::GetMouseClickFloorPosition()
 // 
 // 	TArray<AActor*> IgnoreActors;
 // 	FHitResult HitResult;
-// 	// DefaultEngine.iniÅäÖÃÁË±à¼­Æ÷ÀïĞÂÔöµÄCfg£¬ECC_GameTraceChannel2¶ÔÓ¦WalkFloorµÄObjType
+// 	// DefaultEngine.inié…ç½®äº†ç¼–è¾‘å™¨é‡Œæ–°å¢çš„Cfgï¼ŒECC_GameTraceChannel2å¯¹åº”WalkFloorçš„ObjType
 // 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes{ UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel2) };
 // 	UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), CameraWorldPosition, CamerToMouseWorldDirection * 10000 + CameraWorldPosition, ObjectTypes, false, IgnoreActors, EDrawDebugTrace::None, HitResult, true, FLinearColor::Green);
 // 
@@ -180,8 +180,8 @@ void AMixHostController::RightClick(const FInputActionValue& Value)
 	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, WalkPosition);
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, FXCursor, WalkPosition, FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None, true);
 
-	// ´ò¶Ï½ÇÉ«Ğı×ª³¯ÏòµĞ·½µ¥Î»
-	UMixHostAttackComponent* HostAttackComponent = Host->FindComponentByClass<UMixHostAttackComponent>();
+	// æ‰“æ–­è§’è‰²æ—‹è½¬æœå‘æ•Œæ–¹å•ä½
+	UMixHostAttackComponent* HostAttackComponent = Cast<UMixHostAttackComponent>(Host->CharacterAttackComponent2);
 	if (!ensure(HostAttackComponent)) return;
 
 	HostAttackComponent->bIsRotating = false;
@@ -198,7 +198,7 @@ void AMixHostController::LeftClick(const FInputActionValue& Value)
 		SetMouseCursorWidget(EMouseCursor::Default, CursorDefaultWidget);
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, FXCursorAttack, GetMouseClickFloorPosition(), FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None, true);
 
-		UMixHostAttackComponent* HostAttackComponent = Host->FindComponentByClass<UMixHostAttackComponent>();
+		UMixHostAttackComponent* HostAttackComponent = Cast<UMixHostAttackComponent>(Host->CharacterAttackComponent2);
 		if (!ensure(HostAttackComponent)) return;
 
 		HostAttackComponent->LastMouseClickPos = GetMouseClickFloorPosition();

@@ -6,8 +6,8 @@
 #include "Algo/MinElement.h"
 #include "GameFramework\CharacterMovementComponent.h"
 #include "Character\Host\MixHostController.h"
-#include "Engine\AssetManager.h"
 #include "Ammo\Host\MixHostAmmo.h"
+#include "Engine\AssetManager.h"
 
 UMixHostAttackComponent::UMixHostAttackComponent() : Super()
 {
@@ -15,6 +15,8 @@ UMixHostAttackComponent::UMixHostAttackComponent() : Super()
 
 	AttackRange = 500.0f;
 	KRotationTime = 0.3f;
+	AttackMontagePath = TEXT("/Script/Engine.AnimMontage'/Game/MixGame/Character/Host/Animations/Primary_Fire_Med_Montage.Primary_Fire_Med_Montage'");
+	AmmoPath = TEXT("/Script/Engine.Blueprint'/Game/MixGame/Ammo/HostAmmo/HostArrow.HostArrow_C'");
 }
 
 void UMixHostAttackComponent::BeginPlay()
@@ -40,42 +42,45 @@ TWeakObjectPtr<AMixBatman> UMixHostAttackComponent::SelectClosestTarget()
 	return *ClosestBatman;
 }
 
-void UMixHostAttackComponent::SelectTarget()
+bool UMixHostAttackComponent::SelectTarget()
 {
-	// »ñÈ¡·¶Î§ÄÚµĞ·½µ¥Î»
+	// è·å–èŒƒå›´å†…æ•Œæ–¹å•ä½
 	BatmanInRange.Empty();
 	FVector StartPos = Host->GetActorLocation();
 	FVector EndPos = Host->GetActorLocation();
 	TArray<AActor*> ActorsToIgnore;
 	TArray<FHitResult> OutHits;
-	// DefaultEngine.iniÅäÖÃÁË±à¼­Æ÷ÀïĞÂÔöµÄCfg£¬ECC_GameTraceChannel1¶ÔÓ¦EnemyµÄObjType
+	// DefaultEngine.inié…ç½®äº†ç¼–è¾‘å™¨é‡Œæ–°å¢çš„Cfgï¼ŒECC_GameTraceChannel1å¯¹åº”Enemyçš„ObjType
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes{ UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel1) };
 	UKismetSystemLibrary::CapsuleTraceMultiForObjects(GetWorld(), StartPos, EndPos, AttackRange, 1000.0f, ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::None, OutHits, true);
 
 	for (const FHitResult& Hit : OutHits)
 	{
 		AActor* HitActor = Hit.GetActor();
-		if (!ensure(HitActor)) return;
+		if (!ensure(HitActor)) return false;
 
 		AMixBatman* Batman = Cast<AMixBatman>(HitActor);
-		if (!ensure(Batman)) return;
+		if (!ensure(Batman)) return false;
 
 		BatmanInRange.Add(Batman);
 	}
 
-	// ·¶Î§ÄÚÃ»ÓĞµĞ·½µ¥Î»£¬½ûÖ¹¹¥»÷
-	if (BatmanInRange.IsEmpty()) return;
+	// èŒƒå›´å†…æ²¡æœ‰æ•Œæ–¹å•ä½ï¼Œç¦æ­¢æ”»å‡»
+	if (BatmanInRange.IsEmpty()) return false;
 
-	// É¸Ñ¡·¶Î§ÄÚ×î½üµĞ·½µ¥Î»£¬×¼±¸¹¥»÷
+	// ç­›é€‰èŒƒå›´å†…æœ€è¿‘æ•Œæ–¹å•ä½ï¼Œå‡†å¤‡æ”»å‡»
 	SelectCharacterTarget = SelectClosestTarget();
-	if (!ensure(SelectCharacterTarget.IsValid())) return;
+	if (!ensure(SelectCharacterTarget.IsValid())) return false;
+
+	return true;
 }
 
 void UMixHostAttackComponent::StopMovement()
 {
-	// Í£Ö¹½ÇÉ«Î»ÒÆ
+	// åœæ­¢è§’è‰²ä½ç§»
 	AMixHostController* HostController = Cast<AMixHostController>(Host->GetController());
 	if (!ensure(HostController)) return;
+
 	HostController->WalkPosition = Host->GetActorLocation();
 	HostController->StopMovement();
 }
@@ -84,61 +89,6 @@ void UMixHostAttackComponent::TickComponent(float DeltaTime, enum ELevelTick Tic
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (bIsRotating)
-	{
-		FRotator HostNewRotation = FRotator(0.0f, Host->GetActorRotation().Yaw + YawPerFrame, 0.0f);
-		Host->SetActorRotation(HostNewRotation);
-
-		float RotationDiff = FMath::Abs(FMath::Fmod(SelfLookAtRotation.Yaw - HostNewRotation.Yaw + 180.0f, 360.0f) - 180.0f);
-		if (RotationDiff <= 6.0f)
-		{
-			// ×îºó»ñÈ¡Host×îĞÂÓ¦¸ÃµÄ³¯Ïò£¬ÓÃÓÚ½ÃÕı
-			FRotator FinalFixRotation = FRotator(0.0f, (SelectCharacterTarget->GetActorLocation() - Host->GetActorLocation()).Rotation().Yaw, 0.0f);
-			Host->SetActorRotation(FinalFixRotation);
-			bIsRotating = false;
-
-			PlayAttackMontage();
-		}
-	}
-}
-
-void UMixHostAttackComponent::PlayAttackMontage()
-{
-	FStreamableManager& StreamableManager = UAssetManager::GetStreamableManager();
-	StreamableManager.RequestAsyncLoad(AttackMontagePath, FStreamableDelegate::CreateLambda([this]()
-		{
-			UAnimMontage* AttackAnimMontage = Cast<UAnimMontage>(AttackMontagePath.TryLoad());
-			if (!ensure(AttackAnimMontage)) return;
-
-			Host->PlayAnimMontage(AttackAnimMontage);
-// 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("play attack montage")));
-		}));
-}
-
-void UMixHostAttackComponent::AttackSpawn()
-{
-	// ×ÊÔ´¼ÓÔØ´æÔÚ¶àÖÖ·½Ê½£¬Ò»°ã×ÊÔ´Àà£¬¿ÉÒÔ²ÉÈ¡LoadObject£¨Í¬²½£©£¬²ÉÈ¡FStreamableManager.RequestAsyncLoad£¨Òì²½£©
-	// À¶Í¼Àà£¬Ò²¿ÉÒÔ²ÉÈ¡FStreamableManager.RequestAsyncLoad£¨Òì²½£©£¬Ò²¿ÉÒÔ²ÉÈ¡TSubClassOf()µÄ´æ·Å£¬È»ºóÍ¬²½»òÒì²½¼ÓÔØ
-	FStreamableManager& StreamableManager = UAssetManager::GetStreamableManager();
-	StreamableManager.RequestAsyncLoad(ArrowAmmoPath, FStreamableDelegate::CreateLambda([this]()
-		{
-			UClass* ArrowAmmoClass = Cast<UClass>(ArrowAmmoPath.TryLoad());
-			if (!ensure(ArrowAmmoClass)) return;
-		
-			FTransform BowEmitterTransform = Host->GetMesh()->GetSocketTransform("BowEmitterSocket");
-			FActorSpawnParameters SpawnParams;
-			SpawnParams.Instigator = Host.Get();
-			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-			SpawnParams.CustomPreSpawnInitalization = [this](AActor* SpawnedActor)
-				{
-					AMixHostAmmo* HostAmmo = Cast<AMixHostAmmo>(SpawnedActor);
-					if (!ensure(HostAmmo)) return;
-
-					HostAmmo->Target = SelectCharacterTarget;
-					HostAmmo->Shooter = Host;
-				};
-			AMixHostAmmo* SpawnedActor = GetWorld()->SpawnActor<AMixHostAmmo>(ArrowAmmoClass, BowEmitterTransform, SpawnParams);
-		}));
 }
 
 void UMixHostAttackComponent::SetAttackRangeHidden(bool bHidden)
@@ -156,3 +106,30 @@ void UMixHostAttackComponent::SetAttackRangeHidden(bool bHidden)
 		AttackRangeMeshComponent->SetHiddenInGame(bHidden);
 	}
 }
+
+void UMixHostAttackComponent::AttackSpawn()
+{
+	// èµ„æºåŠ è½½å­˜åœ¨å¤šç§æ–¹å¼ï¼Œä¸€èˆ¬èµ„æºç±»ï¼Œå¯ä»¥é‡‡å–LoadObjectï¼ˆåŒæ­¥ï¼‰ï¼Œé‡‡å–FStreamableManager.RequestAsyncLoadï¼ˆå¼‚æ­¥ï¼‰
+	// è“å›¾ç±»ï¼Œä¹Ÿå¯ä»¥é‡‡å–FStreamableManager.RequestAsyncLoadï¼ˆå¼‚æ­¥ï¼‰ï¼Œä¹Ÿå¯ä»¥é‡‡å–TSubClassOf()çš„å­˜æ”¾ï¼Œç„¶ååŒæ­¥æˆ–å¼‚æ­¥åŠ è½½
+	FStreamableManager& StreamableManager = UAssetManager::GetStreamableManager();
+	StreamableManager.RequestAsyncLoad(AmmoPath, FStreamableDelegate::CreateLambda([this]()
+		{
+			UClass* AmmoClass = Cast<UClass>(AmmoPath.TryLoad());
+			if (!ensure(AmmoClass)) return;
+
+			FTransform BowEmitterTransform = Host->GetMesh()->GetSocketTransform("BowEmitterSocket");
+			FActorSpawnParameters SpawnParams;
+			SpawnParams.Instigator = Host.Get();
+			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+			SpawnParams.CustomPreSpawnInitalization = [this](AActor* SpawnedActor)
+				{
+					AMixHostAmmo* HostAmmo = Cast<AMixHostAmmo>(SpawnedActor);
+					if (!ensure(HostAmmo)) return;
+
+					HostAmmo->Target = SelectCharacterTarget;
+					HostAmmo->Shooter = Host;
+				};
+			AMixHostAmmo* SpawnedActor = GetWorld()->SpawnActor<AMixHostAmmo>(AmmoClass, BowEmitterTransform, SpawnParams);
+		}));
+}
+

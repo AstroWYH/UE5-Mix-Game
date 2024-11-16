@@ -1,8 +1,9 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "MixCharacter.h"
+#include "Character\MixCharacterAttackComponent.h"
 
-AMixCharacter::AMixCharacter(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+AMixCharacter::AMixCharacter() : Super()
 {
 
 }

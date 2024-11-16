@@ -16,8 +16,14 @@ class MYGAME_API AMixBatman : public AMixCharacter
 public:
 	AMixBatman();
 
+	void BeginPlay() override;
+
 public:
-	UPROPERTY(Category=Character, VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
-	TObjectPtr<class UMixBatmanAttackComponent> BatmanAttackComponent;
+// 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+// 	UStaticMeshComponent* TestMesh;
+// 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+// 	TObjectPtr<UStaticMeshComponent> TestMesh2;
+// 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AMixCharacter, meta = (AllowPrivateAccess = "true"))
+// 	TObjectPtr<class UMixBatmanAttackComponent> BatmanAttackComponent;
 
 };

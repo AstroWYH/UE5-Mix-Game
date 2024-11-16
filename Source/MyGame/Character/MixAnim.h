@@ -16,14 +16,14 @@ class MYGAME_API UMixAnim : public UAnimInstance
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixAnim")
 	float Speed = 0.0f;
 
 	void NativeInitializeAnimation();
 
 	void NativeUpdateAnimation(float DeltaTime);
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UMixAnim")
 	TWeakObjectPtr<class AMixCharacter> MixCharacter;
 
 };

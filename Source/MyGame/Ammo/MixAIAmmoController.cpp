@@ -8,20 +8,20 @@ void AMixAIAmmoController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ´ËÊ±ÎŞ·¨»ñÈ¡Pawn£¬ÒòÎªSpawnActor<AMixAIAmmoController>µÄ¹ı³ÌÖĞ£¬»áÖ´ĞĞAMixAIAmmoController::BeginPlay()
-	// ¶ø´ËÊ±»¹Ã»OnPossess(Pawn)
+	// æ­¤æ—¶æ— æ³•è·å–Pawnï¼Œå› ä¸ºSpawnActor<AMixAIAmmoController>çš„è¿‡ç¨‹ä¸­ï¼Œä¼šæ‰§è¡ŒAMixAIAmmoController::BeginPlay()
+	// è€Œæ­¤æ—¶è¿˜æ²¡OnPossess(Pawn)
 }
 
 void AMixAIAmmoController::OnPossess(APawn* InPawn)
 {
     Super::OnPossess(InPawn);
 
-	Ammo = Cast<AMixHostAmmo>(GetPawn());
+	Ammo = Cast<AMixAmmo>(GetPawn());
 	if (!ensure(Ammo.IsValid())) return;
 	if (!ensure(Ammo->Target.IsValid())) return;
 
-	// Ammo->TargetÈç¹û²»ÔÚCustomPreSpawnInitalizationÉèÖÃ£¬Ôò´Ë´¦»ñÈ¡²»µ½
-	// Ê¹ÓÃMoveToActorÎŞ·¨ºÍµĞ·½µ¥Î»²úÉúÅö×²
+	// Ammo->Targetå¦‚æœä¸åœ¨CustomPreSpawnInitalizationè®¾ç½®ï¼Œåˆ™æ­¤å¤„è·å–ä¸åˆ°
+	// ä½¿ç”¨MoveToActoræ— æ³•å’Œæ•Œæ–¹å•ä½äº§ç”Ÿç¢°æ’
 	// MoveToActor(Ammo->Target.Get(), 0.0f);
 	bCanLaunch = true;
 
@@ -34,6 +34,7 @@ void AMixAIAmmoController::Tick(float DeltaTime)
 	if (bCanLaunch)
 	{
 		FVector TargetLocation = Ammo->Target->GetActorLocation();
-		MoveToLocation(TargetLocation, 1.0f);
+		TargetLocation.Z += Ammo->AmmoOffset;
+		MoveToLocation(TargetLocation, 1.0f, true, false, false);
 	}
 }

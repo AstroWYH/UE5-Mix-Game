@@ -23,7 +23,7 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Host Controller")
-	TWeakObjectPtr<class AMixHostAmmo> Ammo;
+	TWeakObjectPtr<class AMixAmmo> Ammo;
 
 public:
 	bool bCanLaunch = false;

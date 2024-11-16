@@ -3,8 +3,12 @@
 
 #include "Ammo/Batman/MixBatmanAmmo.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
+#include "Character\Host\MixHost.h"
 
 void AMixBatmanAmmo::BeginPlay()
 {
-// 	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, WalkPosition);
+	Super::BeginPlay();
+
+// 	AMixHost* Host = Cast<AMixHost>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+//  	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, Host->GetActorLocation());
 }

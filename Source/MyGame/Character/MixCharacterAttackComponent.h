@@ -12,18 +12,24 @@ class MYGAME_API UMixCharacterAttackComponent : public UActorComponent
 public:
     virtual void BeginPlay() override;
 
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 public:
 	UFUNCTION(BlueprintCallable, Category = "UMixCharacterAttackComponent")
 	virtual void PreAttack();
 
-    UFUNCTION(BlueprintCallable, Category = "UMixCharacterAttackComponent")
 	virtual void StopMovement();
 
-	UFUNCTION(BlueprintCallable, Category = "UMixCharacterAttackComponent")
-	virtual void SelectTarget();
+	virtual bool SelectTarget();
+
+	virtual void TurnToTarget();
+
+	virtual void TickRotateToTarget();
+
+	virtual void PlayAttackMontage();
 
 	UFUNCTION(BlueprintCallable, Category = "UMixCharacterAttackComponent")
-	virtual void TurnToTarget();
+	virtual void AttackSpawn();
 
 public:
 	TWeakObjectPtr<class AMixCharacter> MixCharacter;
@@ -31,7 +37,7 @@ public:
     TWeakObjectPtr<class AMixCharacter> SelectCharacterTarget;
 
 public:
-    // 攻击参数
+    // 鏀诲嚮鍙傛暟
     int32 AttackVal = 0;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixCharacterAttackComponent")
@@ -40,7 +46,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixCharacterAttackComponent")
     bool bIsAttacking = false;
 
-    // 朝向目标参数
+    // 鏈濆悜鐩爣鍙傛暟
     FVector SelfLocation;
     FRotator SelfRotation;
     FVector TargetLocation;
@@ -49,5 +55,12 @@ public:
     bool bIsRotating = false;
     float KRotationTime = 0.0f;
     float YawPerFrame = 0.0f;
+
+public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixCharacterAttackComponent")
+	FSoftObjectPath AttackMontagePath;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixCharacterAttackComponent")
+	FSoftObjectPath AmmoPath;
 
 };

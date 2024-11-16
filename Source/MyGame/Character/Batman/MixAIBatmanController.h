@@ -21,18 +21,43 @@ public:
 
 	void OnPossess(APawn* InPawn) override;
 
-public:
 	UFUNCTION(BlueprintCallable, Category = "AMixAIBatmanController")
 	void PostBpBeginPlay();
 
 public:
+// 	UFUNCTION(BlueprintCallable, Category = "AMixAIBatmanController")
+// 	void TraceTarget();
+// 
+// 	UFUNCTION(BlueprintCallable, Category = "AMixAIBatmanController")
+// 	void TraceTargetAbort();
+// 
+// 	UFUNCTION(BlueprintCallable, Category = "AMixAIBatmanController")
+// 	void TracePathPoint();
+// 
+// 	UFUNCTION(BlueprintCallable, Category = "AMixAIBatmanController")
+// 	void TracePathPointComplete();
+// 
+// 	UFUNCTION(BlueprintCallable, Category = "AMixAIBatmanController")
+// 	void TracePathPointAbort();
+
+public:
+	// AIPerceptionComponent
 	UFUNCTION()
 	void OnTargetPerceptionUpdated(AActor* Actor, struct FAIStimulus Stimulus);
+
+public:
+// 	// AI Controller
+// 	void OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) override;
+
+// 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMixOnMovementAbort);
+// 	UPROPERTY(BlueprintAssignable)
+// 	FMixOnMovementAbort OnMovementAbort;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMixAIBatmanController")
 	TSubclassOf<AActor> PathPointClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMixAIBatmanController")
 	TArray<FVector> PathPointsPos;
 
 // 	const TCHAR* BehaviorTreePath{ TEXT("/Script/AIModule.BehaviorTree'/Game/MixGame/Character/EnemyBatman/AI/BatmanBt.BatmanBt'") };

@@ -21,15 +21,12 @@ public:
 public:    
 	void StopMovement() override;
 
-	void SelectTarget() override;
+	bool SelectTarget() override;
+
+	void AttackSpawn() override;
 
 public:
 	TWeakObjectPtr<class AMixBatman> SelectClosestTarget();
-
-	void PlayAttackMontage();
-
-	UFUNCTION(BlueprintCallable, Category = "UMixHostAttackComponent")
-	void AttackSpawn();
 
 	void SetAttackRangeHidden(bool bHidden);
 
@@ -42,10 +39,4 @@ public:
 
     FVector LastMouseClickPos;
 
-public:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixHostAttackComponent")
-	FSoftObjectPath AttackMontagePath{ TEXT("/Script/Engine.AnimMontage'/Game/MixGame/Character/Host/Animations/Primary_Fire_Med_Montage.Primary_Fire_Med_Montage'") };
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixHostAttackComponent")
-	FSoftObjectPath ArrowAmmoPath{ TEXT("/Script/Engine.Blueprint'/Game/MixGame/Ammo/HostAmmo/HostArrow.HostArrow_C'") };
 };

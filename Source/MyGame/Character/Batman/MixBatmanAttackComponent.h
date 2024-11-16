@@ -19,11 +19,12 @@ public:
 public:
 	void StopMovement() override;
 
-	void SelectTarget() override;
+	bool SelectTarget() override;
+
+	void AttackSpawn() override;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixHostAttackComponent")
     TWeakObjectPtr<class AMixBatman> Batman;
-
 
 };

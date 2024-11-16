@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
-#include "Character\MixCharacterHealthComponent.h"
 #include "Character\MixCharacterAttackComponent.h"
 #include "UObject\UObjectGlobals.h"
 
@@ -17,6 +16,14 @@ class MYGAME_API AMixCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
-	AMixCharacter(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	AMixCharacter();
+
+public:
+// 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AMixCharacter, meta = (AllowPrivateAccess = "true"))
+// 	TObjectPtr<class UMixCharacterAttackComponent> CharacterAttackComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AMixCharacter, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UMixCharacterAttackComponent> CharacterAttackComponent2;
+// 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AMixCharacter, meta = (AllowPrivateAccess = "true"))
+// 	TObjectPtr<UStaticMeshComponent> TestMesh3;
 
 };

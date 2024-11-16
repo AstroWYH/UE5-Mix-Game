@@ -27,6 +27,7 @@ void AMixHostAmmo::BeginPlay()
 
 	ArrowBox->OnComponentBeginOverlap.AddDynamic(this, &AMixHostAmmo::HitTarget);
 
+	// 2s后自毁
 	GetWorld()->GetTimerManager().SetTimer(DestroyTimerHandle, [this]()
 		{
 			Destroy();

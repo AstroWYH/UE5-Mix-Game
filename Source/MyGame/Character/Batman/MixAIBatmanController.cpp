@@ -8,13 +8,14 @@
 #include "Perception\AIPerceptionTypes.h"
 #include "Perception\AIPerceptionComponent.h"
 #include "Character\Host\MixHost.h"
+#include "Kismet\GameplayStatics.h"
 
-// ´ËÊ±ÎŞ·¨»ñÈ¡Pawn
+// æ­¤æ—¶æ— æ³•è·å–Pawn
 void AMixAIBatmanController::BeginPlay()
 {
 	Super::BeginPlay();
 
-// 	// ¿ªÆôĞĞÎªÊ÷
+// 	// å¼€å¯è¡Œä¸ºæ ‘
 // 	BehaviorTree = FindObject<UBehaviorTree>(nullptr, BehaviorTreePath);
 // 	if (!BehaviorTree)
 // 	{
@@ -25,7 +26,7 @@ void AMixAIBatmanController::BeginPlay()
 
 void AMixAIBatmanController::PostBpBeginPlay()
 {
-	// ´æBatmanÂ·¾¶µã
+	// å­˜Batmanè·¯å¾„ç‚¹
 	TArray<AActor*> PathPonits;
 	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), PathPointClass, "PathPoint", PathPonits);
 	for (const auto& PathPoint : PathPonits)
@@ -34,12 +35,12 @@ void AMixAIBatmanController::PostBpBeginPlay()
 		PathPointsPos.Add(PathPoint->GetActorLocation());
 	}
 
-	// InitºÚ°å
+	// Inité»‘æ¿
 	BatmanBlackboard = GetBlackboardComponent();
 	if (!ensure(BatmanBlackboard)) return;
 	BatmanBlackboard->SetValueAsInt("NextPatrolIdx", 0);
 
-	// FindÀ¶Í¼BatmanAIPerception
+	// Findè“å›¾BatmanAIPerception
 	TArray<UActorComponent*> TaggedComponents = GetComponentsByTag(UActorComponent::StaticClass(), "BatmanAIPerception");
 	for (UActorComponent* Component : TaggedComponents)
 	{
@@ -51,13 +52,65 @@ void AMixAIBatmanController::PostBpBeginPlay()
 	}
 }
 
+// void AMixAIBatmanController::TraceTarget()
+// {
+// 	AMixHost* Host = Cast<AMixHost>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+// 	// æ¥è¿‘300åœæ­¢ 
+// 	MoveToActor(Host, 300.0f);
+// }
+// 
+// void AMixAIBatmanController::TraceTargetAbort()
+// {
+// 	if (!bIsDetectHost)
+// 	{
+// 		StopMovement();
+// 
+// 		OnMovementAbort.Broadcast();
+// 	}
+// }
+// 
+// void AMixAIBatmanController::TracePathPoint()
+// {
+// 	int32 NextPatrolIdx = BatmanBlackboard->GetValueAsInt("NextPatrolIdx");
+// 	if (!ensure(PathPointsPos.IsValidIndex(NextPatrolIdx))) return;
+// 
+// 	FVector NextPathPointPos = PathPointsPos[NextPatrolIdx];
+// 	MoveToLocation(NextPathPointPos, -1);
+// }
+// 
+// void AMixAIBatmanController::TracePathPointComplete()
+// {
+// 	int32 NextPatrolIdx = BatmanBlackboard->GetValueAsInt("NextPatrolIdx");
+// 	BatmanBlackboard->SetValueAsInt("NextPatrolIdx", ++NextPatrolIdx);
+// }
+// 
+// void AMixAIBatmanController::TracePathPointAbort()
+// {
+// 	if (bIsDetectHost)
+// 	{
+// 		StopMovement();
+// 
+// 		int32 NextPatrolIdx = BatmanBlackboard->GetValueAsInt("NextPatrolIdx");
+// 		BatmanBlackboard->SetValueAsInt("NextPatrolIdx", --NextPatrolIdx);
+// 
+// 		OnMovementAbort.Broadcast();
+// 	}
+// }
+// 
+// void AMixAIBatmanController::OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result)
+// {
+// 	Super::OnMoveCompleted(RequestID, Result);
+// 
+// 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("AIMoveResult: %d"), Result.Code));
+// }
+
 void AMixAIBatmanController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("bSensed: %d Actor:%s"), Stimulus.WasSuccessfullySensed(), *Actor->GetName()));
-
 	AMixHost* Host = Cast<AMixHost>(Actor);
 	if (Host)
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("bSensed: %d Actor:%s"), Stimulus.WasSuccessfullySensed(), *Actor->GetName()));
+
 		bIsDetectHost = Stimulus.WasSuccessfullySensed();
 		BatmanBlackboard->SetValueAsBool("IsDetectHost", bIsDetectHost);
 	}

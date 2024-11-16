@@ -12,7 +12,7 @@
 //////////////////////////////////////////////////////////////////////////
 // AMixHost
 
-AMixHost::AMixHost()
+AMixHost::AMixHost() : Super()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
@@ -50,7 +50,8 @@ AMixHost::AMixHost()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 
-	HostAttackComponent = CreateDefaultSubobject<UMixHostAttackComponent>(TEXT("HostAttackComponent"));
+ 	CharacterAttackComponent2 = CreateDefaultSubobject<UMixHostAttackComponent>(TEXT("HostAttackComponent2"));
+// 	TestMesh3 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HostTest"));
 }
 
 void AMixHost::BeginPlay()

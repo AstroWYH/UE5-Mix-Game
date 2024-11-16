@@ -19,8 +19,19 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AMixAmmo", meta = (AllowPrivateAccess = "true"))
+    TObjectPtr<class UFloatingPawnMovement> FloatingPawnMovement;
+
+public:
+	TWeakObjectPtr<AActor> Target;
+
+	TWeakObjectPtr<AActor> Shooter;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMixAmmo", meta = (AllowPrivateAccess = "true"))
+	float AmmoOffset = 0.0f;
 
 };

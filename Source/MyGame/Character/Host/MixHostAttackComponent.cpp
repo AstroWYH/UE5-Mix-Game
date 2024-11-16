@@ -63,7 +63,7 @@ void UMixHostAttackComponent::SelectTarget()
 		BatmanInRange.Add(Batman);
 	}
 
-	// 范围内没有敌方单位，拒绝攻击
+	// 范围内没有敌方单位，禁止攻击
 	if (BatmanInRange.IsEmpty()) return;
 
 	// 筛选范围内最近敌方单位，准备攻击

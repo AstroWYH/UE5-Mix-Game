@@ -4,11 +4,28 @@
 #include "Ammo/Batman/MixBatmanAmmo.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Character\Host\MixHost.h"
+#include "Ammo\MixAIAmmoController.h"
 
 void AMixBatmanAmmo::BeginPlay()
 {
 	Super::BeginPlay();
 
-// 	AMixHost* Host = Cast<AMixHost>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-//  	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, Host->GetActorLocation());
+	UStaticMeshComponent* Sphere = FindComponentByClass<UStaticMeshComponent>();
+	if (!ensure(Sphere)) return;
+
+	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AMixBatmanAmmo::HitTarget);
+}
+
+void AMixBatmanAmmo::HitTarget(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("OtherActor: %s"), *OtherActor->GetName()));
+
+	AMixHost* Host = Cast<AMixHost>(OtherActor);
+	if (!ensure(Host)) return;
+
+	AMixAIAmmoController* AmmoController = Cast<AMixAIAmmoController>(GetController());
+	AmmoController->bCanLaunch = false;
+
+	Destroy();
+
 }

@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Ammo/MixAmmo.h"
+#include "TimerManager.h"
 
 // Sets default values
 AMixAmmo::AMixAmmo()
@@ -22,6 +22,11 @@ void AMixAmmo::BeginPlay()
 void AMixAmmo::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+}
+
+void AMixAmmo::HitTarget(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
 
 }
 

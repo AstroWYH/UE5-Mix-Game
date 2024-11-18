@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Character\MixCharacterAttackComponent.h"
+#include "Character/Component/MixCharacterAttackComponent.h"
 
 #include "MixHostAttackComponent.generated.h"
 

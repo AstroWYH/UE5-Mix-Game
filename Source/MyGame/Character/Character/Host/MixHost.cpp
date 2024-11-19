@@ -7,7 +7,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Character/Component/Host/MixHostAttackComponent.h"
+#include "Character/Component/Attack/Host/MixHostAttackComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMixHost

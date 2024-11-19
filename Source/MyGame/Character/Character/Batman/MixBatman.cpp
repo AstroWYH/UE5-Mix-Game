@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "MixBatman.h"
-#include "Character/Component/Batman/MixBatmanAttackComponent.h"
+#include "Character/Component/Attack/Batman/MixBatmanAttackComponent.h"
 
 AMixBatman::AMixBatman() : Super()
 {

@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
-#include "Character/Component/MixCharacterAttackComponent.h"
+#include "Character/Component/Attack/MixCharacterAttackComponent.h"
 #include "UObject\UObjectGlobals.h"
 
 #include "MixCharacter.generated.h"

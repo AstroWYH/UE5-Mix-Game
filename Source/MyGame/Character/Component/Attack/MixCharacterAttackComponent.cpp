@@ -19,7 +19,6 @@ void UMixCharacterAttackComponent::PreAttack()
 
 void UMixCharacterAttackComponent::StopMovement()
 {
-
 }
 
 bool UMixCharacterAttackComponent::SelectTarget()
@@ -43,7 +42,8 @@ void UMixCharacterAttackComponent::TurnToTarget()
 	bIsRotating = true;
 }
 
-void UMixCharacterAttackComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UMixCharacterAttackComponent::TickComponent(float DeltaTime, enum ELevelTick TickType,
+                                                 FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
@@ -57,11 +57,14 @@ void UMixCharacterAttackComponent::TickRotateToTarget()
 		FRotator SelfNewRotation = FRotator(0.0f, MixCharacter->GetActorRotation().Yaw + YawPerFrame, 0.0f);
 		MixCharacter->SetActorRotation(SelfNewRotation);
 
-		float RotationDiff = FMath::Abs(FMath::Fmod(SelfLookAtRotation.Yaw - SelfNewRotation.Yaw + 180.0f, 360.0f) - 180.0f);
+		float RotationDiff = FMath::Abs(
+			FMath::Fmod(SelfLookAtRotation.Yaw - SelfNewRotation.Yaw + 180.0f, 360.0f) - 180.0f);
 		if (RotationDiff <= 6.0f)
 		{
 			// 最后获取Host最新应该的朝向，用于矫正
-			FRotator FinalFixRotation = FRotator(0.0f, (SelectCharacterTarget->GetActorLocation() - MixCharacter->GetActorLocation()).Rotation().Yaw, 0.0f);
+			FRotator FinalFixRotation = FRotator(
+				0.0f, (SelectCharacterTarget->GetActorLocation() - MixCharacter->GetActorLocation()).Rotation().Yaw,
+				0.0f);
 			MixCharacter->SetActorRotation(FinalFixRotation);
 			bIsRotating = false;
 
@@ -75,16 +78,15 @@ void UMixCharacterAttackComponent::PlayAttackMontage()
 {
 	FStreamableManager& StreamableManager = UAssetManager::GetStreamableManager();
 	StreamableManager.RequestAsyncLoad(AttackMontagePath, FStreamableDelegate::CreateLambda([this]()
-		{
-			UAnimMontage* AttackAnimMontage = Cast<UAnimMontage>(AttackMontagePath.TryLoad());
-			if (!ensure(AttackAnimMontage)) return;
+	{
+		UAnimMontage* AttackAnimMontage = Cast<UAnimMontage>(AttackMontagePath.TryLoad());
+		if (!ensure(AttackAnimMontage)) return;
 
-			MixCharacter->PlayAnimMontage(AttackAnimMontage);
-			// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("play attack montage")));
-		}));
+		MixCharacter->PlayAnimMontage(AttackAnimMontage);
+		// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("play attack montage")));
+	}));
 }
 
 void UMixCharacterAttackComponent::AttackSpawn()
 {
-
 }

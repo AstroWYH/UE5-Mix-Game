@@ -1,11 +1,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Component/MixCharacterComponent.h"
 #include "Components/ActorComponent.h"
 #include "MixCharacterAttackComponent.generated.h"
 
 UCLASS()
-class MYGAME_API UMixCharacterAttackComponent : public UActorComponent
+class MYGAME_API UMixCharacterAttackComponent : public UMixCharacterComponent
 {
 	GENERATED_BODY()
 
@@ -33,8 +34,6 @@ public:
 	virtual void AttackSpawn();
 
 public:
-	TWeakObjectPtr<class AMixCharacter> MixCharacter;
-
 	TWeakObjectPtr<class AMixCharacter> SelectCharacterTarget;
 
 public:

@@ -16,9 +16,12 @@ void AMixBatmanAmmo::BeginPlay()
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AMixBatmanAmmo::HitTarget);
 }
 
-void AMixBatmanAmmo::HitTarget(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AMixBatmanAmmo::HitTarget(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+                               UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+                               const FHitResult& SweepResult)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("OtherActor: %s"), *OtherActor->GetName()));
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,
+	                                 FString::Printf(TEXT("OtherActor: %s"), *OtherActor->GetName()));
 
 	AMixHost* Host = Cast<AMixHost>(OtherActor);
 	if (!ensure(Host)) return;
@@ -26,6 +29,7 @@ void AMixBatmanAmmo::HitTarget(UPrimitiveComponent* OverlappedComponent, AActor*
 	AMixAIAmmoController* AmmoController = Cast<AMixAIAmmoController>(GetController());
 	AmmoController->bCanLaunch = false;
 
-	Destroy();
+	MakeDamage(AttackVal);
 
+	Destroy();
 }

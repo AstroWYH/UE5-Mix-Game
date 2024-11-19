@@ -2,15 +2,12 @@
 
 #include "MixBatman.h"
 #include "Character/Component/Attack/Batman/MixBatmanAttackComponent.h"
+#include "Component/Health/Batman/MixBatmanHealthComponent.h"
 
 AMixBatman::AMixBatman() : Super()
 {
-// 	TestMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
-// 	TestMesh2 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent2"));
-// 	TestMesh3 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent3"));
-// 	BatmanAttackComponent = CreateDefaultSubobject<UMixBatmanAttackComponent>(TEXT("BatmanAttackComponent1"));
 	CharacterAttackComponent2 = CreateDefaultSubobject<UMixBatmanAttackComponent>(TEXT("BatmanAttackComponent2"));
-//  CharacterAttackComponent = CreateDefaultSubobject<UMixBatmanAttackComponent>(TEXT("BatmanAttackComponent"));
+	CharacterHeathComponent =  CreateDefaultSubobject<UMixBatmanHealthComponent>(TEXT("BatmanHealthComponent"));
 }
 
 void AMixBatman::BeginPlay()

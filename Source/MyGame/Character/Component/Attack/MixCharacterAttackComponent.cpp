@@ -6,8 +6,6 @@ void UMixCharacterAttackComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	MixCharacter = Cast<AMixCharacter>(GetOwner());
-	if (!ensure(MixCharacter.IsValid())) return;
 }
 
 void UMixCharacterAttackComponent::PreAttack()

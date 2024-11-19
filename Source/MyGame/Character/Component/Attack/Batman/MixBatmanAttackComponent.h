@@ -9,7 +9,7 @@
 UCLASS()
 class MYGAME_API UMixBatmanAttackComponent : public UMixCharacterAttackComponent
 {
-    GENERATED_BODY()
+	GENERATED_BODY()
 
 public:
 	UMixBatmanAttackComponent();
@@ -25,6 +25,5 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixHostAttackComponent")
-    TWeakObjectPtr<class AMixBatman> Batman;
-
+	TWeakObjectPtr<class AMixBatman> Batman;
 };

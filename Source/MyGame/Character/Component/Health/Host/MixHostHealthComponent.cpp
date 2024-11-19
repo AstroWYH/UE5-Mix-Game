@@ -11,7 +11,9 @@ UMixHostHealthComponent::UMixHostHealthComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
+	// TODO: 后续改为配表
+	CurrentHealth = 800;
+	MaxHealth = 800;
 }
 
 

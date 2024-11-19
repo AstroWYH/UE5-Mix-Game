@@ -15,4 +15,20 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
 	float CurrentHealth;
+
+public:
+	virtual void TakeDamage(int32 DamageVal);
+
+	virtual void Death();
+
+public:
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMixOnCharacterDeath);
+
+	UPROPERTY(BlueprintAssignable)
+	FMixOnCharacterDeath OnCharacterDeath;
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMixOnCharacterTakeDamage, int32, DamageVal);
+
+	UPROPERTY(BlueprintAssignable)
+	FMixOnCharacterTakeDamage OnCharacterTakeDamage;
 };

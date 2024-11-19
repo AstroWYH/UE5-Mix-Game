@@ -11,7 +11,8 @@ UMixBatmanAttackComponent::UMixBatmanAttackComponent() : Super()
 
 	AttackRange = 400.0f;
 	KRotationTime = 0.5f;
-	AttackMontagePath = TEXT("/Script/Engine.AnimMontage'/Game/BattleWizardPolyart/Animations/Attack01Anim_Montage.Attack01Anim_Montage'");
+	AttackMontagePath = TEXT(
+		"/Script/Engine.AnimMontage'/Game/BattleWizardPolyart/Animations/Attack01Anim_Montage.Attack01Anim_Montage'");
 	AmmoPath = TEXT("/Script/Engine.Blueprint'/Game/MixGame/Ammo/BatmanAmmo/BatmanAmmo.BatmanAmmo_C'");
 }
 
@@ -42,32 +43,33 @@ void UMixBatmanAttackComponent::AttackSpawn()
 {
 	FStreamableManager& StreamableManager = UAssetManager::GetStreamableManager();
 	StreamableManager.RequestAsyncLoad(AmmoPath, FStreamableDelegate::CreateLambda([this]()
+	{
+		UClass* AmmoClass = Cast<UClass>(AmmoPath.TryLoad());
+		if (!ensure(AmmoClass)) return;
+
+		TArray<UActorComponent*> TaggedComponents = Batman->GetComponentsByTag(
+			UActorComponent::StaticClass(), "LaunchPoint");
+		USceneComponent* LaunchPoint = nullptr;
+		for (UActorComponent* Component : TaggedComponents)
 		{
-			UClass* AmmoClass = Cast<UClass>(AmmoPath.TryLoad());
-			if (!ensure(AmmoClass)) return;
+			if (!ensure(Component)) continue;
+			LaunchPoint = Cast<USceneComponent>(Component);
+			if (!ensure(LaunchPoint)) continue;
+		}
 
-			TArray<UActorComponent*> TaggedComponents = Batman->GetComponentsByTag(UActorComponent::StaticClass(), "LaunchPoint");
-			USceneComponent* LaunchPoint = nullptr;
-			for (UActorComponent* Component : TaggedComponents)
-			{
-				if (!ensure(Component)) continue;
-				LaunchPoint = Cast<USceneComponent>(Component);
-				if (!ensure(LaunchPoint)) continue;
-			}
+		FTransform EmitterTransform = LaunchPoint->GetComponentToWorld();
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Instigator = Batman.Get();
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		SpawnParams.CustomPreSpawnInitalization = [this](AActor* SpawnedActor)
+		{
+			AMixBatmanAmmo* BatmanAmmo = Cast<AMixBatmanAmmo>(SpawnedActor);
+			if (!ensure(BatmanAmmo)) return;
 
-			FTransform EmitterTransform = LaunchPoint->GetComponentToWorld();
-			FActorSpawnParameters SpawnParams;
-			SpawnParams.Instigator = Batman.Get();
-			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-			SpawnParams.CustomPreSpawnInitalization = [this](AActor* SpawnedActor)
-				{
-					AMixBatmanAmmo* HostAmmo = Cast<AMixBatmanAmmo>(SpawnedActor);
-					if (!ensure(HostAmmo)) return;
-
-					HostAmmo->Target = SelectCharacterTarget;
-					HostAmmo->Shooter = Batman;
-				};
-			AMixBatmanAmmo* SpawnedActor = GetWorld()->SpawnActor<AMixBatmanAmmo>(AmmoClass, EmitterTransform, SpawnParams);
-		}));
+			BatmanAmmo->Target = SelectCharacterTarget;
+			BatmanAmmo->Shooter = Batman;
+			BatmanAmmo->AttackVal = AttackVal;
+		};
+		AMixBatmanAmmo* SpawnedActor = GetWorld()->SpawnActor<AMixBatmanAmmo>(AmmoClass, EmitterTransform, SpawnParams);
+	}));
 }
-

@@ -23,11 +23,11 @@ class MYGAME_API AMixHost : public AMixCharacter
 
 public:
 	AMixHost();
-	
+
 protected:
 	// APawn interface
 	// virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	
+
 	virtual void BeginPlay();
 
 public:
@@ -36,4 +36,3 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 };
-

@@ -1,38 +1,36 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MixBatmanHealthComponent.h"
+#include "MixCharacterComponent.h"
+#include "Character/MixCharacter.h"
 
 
 // Sets default values for this component's properties
-UMixBatmanHealthComponent::UMixBatmanHealthComponent()
+UMixCharacterComponent::UMixCharacterComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// TODO: 后续改为配表
-	CurrentHealth = 300;
-	MaxHealth = 300;
+	// ...
 }
 
 
 // Called when the game starts
-void UMixBatmanHealthComponent::BeginPlay()
+void UMixCharacterComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+	MixCharacter = Cast<AMixCharacter>(GetOwner());
+	if (!ensure(MixCharacter.IsValid())) return;
 }
 
 
 // Called every frame
-void UMixBatmanHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType,
-                                              FActorComponentTickFunction* ThisTickFunction)
+void UMixCharacterComponent::TickComponent(float DeltaTime, ELevelTick TickType,
+                                           FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
 }
-

@@ -6,6 +6,8 @@
 #include "Character/Character/Batman/MixBatman.h"
 #include "Components\BoxComponent.h"
 #include "Ammo\MixAIAmmoController.h"
+#include "Character/Character/MixCharacter.h"
+#include "Component/Health/MixCharacterHealthComponent.h"
 
 // Sets default values
 AMixHostAmmo::AMixHostAmmo()
@@ -43,12 +45,14 @@ void AMixHostAmmo::HitTarget(UPrimitiveComponent* OverlappedComponent, AActor* O
                              UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
                              const FHitResult& SweepResult)
 {
-	// 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("OtherActor: %s"), *OtherActor->GetName()));
+	// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("OtherActor: %s"), *OtherActor->GetName()));
 
-	AMixBatman* Batman = Cast<AMixBatman>(OtherActor);
-	if (!ensure(Batman)) return;
+	AMixCharacter* TargetCharacter = Cast<AMixCharacter>(OtherActor);
+	if (!ensure(TargetCharacter)) return;
 
-	AttachToComponent(Batman->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "ArrowHit");
+	AttachToComponent(TargetCharacter->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "ArrowHit");
 	AMixAIAmmoController* AmmoController = Cast<AMixAIAmmoController>(GetController());
 	AmmoController->bCanLaunch = false;
+
+	MakeDamage(AttackVal);
 }

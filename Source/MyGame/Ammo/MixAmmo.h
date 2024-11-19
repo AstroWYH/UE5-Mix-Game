@@ -10,8 +10,8 @@ UCLASS()
 class MYGAME_API AMixAmmo : public APawn
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AMixAmmo();
 
@@ -24,20 +24,24 @@ protected:
 
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AMixAmmo", meta = (AllowPrivateAccess = "true"))
-    TObjectPtr<class UFloatingPawnMovement> FloatingPawnMovement;
+	TObjectPtr<class UFloatingPawnMovement> FloatingPawnMovement;
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "AMixAmmo")
-	virtual void HitTarget(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	virtual void HitTarget(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	                       int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	virtual void MakeDamage(int32 DamageVal);
 
 public:
 	TWeakObjectPtr<AActor> Target;
 
 	TWeakObjectPtr<AActor> Shooter;
 
+	int32 AttackVal = 0;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMixAmmo", meta = (AllowPrivateAccess = "true"))
 	float AmmoOffset = 0.0f;
 
 	struct FTimerHandle DestroyTimerHandle;
-
 };

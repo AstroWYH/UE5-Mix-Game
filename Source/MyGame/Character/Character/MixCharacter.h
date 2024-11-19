@@ -19,11 +19,10 @@ public:
 	AMixCharacter();
 
 public:
-// 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AMixCharacter, meta = (AllowPrivateAccess = "true"))
-// 	TObjectPtr<class UMixCharacterAttackComponent> CharacterAttackComponent;
+	// UEÔ¶¹Åbug£¬ÖØÃüÃûCharacterAttackComponentÎªCharacterAttackComponent2
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AMixCharacter, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UMixCharacterAttackComponent> CharacterAttackComponent2;
-// 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AMixCharacter, meta = (AllowPrivateAccess = "true"))
-// 	TObjectPtr<UStaticMeshComponent> TestMesh3;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AMixCharacter, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UMixCharacterHealthComponent> CharacterHeathComponent;
 };

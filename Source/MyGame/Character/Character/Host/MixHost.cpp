@@ -8,6 +8,7 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Character/Component/Attack/Host/MixHostAttackComponent.h"
+#include "Component/Health/Host/MixHostHealthComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMixHost
@@ -16,7 +17,7 @@ AMixHost::AMixHost() : Super()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
-		
+
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -44,14 +45,15 @@ AMixHost::AMixHost() : Super()
 
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
+	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+	// Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 
- 	CharacterAttackComponent2 = CreateDefaultSubobject<UMixHostAttackComponent>(TEXT("HostAttackComponent2"));
-// 	TestMesh3 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HostTest"));
+	CharacterAttackComponent2 = CreateDefaultSubobject<UMixHostAttackComponent>(TEXT("HostAttackComponent2"));
+	CharacterHeathComponent = CreateDefaultSubobject<UMixHostHealthComponent>(TEXT("HostHealthComponent"));
 }
 
 void AMixHost::BeginPlay()
@@ -59,25 +61,3 @@ void AMixHost::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 }
-
-/*
-void AMixHost::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
-{
-	// Set up action bindings
-	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent)) {
-		
-		//Jumping
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
-
-		//Moving
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMixHost::Move);
-
-		//Looking
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMixHost::Look);
-	}
-}*/
-
-
-
-

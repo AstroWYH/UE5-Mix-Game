@@ -47,7 +47,7 @@ public:
 	void Deinitialize() override;
 
 public:
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMixOnInventoryUpdated, bool, bAdd);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMixOnInventoryUpdated);
 	UPROPERTY(BlueprintAssignable)
     FMixOnInventoryUpdated OnInventoryUpdated;
 

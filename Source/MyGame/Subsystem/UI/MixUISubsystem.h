@@ -9,25 +9,39 @@
 /**
  * 该类暂时不起作用
  */
-UCLASS(Blueprintable, BlueprintType)
+UCLASS()
 class MYGAME_API UMixUISubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 
 public:
-    void Initialize(FSubsystemCollectionBase& Collection) override;
+	void Initialize(FSubsystemCollectionBase& Collection) override;
 
-    void Deinitialize() override;
-
-    UFUNCTION(BlueprintImplementableEvent, Category = "UI")
-    void BpInitialize();
-
-	UFUNCTION(BlueprintImplementableEvent, Category = "UI")
-    void BpDeInitialize();
+	void Deinitialize() override;
 
 public:
-/*
-	UFUNCTION(BlueprintImplementableEvent, Category = "UI")
-    void UpdateInventory();*/
+	void CreateInventoryUI();
 
+	void CreateTestBtnUI();
+
+	UFUNCTION()
+	void UpdateInventory();
+
+private:
+	const TCHAR* BpInventoryClassPath = TEXT(
+		"/Script/UMGEditor.WidgetBlueprint'/Game/MixGame/UI/Inventory/WB_Inventory.WB_Inventory_C'");
+
+	const TCHAR* BpItemClassPath = TEXT(
+		"/Script/UMGEditor.WidgetBlueprint'/Game/MixGame/UI/Inventory/WB_InventoryItem.WB_InventoryItem_C'");
+
+	UClass* BpInventoryClass = nullptr;
+
+	UClass* BpItemClass = nullptr;
+
+public:
+	UPROPERTY()
+	TObjectPtr<class UMixInventoryWidget> InventoryUI;
+
+	UPROPERTY()
+	TArray<TObjectPtr<class UMixItemWidget>> ItemUIPool;
 };

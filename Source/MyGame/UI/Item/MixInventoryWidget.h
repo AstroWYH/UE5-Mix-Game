@@ -15,7 +15,14 @@ class MYGAME_API UMixInventoryWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	virtual void NativeConstruct() override;
+	
+public:
 	void DragToOtherEmptySlot(int32 TID, int32 OldPosIdx, int32 NewPosIdx);
 
 	void DragToExchange(int32 OldPosIdx, int32 NewPosIdx);
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(BindWidget))
+	TObjectPtr<class UUniformGridPanel> Grid;
 };

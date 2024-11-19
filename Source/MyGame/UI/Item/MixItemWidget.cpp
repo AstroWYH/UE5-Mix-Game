@@ -13,35 +13,38 @@
 void UMixItemWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	if (!ensure(Img)) return;
 }
 
 void UMixItemWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
-/*
-	FVector2D MousePosition = FSlateApplication::Get().GetCursorPos();
-	FVector2D GridMousePosition = OwnerGrid->GetCachedGeometry().AbsoluteToLocal(MousePosition);
-	FVector2D GirdSize = OwnerGrid->GetCachedGeometry().GetLocalSize();
-
-	float CellWidth = GirdSize.X / KNumColumns;
-	float CellHeight = GirdSize.Y / KNumRows;
-
-	int32 Row = FMath::FloorToInt(GridMousePosition.Y / CellHeight);
-	int32 Col = FMath::FloorToInt(GridMousePosition.X / CellWidth);
-	int32 MousePosIdx = Row * KNumColumns + Col;
-
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,
-			FString::Printf(TEXT("MousePosition: (X=%.2f, Y=%.2f), GridMousePosition: (X=%.2f, Y=%.2f), GridSize: (X=%.2f, Y=%.2f), CellWidth: %.2f, CellHeight: %.2f, Row: %d, Col: %d, MousePosIdx: %d"),
-				MousePosition.X, MousePosition.Y,
-				GridMousePosition.X, GridMousePosition.Y,
-				GirdSize.X, GirdSize.Y,
-				CellWidth, CellHeight,
-				Row, Col, MousePosIdx));
-	}*/
+	/*
+		FVector2D MousePosition = FSlateApplication::Get().GetCursorPos();
+		FVector2D GridMousePosition = OwnerGrid->GetCachedGeometry().AbsoluteToLocal(MousePosition);
+		FVector2D GirdSize = OwnerGrid->GetCachedGeometry().GetLocalSize();
+	
+		float CellWidth = GirdSize.X / KNumColumns;
+		float CellHeight = GirdSize.Y / KNumRows;
+	
+		int32 Row = FMath::FloorToInt(GridMousePosition.Y / CellHeight);
+		int32 Col = FMath::FloorToInt(GridMousePosition.X / CellWidth);
+		int32 MousePosIdx = Row * KNumColumns + Col;
+	
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,
+				FString::Printf(TEXT("MousePosition: (X=%.2f, Y=%.2f), GridMousePosition: (X=%.2f, Y=%.2f), GridSize: (X=%.2f, Y=%.2f), CellWidth: %.2f, CellHeight: %.2f, Row: %d, Col: %d, MousePosIdx: %d"),
+					MousePosition.X, MousePosition.Y,
+					GridMousePosition.X, GridMousePosition.Y,
+					GirdSize.X, GirdSize.Y,
+					CellWidth, CellHeight,
+					Row, Col, MousePosIdx));
+		}*/
 }
 
-void UMixItemWidget::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation)
+void UMixItemWidget::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent,
+                                          UDragDropOperation*& OutOperation)
 {
 	Super::NativeOnDragDetected(InGeometry, InMouseEvent, OutOperation);
 
@@ -62,12 +65,14 @@ void UMixItemWidget::NativeOnDragDetected(const FGeometry& InGeometry, const FPo
 	SetVisibility(ESlateVisibility::Hidden);
 }
 
-void UMixItemWidget::NativeOnDragEnter(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
+void UMixItemWidget::NativeOnDragEnter(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent,
+                                       UDragDropOperation* InOperation)
 {
 	Super::NativeOnDragEnter(InGeometry, InDragDropEvent, InOperation);
 }
 
-bool UMixItemWidget::NativeOnDragOver(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
+bool UMixItemWidget::NativeOnDragOver(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent,
+                                      UDragDropOperation* InOperation)
 {
 	return Super::NativeOnDragOver(InGeometry, InDragDropEvent, InOperation);
 }
@@ -77,7 +82,8 @@ void UMixItemWidget::NativeOnDragLeave(const FDragDropEvent& InDragDropEvent, UD
 	Super::NativeOnDragLeave(InDragDropEvent, InOperation);
 }
 
-bool UMixItemWidget::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
+bool UMixItemWidget::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent,
+                                  UDragDropOperation* InOperation)
 {
 	return Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
 }
@@ -105,7 +111,7 @@ void UMixItemWidget::NativeOnDragCancelled(const FDragDropEvent& InDragDropEvent
 	}
 
 	UMixInventorySubsystem* InventorySys = GetGameInstance()->GetSubsystem<UMixInventorySubsystem>();
-	TSet<int32> AllPosIdx{ 0,1,2,3,4,5 };
+	TSet<int32> AllPosIdx{0, 1, 2, 3, 4, 5};
 	if (!ensure(OwnerWidget.IsValid())) return;
 
 	// 拖到原格子松手 || 拖到外部空间松手 

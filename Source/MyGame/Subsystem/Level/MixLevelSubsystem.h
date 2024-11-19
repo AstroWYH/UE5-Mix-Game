@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class MYGAME_API UMixLevelSubsystem : public UGameInstanceSubsystem
+class MYGAME_API UMixLevelSubsystem : public UWorldSubsystem
 {
 	GENERATED_BODY()
 
@@ -21,5 +21,5 @@ public:
 	// TSubclassOf<class AMixBatman> BpBatmanClass;
 
 private:
-	const TCHAR* BpBatmanClassPath = TEXT("/Script/Engine.Blueprint'/Game/MixGame/Character/EnemyBatman/BatmanBp.BatmanBp_C'");
+	const TCHAR* BpBatmanClassPath = TEXT("/Script/Engine.Blueprint'/Game/MixGame/Character/EnemyBatman/Point/EnemySpawnPoint.EnemySpawnPoint_C'");
 };

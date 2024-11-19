@@ -33,5 +33,5 @@ public:
 	static TSet<IMixUIPersistantInterface*>& GetUIPersistantList() { return UIPersistantList; }
 
 private:
-	inline static TSet<IMixUIPersistantInterface*> UIPersistantList;
+	static TSet<IMixUIPersistantInterface*> UIPersistantList;
 };

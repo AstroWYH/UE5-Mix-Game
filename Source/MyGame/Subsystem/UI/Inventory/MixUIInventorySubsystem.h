@@ -18,10 +18,13 @@ class MYGAME_API UMixUIInventorySubsystem : public UGameInstanceSubsystem, publi
 public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 
+	virtual void Deinitialize() override;
+
 public:
 	virtual void CreateUI() override;
 
 public:
+	UFUNCTION()
 	void UpdateInventory();
 
 private:

@@ -17,6 +17,8 @@ class MYGAME_API AMixAIBatmanController : public AAIController
 public:
 	void BeginPlay() override;
 
+	virtual void BeginDestroy() override;
+
 	void Tick(float DeltaTime) override;
 
 	void OnPossess(APawn* InPawn) override;

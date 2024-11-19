@@ -28,4 +28,6 @@ void UMixUISubsystem::CreatePersistantUI()
 void UMixUISubsystem::Deinitialize()
 {
 	Super::Deinitialize();
+
+	IMixUIPersistantInterface::GetUIPersistantList().Empty();
 }

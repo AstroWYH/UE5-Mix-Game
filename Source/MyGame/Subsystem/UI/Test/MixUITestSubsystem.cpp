@@ -18,6 +18,18 @@ void UMixUITestSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	RegisterSelf();
 }
 
+void UMixUITestSubsystem::Deinitialize()
+{
+	Super::Deinitialize();
+
+	if (!ensure(TestBtnUI)) return;
+	if (!ensure(TestBtnUI->BtnAdd)) return;
+	if (!ensure(TestBtnUI->BtnRemove)) return;
+	
+	TestBtnUI->BtnAdd->OnClicked.RemoveAll(this);
+	TestBtnUI->BtnRemove->OnClicked.RemoveAll(this);
+}
+
 void UMixUITestSubsystem::CreateUI()
 {
 	TestBtnUI = Cast<UMixTestBtnWidget>(

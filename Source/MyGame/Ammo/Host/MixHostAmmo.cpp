@@ -35,6 +35,16 @@ void AMixHostAmmo::BeginPlay()
 	}, 2.0f, false);
 }
 
+void AMixHostAmmo::BeginDestroy()
+{
+	Super::BeginDestroy();
+
+	UBoxComponent* ArrowBox = FindComponentByClass<UBoxComponent>();
+	if (!ensure(ArrowBox)) return;
+
+	ArrowBox->OnComponentBeginOverlap.RemoveAll(this);
+}
+
 // Called every frame
 void AMixHostAmmo::Tick(float DeltaTime)
 {

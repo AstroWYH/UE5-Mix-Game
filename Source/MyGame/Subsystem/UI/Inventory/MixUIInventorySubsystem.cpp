@@ -73,3 +73,11 @@ void UMixUIInventorySubsystem::UpdateInventory()
 		InventoryUI->Grid->AddChildToUniformGrid(ItemWidget, Row, Col);
 	}
 }
+
+void UMixUIInventorySubsystem::Deinitialize()
+{
+	Super::Deinitialize();
+
+	UMixInventorySubsystem* InventorySubsystem = GetGameInstance()->GetSubsystem<UMixInventorySubsystem>();
+	InventorySubsystem->OnInventoryUpdated.RemoveDynamic(this, &ThisClass::UpdateInventory);
+}

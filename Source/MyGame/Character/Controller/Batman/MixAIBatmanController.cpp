@@ -24,6 +24,14 @@ void AMixAIBatmanController::BeginPlay()
 // 	RunBehaviorTree(BehaviorTree);
 }
 
+void AMixAIBatmanController::BeginDestroy()
+{
+	Super::BeginDestroy();
+
+	if (!ensure(BatmanAIPerceptionComponent)) return;
+	BatmanAIPerceptionComponent->OnTargetPerceptionUpdated.RemoveAll(this);
+}
+
 void AMixAIBatmanController::PostBpBeginPlay()
 {
 	// 存Batman路径点

@@ -17,6 +17,8 @@ class MYGAME_API UMixUITestSubsystem : public UGameInstanceSubsystem, public IMi
 
 public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+
+	virtual void Deinitialize() override;
 	
 public:
 	virtual void CreateUI() override;

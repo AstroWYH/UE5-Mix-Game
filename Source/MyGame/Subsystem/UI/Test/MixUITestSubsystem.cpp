@@ -12,7 +12,7 @@ void UMixUITestSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	Super::Initialize(Collection);
 
 	UMixUISubsystem* UISubsystem = GetGameInstance()->GetSubsystem<UMixUISubsystem>();
-	UISubsystem->RegisterUIPathAssets(
+	BpTestUIClass = UISubsystem->LoadUIResource(
 		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/MixGame/UI/TestBtn/TestBtn.TestBtn_C'"));
 
 	RegisterSelf();
@@ -40,4 +40,3 @@ void UMixUITestSubsystem::TestRemove()
 	UMixInventorySubsystem* InventorySubsystem = GetGameInstance()->GetSubsystem<UMixInventorySubsystem>();
 	InventorySubsystem->InventoryTestRemoveBtn();
 }
-

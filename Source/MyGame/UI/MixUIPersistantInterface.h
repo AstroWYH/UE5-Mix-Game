@@ -9,12 +9,12 @@ public:
 };
 
 UINTERFACE(Blueprintable)
-class LYRAGAME_API UMixUIPersistantInterface : public UInterface
+class MYGAME_API UMixUIPersistantInterface : public UInterface
 {
 	GENERATED_BODY()
 };
 
-class LYRAGAME_API IMixUIPersistantInterface : public IInterface
+class MYGAME_API IMixUIPersistantInterface : public IInterface
 {
 	GENERATED_BODY()
 
@@ -30,8 +30,8 @@ public:
 	virtual void CreateUI() = 0;
 
 public:
-	static TSet<TWeakObjectPtr<IMixUIPersistantInterface>>& GetUIPersistantList() { return UIPersistantList; }
+	static TSet<IMixUIPersistantInterface*>& GetUIPersistantList() { return UIPersistantList; }
 
 private:
-	static TSet<TWeakObjectPtr<IMixUIPersistantInterface>> UIPersistantList;
+	inline static TSet<IMixUIPersistantInterface*> UIPersistantList;
 };

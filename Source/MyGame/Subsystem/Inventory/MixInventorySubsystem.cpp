@@ -113,7 +113,7 @@ void UMixInventorySubsystem::AddItem(TObjectPtr<UMixItem> Item, int32 PosIdx)
         PosToTIDMap.Add(SavePosIdx, TID);
     }
 
-    OnInventoryUpdated.Broadcast(true);
+    OnInventoryUpdated.Broadcast();
 }
 
 void UMixInventorySubsystem::RemoveItem(int32 TID)
@@ -124,7 +124,7 @@ void UMixInventorySubsystem::RemoveItem(int32 TID)
     CurPosIdxes.Remove(InventoryItems[TID]->PosIdx);
     PosToTIDMap.Remove(InventoryItems[TID]->PosIdx);
     InventoryItems.Remove(TID);
-    OnInventoryUpdated.Broadcast(false);
+    OnInventoryUpdated.Broadcast();
 }
 
 void UMixInventorySubsystem::ExchangeItem(int32 OldPosIdx, int32 NewPosIdx)
@@ -148,7 +148,7 @@ void UMixInventorySubsystem::ExchangeItem(int32 OldPosIdx, int32 NewPosIdx)
     PosToTIDMap[OldPosIdx] = NewTID;
     PosToTIDMap[NewPosIdx] = OldTID;
 
-    OnInventoryUpdated.Broadcast(false);
+    OnInventoryUpdated.Broadcast();
 }
 
 void UMixInventorySubsystem::Deinitialize()

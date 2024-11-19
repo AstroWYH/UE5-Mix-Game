@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "MixCharacter.h"
+#include "Character/Character/MixCharacter.h"
 
 #include "MixBatman.generated.h"
 

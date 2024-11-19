@@ -3,7 +3,7 @@
 
 #include "MixHostAmmo.h"
 #include "GameFramework\FloatingPawnMovement.h"
-#include "Character\Batman\MixBatman.h"
+#include "Character/Character/Batman/MixBatman.h"
 #include "Components\BoxComponent.h"
 #include "Ammo\MixAIAmmoController.h"
 

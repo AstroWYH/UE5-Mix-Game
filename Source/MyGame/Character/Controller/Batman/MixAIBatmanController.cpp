@@ -7,7 +7,7 @@
 #include "BehaviorTree\BlackboardComponent.h"
 #include "Perception\AIPerceptionTypes.h"
 #include "Perception\AIPerceptionComponent.h"
-#include "Character\Host\MixHost.h"
+#include "Character/Character/Host/MixHost.h"
 #include "Kismet\GameplayStatics.h"
 
 // 此时无法获取Pawn

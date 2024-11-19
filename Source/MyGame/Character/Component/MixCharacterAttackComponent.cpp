@@ -1,5 +1,5 @@
 #include "MixCharacterAttackComponent.h"
-#include "Character\MixCharacter.h"
+#include "Character/Character/MixCharacter.h"
 #include "Engine\AssetManager.h"
 
 void UMixCharacterAttackComponent::BeginPlay()

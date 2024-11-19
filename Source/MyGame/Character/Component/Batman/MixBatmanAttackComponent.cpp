@@ -1,6 +1,6 @@
 #include "MixBatmanAttackComponent.h"
-#include "Character\Batman\MixBatman.h"
-#include "Character\Batman\MixAIBatmanController.h"
+#include "Character/Character/Batman/MixBatman.h"
+#include "Character/Controller/Batman/MixAIBatmanController.h"
 #include "Kismet\GameplayStatics.h"
 #include "Engine\AssetManager.h"
 #include "Ammo\Batman\MixBatmanAmmo.h"

@@ -3,7 +3,7 @@
 
 #include "Ammo/Batman/MixBatmanAmmo.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
-#include "Character\Host\MixHost.h"
+#include "Character/Character/Host/MixHost.h"
 #include "Ammo\MixAIAmmoController.h"
 
 void AMixBatmanAmmo::BeginPlay()

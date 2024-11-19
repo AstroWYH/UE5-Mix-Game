@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MixAnim.h"
-#include "MixCharacter.h"
+#include "Character/MixCharacter.h"
 #include "Kismet\KismetMathLibrary.h"
 
 void UMixAnim::NativeInitializeAnimation()

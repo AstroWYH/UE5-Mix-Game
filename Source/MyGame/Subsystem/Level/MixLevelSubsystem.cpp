@@ -12,7 +12,11 @@ void UMixLevelSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	
 	UClass* BpBatmanClass = LoadObject<UClass>(nullptr, BpBatmanClassPath);
 	if (!ensure(BpBatmanClass)) return;
-
+	
+	UObject* MixOutter = GetOuter();
+	UWorld* MixCastWorld = Cast<UWorld>(GetOuter());
+	UWorld* MixWorld = GetWorld();
+	
 	TArray<AActor*> OutActors;
 	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), BpBatmanClass, "SpawnPoint", OutActors);
 	if (!ensure(OutActors.IsValidIndex(0))) return;

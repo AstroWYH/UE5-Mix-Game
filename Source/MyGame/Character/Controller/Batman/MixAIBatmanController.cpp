@@ -15,13 +15,13 @@ void AMixAIBatmanController::BeginPlay()
 {
 	Super::BeginPlay();
 
-// 	// 开启行为树
-// 	BehaviorTree = FindObject<UBehaviorTree>(nullptr, BehaviorTreePath);
-// 	if (!BehaviorTree)
-// 	{
-// 		BehaviorTree = LoadObject<UBehaviorTree>(nullptr, BehaviorTreePath);
-// 	}
-// 	RunBehaviorTree(BehaviorTree);
+	// 	// 开启行为树
+	// 	BehaviorTree = FindObject<UBehaviorTree>(nullptr, BehaviorTreePath);
+	// 	if (!BehaviorTree)
+	// 	{
+	// 		BehaviorTree = LoadObject<UBehaviorTree>(nullptr, BehaviorTreePath);
+	// 	}
+	// 	RunBehaviorTree(BehaviorTree);
 }
 
 void AMixAIBatmanController::BeginDestroy()
@@ -49,14 +49,16 @@ void AMixAIBatmanController::PostBpBeginPlay()
 	BatmanBlackboard->SetValueAsInt("NextPatrolIdx", 0);
 
 	// Find蓝图BatmanAIPerception
-	TArray<UActorComponent*> TaggedComponents = GetComponentsByTag(UActorComponent::StaticClass(), "BatmanAIPerception");
+	TArray<UActorComponent*> TaggedComponents =
+		GetComponentsByTag(UActorComponent::StaticClass(), "BatmanAIPerception");
 	for (UActorComponent* Component : TaggedComponents)
 	{
 		if (!ensure(Component)) continue;
 		BatmanAIPerceptionComponent = Cast<UAIPerceptionComponent>(Component);
 		if (!ensure(BatmanAIPerceptionComponent)) continue;
 
-		BatmanAIPerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &AMixAIBatmanController::OnTargetPerceptionUpdated);
+		BatmanAIPerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(
+			this, &AMixAIBatmanController::OnTargetPerceptionUpdated);
 	}
 }
 
@@ -117,7 +119,10 @@ void AMixAIBatmanController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulu
 	AMixHost* Host = Cast<AMixHost>(Actor);
 	if (Host)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("bSensed: %d Actor:%s"), Stimulus.WasSuccessfullySensed(), *Actor->GetName()));
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,
+		                                 FString::Printf(
+			                                 TEXT("bSensed: %d Actor:%s"), Stimulus.WasSuccessfullySensed(),
+			                                 *Actor->GetName()));
 
 		bIsDetectHost = Stimulus.WasSuccessfullySensed();
 		BatmanBlackboard->SetValueAsBool("IsDetectHost", bIsDetectHost);
@@ -126,12 +131,10 @@ void AMixAIBatmanController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulu
 
 void AMixAIBatmanController::OnPossess(APawn* InPawn)
 {
-    Super::OnPossess(InPawn);
-
+	Super::OnPossess(InPawn);
 }
 
 void AMixAIBatmanController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }

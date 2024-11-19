@@ -14,10 +14,12 @@
 void UMixUIInventorySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	
+
 	UMixUISubsystem* UISubsystem = GetGameInstance()->GetSubsystem<UMixUISubsystem>();
-	BpInventoryClass = UISubsystem->LoadUIResource(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/MixGame/UI/Inventory/WB_Inventory.WB_Inventory_C'"));
-	BpItemClass = UISubsystem->LoadUIResource(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/MixGame/UI/Inventory/WB_InventoryItem.WB_InventoryItem_C'"));
+	BpInventoryClass = UISubsystem->LoadUIResource(
+		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/MixGame/UI/Inventory/WB_Inventory.WB_Inventory_C'"));
+	BpItemClass = UISubsystem->LoadUIResource(
+		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/MixGame/UI/Inventory/WB_InventoryItem.WB_InventoryItem_C'"));
 
 	RegisterSelf();
 }
@@ -77,7 +79,7 @@ void UMixUIInventorySubsystem::UpdateInventory()
 void UMixUIInventorySubsystem::Deinitialize()
 {
 	Super::Deinitialize();
-
+	
 	UMixInventorySubsystem* InventorySubsystem = GetGameInstance()->GetSubsystem<UMixInventorySubsystem>();
 	InventorySubsystem->OnInventoryUpdated.RemoveDynamic(this, &ThisClass::UpdateInventory);
 }

@@ -31,6 +31,10 @@ void AMixHostAmmo::BeginPlay()
 	// 2s后自毁
 	GetWorld()->GetTimerManager().SetTimer(DestroyTimerHandle, [this]()
 	{
+		UBoxComponent* ArrowBox = FindComponentByClass<UBoxComponent>();
+		if (!ensure(ArrowBox)) return;
+		ArrowBox->OnComponentBeginOverlap.RemoveAll(this);
+		
 		Destroy();
 	}, 2.0f, false);
 }
@@ -38,11 +42,6 @@ void AMixHostAmmo::BeginPlay()
 void AMixHostAmmo::BeginDestroy()
 {
 	Super::BeginDestroy();
-
-	UBoxComponent* ArrowBox = FindComponentByClass<UBoxComponent>();
-	if (!ensure(ArrowBox)) return;
-
-	ArrowBox->OnComponentBeginOverlap.RemoveAll(this);
 }
 
 // Called every frame

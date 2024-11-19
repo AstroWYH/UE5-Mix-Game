@@ -21,7 +21,7 @@ void UMixUITestSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 void UMixUITestSubsystem::Deinitialize()
 {
 	Super::Deinitialize();
-
+	
 	if (!ensure(TestBtnUI)) return;
 	if (!ensure(TestBtnUI->BtnAdd)) return;
 	if (!ensure(TestBtnUI->BtnRemove)) return;

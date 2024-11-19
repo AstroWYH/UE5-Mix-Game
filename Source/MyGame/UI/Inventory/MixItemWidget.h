@@ -56,7 +56,6 @@ private:
 	int32 KNumColumns = 3;
 
 public:
-public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(BindWidget))
 	TObjectPtr<class UImage> Img;
 

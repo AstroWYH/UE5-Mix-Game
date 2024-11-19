@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "UI/Item/MixItemWidget.h"
+#include "UI/Inventory/MixItemWidget.h"
 #include "Blueprint/DragDropOperation.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Components/UniformGridPanel.h"

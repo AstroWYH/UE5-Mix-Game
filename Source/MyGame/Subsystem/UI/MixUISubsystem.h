@@ -20,28 +20,8 @@ public:
 	void Deinitialize() override;
 
 public:
-	void CreateInventoryUI();
+	UClass* LoadUIResource(const TCHAR* Path);
 
-	void CreateTestBtnUI();
+	void CreatePersistantUI();
 
-	UFUNCTION()
-	void UpdateInventory();
-
-private:
-	const TCHAR* BpInventoryClassPath = TEXT(
-		"/Script/UMGEditor.WidgetBlueprint'/Game/MixGame/UI/Inventory/WB_Inventory.WB_Inventory_C'");
-
-	const TCHAR* BpItemClassPath = TEXT(
-		"/Script/UMGEditor.WidgetBlueprint'/Game/MixGame/UI/Inventory/WB_InventoryItem.WB_InventoryItem_C'");
-
-	UClass* BpInventoryClass = nullptr;
-
-	UClass* BpItemClass = nullptr;
-
-public:
-	UPROPERTY()
-	TObjectPtr<class UMixInventoryWidget> InventoryUI;
-
-	UPROPERTY()
-	TArray<TObjectPtr<class UMixItemWidget>> ItemUIPool;
 };

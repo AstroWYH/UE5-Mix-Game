@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UI/Item/MixInventoryWidget.h"
+#include "UI/Inventory/MixInventoryWidget.h"
 #include "Inventory/MixInventorySubsystem.h"
 #include "Subsystem/Inventory/MixItem.h"
 

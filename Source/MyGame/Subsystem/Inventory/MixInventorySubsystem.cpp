@@ -88,7 +88,6 @@ void UMixInventorySubsystem::AddItem(TObjectPtr<UMixItem> Item, int32 PosIdx)
         if (PosIdx == -1)
         {
             // 因为Remove位置的不确定性，每次重新计算SavePosIdx的位置
- 
             for (int32 Idx = 0; Idx < KSlotNum; Idx++)
             {
                 if (CurPosIdxes.Contains(Idx))

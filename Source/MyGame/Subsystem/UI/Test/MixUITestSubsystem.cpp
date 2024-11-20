@@ -30,8 +30,8 @@ void UMixUITestSubsystem::CreateUI()
 	TestBtnUI = Cast<UMixTestBtnWidget>(
 		UUserWidget::CreateWidgetInstance(*GetGameInstance(), BpTestUIClass, TEXT("TestBtn")));
 	if (!ensure(TestBtnUI)) return;
+	
 	TestBtnUI->AddToViewport();
-
 	TestBtnUI->BtnAdd->OnClicked.AddDynamic(this, &ThisClass::TestAdd);
 	TestBtnUI->BtnRemove->OnClicked.AddDynamic(this, &ThisClass::TestRemove);
 }

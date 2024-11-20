@@ -59,7 +59,7 @@ void UMixUIInventorySubsystem::UpdateInventory()
 
 		// Éú³ÉItemWidget
 		UMixItemWidget* ItemWidget = Cast<UMixItemWidget>(
-			UUserWidget::CreateWidgetInstance(*GetGameInstance(), BpItemClass, TEXT("Item")));
+			UUserWidget::CreateWidgetInstance(*GetGameInstance(), BpItemClass, FName(*FString::Printf(TEXT("Item_%d"), ItemTID))));
 		if (!ensure(ItemWidget)) continue;
 
 		ItemWidget->OwnerWidget = InventoryUI;

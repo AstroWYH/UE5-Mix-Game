@@ -20,6 +20,7 @@ void UMixInventoryWidget::DragToOtherEmptySlot(int32 TID, int32 OldPosIdx, int32
 	TObjectPtr<UMixItem> Item = NewObject<UMixItem>();
 	Item->TID = TID;
 	if (!ensure(InventorySys->AllItemsCfg.Contains(TID))) return;
+	
 	Item->ItemCfg = InventorySys->AllItemsCfg[TID];
 	InventorySys->AddItem(Item, NewPosIdx);
 }

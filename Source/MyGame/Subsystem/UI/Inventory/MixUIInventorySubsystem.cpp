@@ -38,6 +38,7 @@ void UMixUIInventorySubsystem::CreateUI()
 
 void UMixUIInventorySubsystem::UpdateInventory()
 {
+	if (!ensure(InventoryUI)) return;
 	if (!ensure(InventoryUI->Grid)) return;
 
 	// 清理背包UI网格的ItemWidget

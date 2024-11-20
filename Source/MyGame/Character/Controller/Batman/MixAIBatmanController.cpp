@@ -27,9 +27,6 @@ void AMixAIBatmanController::BeginPlay()
 void AMixAIBatmanController::BeginDestroy()
 {
 	Super::BeginDestroy();
-
-	if (!ensure(BatmanAIPerceptionComponent)) return;
-	BatmanAIPerceptionComponent->OnTargetPerceptionUpdated.RemoveAll(this);
 }
 
 void AMixAIBatmanController::PostBpBeginPlay()

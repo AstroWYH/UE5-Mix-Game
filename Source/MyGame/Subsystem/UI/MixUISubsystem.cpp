@@ -5,7 +5,8 @@ void UMixUISubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 
-	CreatePersistantUI();
+	// TODO: 需要PostInit
+	GetWorld()->GetTimerManager().SetTimerForNextTick(FTimerDelegate::CreateUObject(this, &UMixUISubsystem::CreatePersistantUI));
 }
 
 UClass* UMixUISubsystem::LoadUIResource(const TCHAR* Path)
@@ -29,5 +30,6 @@ void UMixUISubsystem::Deinitialize()
 {
 	Super::Deinitialize();
 
-	IMixUIPersistantInterface::GetUIPersistantList().Empty();
+	// 清理持久UI的List，否则PIE重启游戏error，放到每个UISubsystem去做
+	// IMixUIPersistantInterface::GetUIPersistantList().Empty();
 }

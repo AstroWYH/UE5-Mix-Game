@@ -6,18 +6,15 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "MixUISubsystem.generated.h"
 
-/**
- * 该类暂时不起作用
- */
 UCLASS()
 class MYGAME_API UMixUISubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 
 public:
-	void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 
-	void Deinitialize() override;
+	virtual void Deinitialize() override;
 
 public:
 	UClass* LoadUIResource(const TCHAR* Path);

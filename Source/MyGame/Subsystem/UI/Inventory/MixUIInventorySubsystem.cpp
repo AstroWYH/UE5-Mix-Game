@@ -78,8 +78,12 @@ void UMixUIInventorySubsystem::UpdateInventory()
 
 void UMixUIInventorySubsystem::Deinitialize()
 {
+	UMixInventorySubsystem* InventorySubsystem = GetGameInstance()->GetSubsystem<UMixInventorySubsystem>();
+	InventorySubsystem->OnInventoryUpdated.RemoveAll(this);
+	
+	UnRegisterSelf();
+
 	Super::Deinitialize();
 	
-	UMixInventorySubsystem* InventorySubsystem = GetGameInstance()->GetSubsystem<UMixInventorySubsystem>();
-	InventorySubsystem->OnInventoryUpdated.RemoveDynamic(this, &ThisClass::UpdateInventory);
+
 }

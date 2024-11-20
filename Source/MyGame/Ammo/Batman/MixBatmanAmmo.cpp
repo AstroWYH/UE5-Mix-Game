@@ -35,10 +35,5 @@ void AMixBatmanAmmo::HitTarget(UPrimitiveComponent* OverlappedComponent, AActor*
 	AmmoController->bCanLaunch = false;
 
 	MakeDamage(AttackVal);
-
-	UStaticMeshComponent* Sphere = FindComponentByClass<UStaticMeshComponent>();
-	if (!ensure(Sphere)) return;
-	Sphere->OnComponentBeginOverlap.RemoveAll(this);
-
 	Destroy();
 }

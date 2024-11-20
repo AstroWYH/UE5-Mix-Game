@@ -17,9 +17,12 @@ class MYGAME_API UMixLevelSubsystem : public UWorldSubsystem
 public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 
-public:
-	// TSubclassOf<class AMixBatman> BpBatmanClass;
+	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 
 private:
-	const TCHAR* BpBatmanClassPath = TEXT("/Script/Engine.Blueprint'/Game/MixGame/Character/EnemyBatman/Point/EnemySpawnPoint.EnemySpawnPoint_C'");
+	const TCHAR* BpSpawnPointPath = TEXT(
+		"/Script/Engine.Blueprint'/Game/MixGame/Character/EnemyBatman/Point/EnemySpawnPoint.EnemySpawnPoint_C'");
+
+	const TCHAR* BpBatmanClassPath = TEXT(
+		"/Script/Engine.Blueprint'/Game/MixGame/Character/EnemyBatman/BatmanBp.BatmanBp_C'");
 };

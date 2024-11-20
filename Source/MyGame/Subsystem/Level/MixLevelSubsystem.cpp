@@ -9,18 +9,22 @@
 void UMixLevelSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	
+}
+
+void UMixLevelSubsystem::OnWorldBeginPlay(UWorld& InWorld)
+{
+	Super::OnWorldBeginPlay(InWorld);
+
 	UClass* BpBatmanClass = LoadObject<UClass>(nullptr, BpBatmanClassPath);
 	if (!ensure(BpBatmanClass)) return;
-	
-	UObject* MixOutter = GetOuter();
-	UWorld* MixCastWorld = Cast<UWorld>(GetOuter());
-	UWorld* MixWorld = GetWorld();
-	
+
+	UClass* BpSpawnPointClass = LoadObject<UClass>(nullptr, BpSpawnPointPath);
+	if (!ensure(BpSpawnPointClass)) return;
+
 	TArray<AActor*> OutActors;
-	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), BpBatmanClass, "SpawnPoint", OutActors);
+	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), BpSpawnPointClass, "SpawnPoint", OutActors);
 	if (!ensure(OutActors.IsValidIndex(0))) return;
-	
+
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	FTransform SpawnTransform = OutActors[0]->GetActorTransform();

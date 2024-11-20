@@ -108,7 +108,9 @@ void UMixHostAttackComponent::SetAttackRangeHidden(bool bHidden)
 		if (!ensure(AttackRangeMeshComponent)) continue;
 
 		UE_LOG(LogTemp, Warning, TEXT("Found component with tag %s"), *AttackRangeComponent->GetName());
-		// 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Found component with tag %s"), *AttackRangeComponent->GetName()));
+		// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,
+		//                                  FString::Printf(
+		// 	                                 TEXT("Found component with tag %s"), *AttackRangeComponent->GetName()));
 
 		AttackRangeMeshComponent->SetHiddenInGame(bHidden);
 	}

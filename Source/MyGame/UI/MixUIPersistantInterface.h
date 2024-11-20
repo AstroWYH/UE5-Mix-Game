@@ -27,6 +27,11 @@ public:
 		}
 	}
 
+	void UnRegisterSelf()
+	{
+		UIPersistantList.Remove(this);
+	}
+
 	virtual void CreateUI() = 0;
 
 public:

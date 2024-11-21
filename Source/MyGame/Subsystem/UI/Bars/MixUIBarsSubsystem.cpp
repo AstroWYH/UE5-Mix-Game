@@ -14,8 +14,34 @@ void UMixUIBarsSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	UIModulePath = TEXT("UI/Bars/");
 
 	Super::Initialize(Collection);
+}
 
-	// GetGameInstance()->GetGameViewportClient()->OnPlayerAdded().AddUObject(this, &ThisClass::OnTakeDamage);
+void UMixUIBarsSubsystem::Tick(float DeltaTime)
+{
+	ACharacter* Character = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	if (Character)
+	{
+		AMixHost* Host = Cast<AMixHost>(Character);
+		if (!ensure(Host)) return;
+		if (!ensure(Host->CharacterHeathComponent)) return;
+
+		if (!Host->CharacterHeathComponent->OnCharacterTakeDamage.IsBound())
+		{
+			Host->CharacterHeathComponent->OnCharacterTakeDamage.AddDynamic(this, &ThisClass::UpdateUIBars);
+		}
+	}
+
+	// UGameViewportClient* GameViewportClient = GetGameInstance()->GetGameViewportClient();
+	// if (GameViewportClient)
+	// {
+	// 	if (!GameViewportClient->OnPlayerAdded().IsBound())
+	// 	{
+	// 		OnTest.AddUObject(
+	// 			this, &UMixUIBarsSubsystem::OnPlayerAdded);
+	// 		GetGameInstance()->GetGameViewportClient()->OnPlayerAdded().AddUObject(
+	// 			this, &UMixUIBarsSubsystem::OnPlayerAdded);
+	// 	}
+	// }
 }
 
 void UMixUIBarsSubsystem::LoadUIClass()
@@ -33,14 +59,14 @@ void UMixUIBarsSubsystem::BindUpdateUIEvent()
 	Super::BindUpdateUIEvent();
 }
 
-void UMixUIBarsSubsystem::OnTakeDamage(int32 LocalUserNum)
-{
-	AMixHost* Host = Cast<AMixHost>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	if (!ensure(Host)) return;
-	if (!ensure(Host->CharacterHeathComponent)) return;
-
-	Host->CharacterHeathComponent->OnCharacterTakeDamage.AddDynamic(this, &ThisClass::UpdateUIBars);
-}
+// void UMixUIBarsSubsystem::OnPlayerAdded(int32 LocalUserNum)
+// {
+// 	AMixHost* Host = Cast<AMixHost>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+// 	if (!ensure(Host)) return;
+// 	if (!ensure(Host->CharacterHeathComponent)) return;
+//
+// 	Host->CharacterHeathComponent->OnCharacterTakeDamage.AddDynamic(this, &ThisClass::UpdateUIBars);
+// }
 
 void UMixUIBarsSubsystem::CreatePersistantUI()
 {
@@ -55,6 +81,8 @@ void UMixUIBarsSubsystem::CreatePersistantUI()
 
 void UMixUIBarsSubsystem::UpdateUIBars(int32 DamageVal)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,
+	                                 FString::Printf(TEXT("GetDamage: %d"), DamageVal));
 }
 
 void UMixUIBarsSubsystem::Deinitialize()

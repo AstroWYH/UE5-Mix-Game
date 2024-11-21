@@ -12,7 +12,7 @@
  * 
  */
 UCLASS()
-class MYGAME_API UMixUIBarsSubsystem : public UMixUISubsystemBase
+class MYGAME_API UMixUIBarsSubsystem : public UMixUISubsystemBase, public FTickableGameObject
 {
 	GENERATED_BODY()
 
@@ -20,6 +20,16 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 
 	virtual void Deinitialize() override;
+
+public:
+	virtual void Tick(float DeltaTime) override;
+
+	virtual bool IsTickable() const override { return !IsTemplate(); }
+
+	virtual TStatId GetStatId() const override
+	{
+		RETURN_QUICK_DECLARE_CYCLE_STAT(UMixUIBarsSubsystem, STATGROUP_Tickables);
+	}
 
 public:
 	virtual void CreatePersistantUI() override;
@@ -30,7 +40,7 @@ public:
 	virtual void BindUpdateUIEvent() override;
 
 public:
-	void OnTakeDamage(int32 LocalUserNum);
+	// void OnPlayerAdded(int32 LocalUserNum);
 
 	UFUNCTION()
 	void UpdateUIBars(int32 DamageVal);

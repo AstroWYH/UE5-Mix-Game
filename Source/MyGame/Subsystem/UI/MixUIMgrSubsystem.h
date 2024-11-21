@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
-#include "MixUISubsystem.generated.h"
+#include "MixUIMgrSubsystem.generated.h"
 
 UCLASS()
-class MYGAME_API UMixUISubsystem : public UGameInstanceSubsystem
+class MYGAME_API UMixUIMgrSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 
@@ -16,8 +16,10 @@ public:
 
 	virtual void Deinitialize() override;
 
+	void PostInit();
+
 public:
-	UClass* LoadUIResource(const TCHAR* Path);
+	UClass* LoadUIClass(const FString& ModulePath, const FString& BlueprintName);
 
 	void CreatePersistantUI();
 

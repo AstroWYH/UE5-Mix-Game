@@ -21,5 +21,3 @@ public:
 	UTexture2D* Icon;
 
 };
-
-

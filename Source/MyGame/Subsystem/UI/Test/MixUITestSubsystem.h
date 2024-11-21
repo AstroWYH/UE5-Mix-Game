@@ -5,13 +5,14 @@
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "UI/MixUIPersistantInterface.h"
+#include "UI/MixUISubsystemBase.h"
 #include "MixUITestSubsystem.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MYGAME_API UMixUITestSubsystem : public UGameInstanceSubsystem, public IMixUIPersistantInterface
+class MYGAME_API UMixUITestSubsystem : public UMixUISubsystemBase
 {
 	GENERATED_BODY()
 
@@ -19,9 +20,17 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 
 	virtual void Deinitialize() override;
-	
+
 public:
-	virtual void CreateUI() override;
+	virtual void CreatePersistantUI() override;
+
+public:
+	virtual void LoadUIClass() override;
+
+	virtual void BindUpdateUIEvent() override;
+
+	virtual void BindUIEvent() override;
+
 
 public:
 	UFUNCTION()
@@ -36,5 +45,4 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<class UMixTestBtnWidget> TestBtnUI;
-
 };

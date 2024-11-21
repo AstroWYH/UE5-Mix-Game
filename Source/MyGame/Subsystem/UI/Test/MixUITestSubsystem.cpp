@@ -4,34 +4,46 @@
 #include "MixUITestSubsystem.h"
 #include "Components/Button.h"
 #include "Inventory/MixInventorySubsystem.h"
-#include "UI/MixUISubsystem.h"
+#include "UI/MixUIMgrSubsystem.h"
 #include "UI/Test/MixTestBtnWidget.h"
 
 void UMixUITestSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
+	UIModulePath = "UI/TestBtn/";
+
 	Super::Initialize(Collection);
-
-	UMixUISubsystem* UISubsystem = GetGameInstance()->GetSubsystem<UMixUISubsystem>();
-	BpTestUIClass = UISubsystem->LoadUIResource(
-		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/MixGame/UI/TestBtn/TestBtn.TestBtn_C'"));
-
-	RegisterSelf();
 }
 
-void UMixUITestSubsystem::Deinitialize()
+void UMixUITestSubsystem::LoadUIClass()
 {
-	UnRegisterSelf();
+	Super::LoadUIClass();
+
+	UMixUIMgrSubsystem* UISubsystem = GetGameInstance()->GetSubsystem<UMixUIMgrSubsystem>();
+	BpTestUIClass = UISubsystem->LoadUIClass(UIModulePath, TEXT("TestBtn.TestBtn_C"));
+}
+
+void UMixUITestSubsystem::BindUpdateUIEvent()
+{
+	Super::BindUpdateUIEvent();
+}
+
+void UMixUITestSubsystem::CreatePersistantUI()
+{
+	Super::CreatePersistantUI();
 	
-	Super::Deinitialize();
-}
-
-void UMixUITestSubsystem::CreateUI()
-{
 	TestBtnUI = Cast<UMixTestBtnWidget>(
 		UUserWidget::CreateWidgetInstance(*GetGameInstance(), BpTestUIClass, TEXT("TestBtn")));
 	if (!ensure(TestBtnUI)) return;
-	
+
 	TestBtnUI->AddToViewport();
+	
+	BindUIEvent();
+}
+
+void UMixUITestSubsystem::BindUIEvent()
+{
+	Super::BindUIEvent();
+
 	TestBtnUI->BtnAdd->OnClicked.AddDynamic(this, &ThisClass::TestAdd);
 	TestBtnUI->BtnRemove->OnClicked.AddDynamic(this, &ThisClass::TestRemove);
 }
@@ -46,4 +58,9 @@ void UMixUITestSubsystem::TestRemove()
 {
 	UMixInventorySubsystem* InventorySubsystem = GetGameInstance()->GetSubsystem<UMixInventorySubsystem>();
 	InventorySubsystem->InventoryTestRemoveBtn();
+}
+
+void UMixUITestSubsystem::Deinitialize()
+{
+	Super::Deinitialize();
 }

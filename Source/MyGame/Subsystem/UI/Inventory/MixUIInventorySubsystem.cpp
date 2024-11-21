@@ -7,32 +7,42 @@
 #include "Components/UniformGridPanel.h"
 #include "Inventory/MixInventoryItem.h"
 #include "Inventory/MixInventorySubsystem.h"
-#include "UI/MixUISubsystem.h"
+#include "UI/MixUIMgrSubsystem.h"
 #include "UI/Inventory/MixInventoryWidget.h"
 #include "UI/Inventory/MixItemWidget.h"
 
 void UMixUIInventorySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
+	UIModulePath = TEXT("UI/Inventory/");
+
 	Super::Initialize(Collection);
-
-	UMixUISubsystem* UISubsystem = GetGameInstance()->GetSubsystem<UMixUISubsystem>();
-	BpInventoryClass = UISubsystem->LoadUIResource(
-		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/MixGame/UI/Inventory/WB_Inventory.WB_Inventory_C'"));
-	BpItemClass = UISubsystem->LoadUIResource(
-		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/MixGame/UI/Inventory/WB_InventoryItem.WB_InventoryItem_C'"));
-
-	RegisterSelf();
 }
 
-void UMixUIInventorySubsystem::CreateUI()
+void UMixUIInventorySubsystem::LoadUIClass()
 {
+	Super::LoadUIClass();
+
+	UMixUIMgrSubsystem* UISubsystem = GetGameInstance()->GetSubsystem<UMixUIMgrSubsystem>();
+	BpInventoryClass = UISubsystem->LoadUIClass(UIModulePath, TEXT("WB_Inventory.WB_Inventory_C"));
+	BpItemClass = UISubsystem->LoadUIClass(UIModulePath, TEXT("WB_InventoryItem.WB_InventoryItem_C"));
+}
+
+void UMixUIInventorySubsystem::BindUpdateUIEvent()
+{
+	Super::BindUpdateUIEvent();
+
 	UMixInventorySubsystem* InventorySubsystem = GetGameInstance()->GetSubsystem<UMixInventorySubsystem>();
 	InventorySubsystem->OnInventoryUpdated.AddDynamic(this, &ThisClass::UpdateInventory);
+}
 
-	// 创建背包UI
+void UMixUIInventorySubsystem::CreatePersistantUI()
+{
+	Super::CreatePersistantUI();
+	
 	InventoryUI = Cast<UMixInventoryWidget>(
 		UUserWidget::CreateWidgetInstance(*GetGameInstance(), BpInventoryClass, TEXT("Inventory")));
 	if (!ensure(InventoryUI)) return;
+	
 	InventoryUI->AddToViewport();
 }
 
@@ -60,7 +70,8 @@ void UMixUIInventorySubsystem::UpdateInventory()
 
 		// 生成ItemWidget
 		UMixItemWidget* ItemWidget = Cast<UMixItemWidget>(
-			UUserWidget::CreateWidgetInstance(*GetGameInstance(), BpItemClass, FName(*FString::Printf(TEXT("Item_%d"), ItemTID))));
+			UUserWidget::CreateWidgetInstance(*GetGameInstance(), BpItemClass,
+			                                  FName(*FString::Printf(TEXT("Item_%d"), ItemTID))));
 		if (!ensure(ItemWidget)) continue;
 
 		ItemWidget->OwnerWidget = InventoryUI;
@@ -81,10 +92,6 @@ void UMixUIInventorySubsystem::Deinitialize()
 {
 	UMixInventorySubsystem* InventorySubsystem = GetGameInstance()->GetSubsystem<UMixInventorySubsystem>();
 	InventorySubsystem->OnInventoryUpdated.RemoveAll(this);
-	
-	UnRegisterSelf();
 
 	Super::Deinitialize();
-	
-
 }

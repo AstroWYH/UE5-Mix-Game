@@ -5,13 +5,14 @@
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "UI/MixUIPersistantInterface.h"
+#include "UI/MixUISubsystemBase.h"
 #include "MixUIBarsSubsystem.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MYGAME_API UMixUIBarsSubsystem : public UGameInstanceSubsystem, public IMixUIPersistantInterface
+class MYGAME_API UMixUIBarsSubsystem : public UMixUISubsystemBase
 {
 	GENERATED_BODY()
 
@@ -21,9 +22,16 @@ public:
 	virtual void Deinitialize() override;
 
 public:
-	virtual void CreateUI() override;
+	virtual void CreatePersistantUI() override;
 
 public:
+	virtual void LoadUIClass() override;
+
+	virtual void BindUpdateUIEvent() override;
+
+public:
+	void OnTakeDamage(int32 LocalUserNum);
+
 	UFUNCTION()
 	void UpdateUIBars(int32 DamageVal);
 

@@ -16,5 +16,5 @@ class MYGAME_API UMixBarsContainerWidget : public UUserWidget
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(BindWidget))
-	TObjectPtr<class UHorizontalBox> Container;
+	TObjectPtr<class UVerticalBox> Container;
 };

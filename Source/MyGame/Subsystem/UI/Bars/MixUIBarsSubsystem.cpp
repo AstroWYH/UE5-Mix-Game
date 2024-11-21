@@ -6,24 +6,35 @@
 #include "Character/Host/MixHost.h"
 #include "Component/Health/MixCharacterHealthComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "UI/MixUISubsystem.h"
+#include "UI/MixUIMgrSubsystem.h"
 #include "UI/Bars/MixBarsContainerWidget.h"
 
 void UMixUIBarsSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
+	UIModulePath = TEXT("UI/Bars/");
+
 	Super::Initialize(Collection);
 
-	// TODO: 整理到datatable
-	UMixUISubsystem* UISubsystem = GetGameInstance()->GetSubsystem<UMixUISubsystem>();
-	BpBarContainerClass = UISubsystem->LoadUIResource(
-		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/MixGame/UI/Bars/WB_BarsContainer.WB_BarsContainer_C'"));
-	BpHealthClass = UISubsystem->LoadUIResource(
-		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/MixGame/UI/Bars/WB_HealthBar.WB_HealthBar_C'"));
-	BpMagicClass = UISubsystem->LoadUIResource(
-		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/MixGame/UI/Bars/WB_MagicBar.WB_MagicBar_C'"));
+	// GetGameInstance()->GetGameViewportClient()->OnPlayerAdded().AddUObject(this, &ThisClass::OnTakeDamage);
+}
 
-	RegisterSelf();
+void UMixUIBarsSubsystem::LoadUIClass()
+{
+	Super::LoadUIClass();
 
+	UMixUIMgrSubsystem* UISubsystem = GetGameInstance()->GetSubsystem<UMixUIMgrSubsystem>();
+	BpBarContainerClass = UISubsystem->LoadUIClass(UIModulePath, TEXT("WB_BarsContainer.WB_BarsContainer_C"));
+	BpHealthClass = UISubsystem->LoadUIClass(UIModulePath, TEXT("WB_HealthBar.WB_HealthBar_C"));
+	BpMagicClass = UISubsystem->LoadUIClass(UIModulePath, TEXT("WB_MagicBar.WB_MagicBar_C"));
+}
+
+void UMixUIBarsSubsystem::BindUpdateUIEvent()
+{
+	Super::BindUpdateUIEvent();
+}
+
+void UMixUIBarsSubsystem::OnTakeDamage(int32 LocalUserNum)
+{
 	AMixHost* Host = Cast<AMixHost>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (!ensure(Host)) return;
 	if (!ensure(Host->CharacterHeathComponent)) return;
@@ -31,8 +42,10 @@ void UMixUIBarsSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	Host->CharacterHeathComponent->OnCharacterTakeDamage.AddDynamic(this, &ThisClass::UpdateUIBars);
 }
 
-void UMixUIBarsSubsystem::CreateUI()
+void UMixUIBarsSubsystem::CreatePersistantUI()
 {
+	Super::CreatePersistantUI();
+
 	BarsContainerUI = Cast<UMixBarsContainerWidget>(
 		UUserWidget::CreateWidgetInstance(*GetGameInstance(), BpBarContainerClass, TEXT("BarsContainer")));
 	if (!ensure(BarsContainerUI)) return;
@@ -42,12 +55,9 @@ void UMixUIBarsSubsystem::CreateUI()
 
 void UMixUIBarsSubsystem::UpdateUIBars(int32 DamageVal)
 {
-	
 }
 
 void UMixUIBarsSubsystem::Deinitialize()
 {
-	UnRegisterSelf();
-
 	Super::Deinitialize();
 }

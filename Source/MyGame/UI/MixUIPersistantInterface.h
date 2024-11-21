@@ -32,7 +32,7 @@ public:
 		UIPersistantList.Remove(this);
 	}
 
-	virtual void CreateUI() = 0;
+	virtual void CreatePersistantUI() = 0;
 
 public:
 	static TSet<IMixUIPersistantInterface*>& GetUIPersistantList() { return UIPersistantList; }

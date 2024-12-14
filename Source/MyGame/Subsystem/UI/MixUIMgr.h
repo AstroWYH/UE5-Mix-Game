@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
-#include "MixUIMgrSubsystem.generated.h"
+#include "MixUIMgr.generated.h"
 
 UCLASS()
-class MYGAME_API UMixUIMgrSubsystem : public UGameInstanceSubsystem
+class MYGAME_API UMixUIMgr : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 
@@ -18,9 +18,18 @@ public:
 
 	void PostInit();
 
-public:
-	UClass* LoadUIClass(const FString& ModulePath, const FString& BlueprintName);
+private:
+	void LoadUIAssets();
 
+public:
 	void CreatePersistantUI();
 
+private:
+	TSharedPtr<const TMap<FName, FUIClassArray>> UIAssetMap;
+
+public:
+	TSharedPtr<const TMap<FName, FUIClassArray>> GetAllUIAssets() const
+	{
+		return UIAssetMap;
+	}
 };

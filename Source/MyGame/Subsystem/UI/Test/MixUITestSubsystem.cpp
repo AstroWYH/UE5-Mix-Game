@@ -4,13 +4,10 @@
 #include "MixUITestSubsystem.h"
 #include "Components/Button.h"
 #include "Inventory/MixInventorySubsystem.h"
-#include "UI/MixUIMgrSubsystem.h"
 #include "UI/Test/MixTestBtnWidget.h"
 
 void UMixUITestSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
-	UIModulePath = "UI/TestBtn/";
-
 	Super::Initialize(Collection);
 }
 
@@ -18,13 +15,19 @@ void UMixUITestSubsystem::LoadUIClass()
 {
 	Super::LoadUIClass();
 
-	UMixUIMgrSubsystem* UISubsystem = GetGameInstance()->GetSubsystem<UMixUIMgrSubsystem>();
-	BpTestUIClass = UISubsystem->LoadUIClass(UIModulePath, TEXT("TestBtn.TestBtn_C"));
-}
+	UMixUIMgr* UIMgr = GetGameInstance()->GetSubsystem<UMixUIMgr>();
+	const auto& UIAssetMap = UIMgr->GetAllUIAssets();
+	if (!ensure(UIAssetMap.IsValid())) return;
+	if (!ensure(UIAssetMap->Contains(ThisClass::GetFName()))) return;
 
-void UMixUITestSubsystem::BindUpdateUIEvent()
-{
-	Super::BindUpdateUIEvent();
+	FUIClassArray UIClassArray = (*UIAssetMap)[ThisClass::GetFName()];
+	for (TSubclassOf<UUserWidget> UIClass : UIClassArray.UIClasses)
+	{
+		if (UIClass->IsChildOf(UMixTestBtnWidget::StaticClass()))
+		{
+			BpTestUIClass = UIClass;
+		}
+	}
 }
 
 void UMixUITestSubsystem::CreatePersistantUI()
@@ -36,8 +39,6 @@ void UMixUITestSubsystem::CreatePersistantUI()
 	if (!ensure(TestBtnUI)) return;
 
 	TestBtnUI->AddToViewport();
-	
-	BindUIEvent();
 }
 
 void UMixUITestSubsystem::BindUIEvent()

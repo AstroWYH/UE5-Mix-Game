@@ -6,13 +6,12 @@
 #include "Character/Host/MixHost.h"
 #include "Component/Health/MixCharacterHealthComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "UI/MixUIMgrSubsystem.h"
 #include "UI/Bars/MixBarsContainerWidget.h"
+#include "UI/Bars/MixHealthBarWidget.h"
+#include "UI/Bars/MixMagicBarWidget.h"
 
 void UMixUIBarsSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
-	UIModulePath = TEXT("UI/Bars/");
-
 	Super::Initialize(Collection);
 }
 
@@ -48,25 +47,28 @@ void UMixUIBarsSubsystem::LoadUIClass()
 {
 	Super::LoadUIClass();
 
-	UMixUIMgrSubsystem* UISubsystem = GetGameInstance()->GetSubsystem<UMixUIMgrSubsystem>();
-	BpBarContainerClass = UISubsystem->LoadUIClass(UIModulePath, TEXT("WB_BarsContainer.WB_BarsContainer_C"));
-	BpHealthClass = UISubsystem->LoadUIClass(UIModulePath, TEXT("WB_HealthBar.WB_HealthBar_C"));
-	BpMagicClass = UISubsystem->LoadUIClass(UIModulePath, TEXT("WB_MagicBar.WB_MagicBar_C"));
-}
+	UMixUIMgr* UIMgr = GetGameInstance()->GetSubsystem<UMixUIMgr>();
+	const auto& UIAssetMap = UIMgr->GetAllUIAssets();
+	if (!ensure(UIAssetMap.IsValid())) return;
+	if (!ensure(UIAssetMap->Contains(ThisClass::GetFName()))) return;
 
-void UMixUIBarsSubsystem::BindUpdateUIEvent()
-{
-	Super::BindUpdateUIEvent();
+	FUIClassArray UIClassArray = (*UIAssetMap)[ThisClass::GetFName()];
+	for (TSubclassOf<UUserWidget> UIClass : UIClassArray.UIClasses)
+	{
+		if (UIClass->IsChildOf(UMixBarsContainerWidget::StaticClass()))
+		{
+			BpBarContainerClass = UIClass;
+		}
+		if (UIClass->IsChildOf(UMixHealthBarWidget::StaticClass()))
+		{
+			BpHealthClass = UIClass;
+		}
+		if (UIClass->IsChildOf(UMixMagicBarWidget::StaticClass()))
+		{
+			BpMagicClass = UIClass;
+		}
+	}
 }
-
-// void UMixUIBarsSubsystem::OnPlayerAdded(int32 LocalUserNum)
-// {
-// 	AMixHost* Host = Cast<AMixHost>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-// 	if (!ensure(Host)) return;
-// 	if (!ensure(Host->CharacterHeathComponent)) return;
-//
-// 	Host->CharacterHeathComponent->OnCharacterTakeDamage.AddDynamic(this, &ThisClass::UpdateUIBars);
-// }
 
 void UMixUIBarsSubsystem::CreatePersistantUI()
 {
@@ -78,6 +80,20 @@ void UMixUIBarsSubsystem::CreatePersistantUI()
 
 	BarsContainerUI->AddToViewport();
 }
+
+void UMixUIBarsSubsystem::BindUIEvent()
+{
+	Super::BindUIEvent();
+}
+
+// void UMixUIBarsSubsystem::OnPlayerAdded(int32 LocalUserNum)
+// {
+// 	AMixHost* Host = Cast<AMixHost>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+// 	if (!ensure(Host)) return;
+// 	if (!ensure(Host->CharacterHeathComponent)) return;
+//
+// 	Host->CharacterHeathComponent->OnCharacterTakeDamage.AddDynamic(this, &ThisClass::UpdateUIBars);
+// }
 
 void UMixUIBarsSubsystem::UpdateUIBars(int32 DamageVal)
 {

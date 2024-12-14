@@ -7,14 +7,11 @@
 #include "Components/UniformGridPanel.h"
 #include "Inventory/MixInventoryItem.h"
 #include "Inventory/MixInventorySubsystem.h"
-#include "UI/MixUIMgrSubsystem.h"
 #include "UI/Inventory/MixInventoryWidget.h"
 #include "UI/Inventory/MixItemWidget.h"
 
 void UMixUIInventorySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
-	UIModulePath = TEXT("UI/Inventory/");
-
 	Super::Initialize(Collection);
 }
 
@@ -22,17 +19,23 @@ void UMixUIInventorySubsystem::LoadUIClass()
 {
 	Super::LoadUIClass();
 
-	UMixUIMgrSubsystem* UISubsystem = GetGameInstance()->GetSubsystem<UMixUIMgrSubsystem>();
-	BpInventoryClass = UISubsystem->LoadUIClass(UIModulePath, TEXT("WB_Inventory.WB_Inventory_C"));
-	BpItemClass = UISubsystem->LoadUIClass(UIModulePath, TEXT("WB_InventoryItem.WB_InventoryItem_C"));
-}
+	UMixUIMgr* UIMgr = GetGameInstance()->GetSubsystem<UMixUIMgr>();
+	const auto& UIAssetMap = UIMgr->GetAllUIAssets();
+	if (!ensure(UIAssetMap.IsValid())) return;
+	if (!ensure(UIAssetMap->Contains(ThisClass::GetFName()))) return;
 
-void UMixUIInventorySubsystem::BindUpdateUIEvent()
-{
-	Super::BindUpdateUIEvent();
-
-	UMixInventorySubsystem* InventorySubsystem = GetGameInstance()->GetSubsystem<UMixInventorySubsystem>();
-	InventorySubsystem->OnInventoryUpdated.AddDynamic(this, &ThisClass::UpdateInventory);
+	FUIClassArray UIClassArray = (*UIAssetMap)[ThisClass::GetFName()];
+	for (TSubclassOf<UUserWidget> UIClass : UIClassArray.UIClasses)
+	{
+		if (UIClass->IsChildOf(UMixInventoryWidget::StaticClass()))
+		{
+			BpInventoryClass = UIClass;
+		}
+		if (UIClass->IsChildOf(UMixItemWidget::StaticClass()))
+		{
+			BpItemClass = UIClass;
+		}
+	}
 }
 
 void UMixUIInventorySubsystem::CreatePersistantUI()
@@ -46,21 +49,29 @@ void UMixUIInventorySubsystem::CreatePersistantUI()
 	InventoryUI->AddToViewport();
 }
 
+void UMixUIInventorySubsystem::BindUIEvent()
+{
+	Super::BindUIEvent();
+
+	UMixInventorySubsystem* InventorySubsystem = GetGameInstance()->GetSubsystem<UMixInventorySubsystem>();
+	InventorySubsystem->OnInventoryUpdated.AddDynamic(this, &ThisClass::UpdateInventory);
+}
+
 void UMixUIInventorySubsystem::UpdateInventory()
 {
 	if (!ensure(InventoryUI)) return;
 	if (!ensure(InventoryUI->Grid)) return;
 
-	// ÇåÀí±³°üUIÍø¸ñµÄItemWidget
+	// æ¸…ç†èƒŒåŒ…UIç½‘æ ¼çš„ItemWidget
 	for (const auto& ItemWidget : ItemUIPool)
 	{
 		InventoryUI->Grid->RemoveChild(ItemWidget.Get());
 	}
 
-	// ÇåÀíItemUIPoolÒıÓÃ³Ø
+	// æ¸…ç†ItemUIPoolå¼•ç”¨æ± 
 	ItemUIPool.Empty();
 
-	// ÖØĞÂÉú³É±³°üÄÚÈ«²¿ItemWidget
+	// é‡æ–°ç”ŸæˆèƒŒåŒ…å†…å…¨éƒ¨ItemWidget
 	UMixInventorySubsystem* InventorySubsystem = GetGameInstance()->GetSubsystem<UMixInventorySubsystem>();
 	for (const auto& [ItemTID, InventoryItem] : InventorySubsystem->InventoryItems)
 	{
@@ -68,7 +79,7 @@ void UMixUIInventorySubsystem::UpdateInventory()
 		if (!ensure(InventorySubsystem->AllItemsCfg.Contains(InventoryItem->TID))) continue;
 		if (!ensure(InventorySubsystem->AllItemsCfg[InventoryItem->TID]->Icon)) continue;
 
-		// Éú³ÉItemWidget
+		// ç”ŸæˆItemWidget
 		UMixItemWidget* ItemWidget = Cast<UMixItemWidget>(
 			UUserWidget::CreateWidgetInstance(*GetGameInstance(), BpItemClass,
 			                                  FName(*FString::Printf(TEXT("Item_%d"), ItemTID))));
@@ -81,7 +92,7 @@ void UMixUIInventorySubsystem::UpdateInventory()
 		ItemWidget->Img->SetBrushFromTexture(InventorySubsystem->AllItemsCfg[InventoryItem->TID]->Icon);
 		ItemUIPool.Add(ItemWidget);
 
-		// ItemWidgetÌí¼Óµ½Grid
+		// ItemWidgetæ·»åŠ åˆ°Grid
 		int32 Row = InventoryItem->PosIdx / 3;
 		int32 Col = InventoryItem->PosIdx % 3;
 		InventoryUI->Grid->AddChildToUniformGrid(ItemWidget, Row, Col);

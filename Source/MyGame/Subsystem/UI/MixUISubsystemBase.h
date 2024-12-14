@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "UI/MixUIPersistantInterface.h"
+#include "UI/MixUIMgr.h"
+#include "MixUIAsset.h"
 #include "MixUISubsystemBase.generated.h"
 
 /**
@@ -21,15 +23,10 @@ public:
 	virtual void Deinitialize() override;
 
 public:
+	virtual void LoadUIClass() override;
+
 	virtual void CreatePersistantUI() override;
-	
-protected:
-	virtual void LoadUIClass();
 
-	virtual void BindUpdateUIEvent();
+	virtual void BindUIEvent() override;
 
-	virtual void BindUIEvent();
-
-protected:
-	FString UIModulePath;
 };

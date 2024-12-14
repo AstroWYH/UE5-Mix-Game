@@ -3,11 +3,6 @@
 #include "UObject/Interface.h"
 #include "MixUIPersistantInterface.generated.h"
 
-class MixUIPersistantInterface
-{
-public:
-};
-
 UINTERFACE(Blueprintable)
 class MYGAME_API UMixUIPersistantInterface : public UInterface
 {
@@ -32,7 +27,11 @@ public:
 		UIPersistantList.Remove(this);
 	}
 
+	virtual void LoadUIClass() = 0;
+
 	virtual void CreatePersistantUI() = 0;
+
+	virtual void BindUIEvent() = 0;
 
 public:
 	static TSet<IMixUIPersistantInterface*>& GetUIPersistantList() { return UIPersistantList; }

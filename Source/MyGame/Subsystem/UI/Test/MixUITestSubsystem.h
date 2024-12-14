@@ -27,10 +27,7 @@ public:
 public:
 	virtual void LoadUIClass() override;
 
-	virtual void BindUpdateUIEvent() override;
-
 	virtual void BindUIEvent() override;
-
 
 public:
 	UFUNCTION()

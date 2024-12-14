@@ -37,7 +37,7 @@ public:
 public:
 	virtual void LoadUIClass() override;
 
-	virtual void BindUpdateUIEvent() override;
+	virtual void BindUIEvent() override;
 
 public:
 	// void OnPlayerAdded(int32 LocalUserNum);

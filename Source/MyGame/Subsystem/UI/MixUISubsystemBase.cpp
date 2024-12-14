@@ -3,26 +3,23 @@
 
 #include "MixUISubsystemBase.h"
 
+#include "MixUIAsset.h"
+#include "MixUIMgr.h"
+
 void UMixUISubsystemBase::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 
+	// 注册所有的UISubsystem，用于UIMgr统一管理
 	RegisterSelf();
-	LoadUIClass();
-	BindUpdateUIEvent();
 }
 
 void UMixUISubsystemBase::LoadUIClass()
 {
 }
 
-void UMixUISubsystemBase::BindUpdateUIEvent()
-{
-}
-
 void UMixUISubsystemBase::CreatePersistantUI()
 {
-	
 }
 
 void UMixUISubsystemBase::BindUIEvent()

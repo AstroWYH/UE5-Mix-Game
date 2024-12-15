@@ -29,7 +29,7 @@ public:
 
 	virtual void LoadUIClass() = 0;
 
-	virtual void CreatePersistantUI() = 0;
+	virtual void CreateUI() = 0;
 
 	virtual void BindUIEvent() = 0;
 

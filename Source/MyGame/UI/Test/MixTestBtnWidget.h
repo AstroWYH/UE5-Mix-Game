@@ -7,7 +7,8 @@
 #include "MixTestBtnWidget.generated.h"
 
 /**
- * 
+ * 该类目前没有使用
+ * 非必要不创建UMG的Cpp父类，除非是包裹类复杂的UMG，需要U版和S版的Native实现
  */
 UCLASS()
 class MYGAME_API UMixTestBtnWidget : public UUserWidget

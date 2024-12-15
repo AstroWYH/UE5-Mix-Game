@@ -25,7 +25,7 @@ public:
 public:
 	virtual void LoadUIClass() override;
 
-	virtual void CreatePersistantUI() override;
+	virtual void CreateUI() override;
 
 	virtual void BindUIEvent() override;
 

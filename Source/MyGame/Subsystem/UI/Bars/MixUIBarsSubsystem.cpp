@@ -70,9 +70,9 @@ void UMixUIBarsSubsystem::LoadUIClass()
 	}
 }
 
-void UMixUIBarsSubsystem::CreatePersistantUI()
+void UMixUIBarsSubsystem::CreateUI()
 {
-	Super::CreatePersistantUI();
+	Super::CreateUI();
 
 	BarsContainerUI = Cast<UMixBarsContainerWidget>(
 		UUserWidget::CreateWidgetInstance(*GetGameInstance(), BpBarContainerClass, TEXT("BarsContainer")));

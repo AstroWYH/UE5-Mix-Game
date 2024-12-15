@@ -22,7 +22,7 @@ public:
 	virtual void Deinitialize() override;
 
 public:
-	virtual void CreatePersistantUI() override;
+	virtual void CreateUI() override;
 
 public:
 	virtual void LoadUIClass() override;

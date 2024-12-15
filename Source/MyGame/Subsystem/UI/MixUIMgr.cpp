@@ -4,6 +4,7 @@
 #include "MixWorldSettings.h"
 #include "Engine/AssetManager.h"
 #include "UI/MixUIPersistantInterface.h"
+#include "Blueprint\UserWidget.h"
 
 void UMixUIMgr::Initialize(FSubsystemCollectionBase& Collection)
 {
@@ -61,17 +62,44 @@ void UMixUIMgr::LoadUIAssets()
 void UMixUIMgr::PostInit()
 {
 	// 统一创建PersistantUI
-	CreatePersistantUI();
+	InitAllPersistantUI();
 }
 
-void UMixUIMgr::CreatePersistantUI()
+void UMixUIMgr::InitAllPersistantUI()
 {
 	const auto& UIPersistantList = IMixUIPersistantInterface::GetUIPersistantList();
 	for (const auto& UIPersistantUISub : UIPersistantList)
 	{
 		UIPersistantUISub->LoadUIClass();
-		UIPersistantUISub->CreatePersistantUI();
+		UIPersistantUISub->CreateUI();
 		UIPersistantUISub->BindUIEvent();
+	}
+}
+
+void UMixUIMgr::GetUIBPData(UUserWidget* Widget, TMap<FName, UObject*>& BPVarDataMap)
+{
+	if (!ensure(Widget)) return;
+
+	UClass* WidgetClass = Widget->GetClass();
+	for (TFieldIterator<FProperty> PropIt(WidgetClass); PropIt; ++PropIt)
+	{
+		FProperty* Property = *PropIt;
+		if (Property->HasAnyPropertyFlags(CPF_ExportObject))
+		{
+			if (FObjectProperty* ObjectProperty = CastField<FObjectProperty>(Property))
+			{
+				if (ObjectProperty->PropertyClass->IsChildOf(UWidget::StaticClass()))
+				{
+					FName WidgetName = Property->GetFName();
+					UObject* WidgetInstance = ObjectProperty->GetObjectPropertyValue_InContainer(Widget);
+
+					if (WidgetInstance)
+					{
+						BPVarDataMap.Add(WidgetName, WidgetInstance);
+					}
+				}
+			}
+		}
 	}
 }
 

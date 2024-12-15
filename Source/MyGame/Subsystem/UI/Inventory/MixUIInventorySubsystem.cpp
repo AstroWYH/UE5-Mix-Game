@@ -38,9 +38,9 @@ void UMixUIInventorySubsystem::LoadUIClass()
 	}
 }
 
-void UMixUIInventorySubsystem::CreatePersistantUI()
+void UMixUIInventorySubsystem::CreateUI()
 {
-	Super::CreatePersistantUI();
+	Super::CreateUI();
 	
 	InventoryUI = Cast<UMixInventoryWidget>(
 		UUserWidget::CreateWidgetInstance(*GetGameInstance(), BpInventoryClass, TEXT("Inventory")));

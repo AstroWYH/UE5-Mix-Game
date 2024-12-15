@@ -22,7 +22,9 @@ private:
 	void LoadUIAssets();
 
 public:
-	void CreatePersistantUI();
+	void InitAllPersistantUI();
+
+	void GetUIBPData(UUserWidget* Widget, TMap<FName, UObject*>& BPVarDataMap);
 
 private:
 	TSharedPtr<const TMap<FName, FUIClassArray>> UIAssetMap;

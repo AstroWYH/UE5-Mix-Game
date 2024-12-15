@@ -18,7 +18,7 @@ void UMixUISubsystemBase::LoadUIClass()
 {
 }
 
-void UMixUISubsystemBase::CreatePersistantUI()
+void UMixUISubsystemBase::CreateUI()
 {
 }
 

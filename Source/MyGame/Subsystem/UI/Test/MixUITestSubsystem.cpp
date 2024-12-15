@@ -30,13 +30,16 @@ void UMixUITestSubsystem::LoadUIClass()
 	}
 }
 
-void UMixUITestSubsystem::CreatePersistantUI()
+void UMixUITestSubsystem::CreateUI()
 {
-	Super::CreatePersistantUI();
+	Super::CreateUI();
 	
-	TestBtnUI = Cast<UMixTestBtnWidget>(
+	TestBtnUI = Cast<UUserWidget>(
 		UUserWidget::CreateWidgetInstance(*GetGameInstance(), BpTestUIClass, TEXT("TestBtn")));
 	if (!ensure(TestBtnUI)) return;
+
+	UMixUIMgr* UIMgr = GetGameInstance()->GetSubsystem<UMixUIMgr>();
+	UIMgr->GetUIBPData(TestBtnUI, BPVarDataMap);
 
 	TestBtnUI->AddToViewport();
 }
@@ -45,8 +48,15 @@ void UMixUITestSubsystem::BindUIEvent()
 {
 	Super::BindUIEvent();
 
-	TestBtnUI->BtnAdd->OnClicked.AddDynamic(this, &ThisClass::TestAdd);
-	TestBtnUI->BtnRemove->OnClicked.AddDynamic(this, &ThisClass::TestRemove);
+	// 尝试在创建UMG时，通过反射Bind变量，非必要不创建cpp父类
+	// TestBtnUI->BtnAdd->OnClicked.AddDynamic(this, &ThisClass::TestAdd);
+	// TestBtnUI->BtnRemove->OnClicked.AddDynamic(this, &ThisClass::TestRemove);
+
+	UButton* BtnAdd = Cast<UButton>(BPVarDataMap["BtnAdd"]);
+	BtnAdd->OnClicked.AddDynamic(this, &ThisClass::TestAdd);
+
+	UButton* BtnRemove = Cast<UButton>(BPVarDataMap["BtnRemove"]);
+	BtnRemove->OnClicked.AddDynamic(this, &ThisClass::TestRemove);
 }
 
 void UMixUITestSubsystem::TestAdd()

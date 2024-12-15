@@ -22,7 +22,7 @@ public:
 	virtual void Deinitialize() override;
 
 public:
-	virtual void CreatePersistantUI() override;
+	virtual void CreateUI() override;
 
 public:
 	virtual void LoadUIClass() override;
@@ -41,5 +41,8 @@ private:
 	UClass* BpTestUIClass = nullptr;
 
 	UPROPERTY()
-	TObjectPtr<class UMixTestBtnWidget> TestBtnUI;
+	TObjectPtr<class UUserWidget> TestBtnUI;
+
+	UPROPERTY()
+	TMap<FName, UObject*> BPVarDataMap;
 };

@@ -38,6 +38,7 @@ public:
 
 	TWeakObjectPtr<AActor> Shooter;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMixAmmo", meta = (AllowPrivateAccess = "true"))
 	int32 AttackVal = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMixAmmo", meta = (AllowPrivateAccess = "true"))

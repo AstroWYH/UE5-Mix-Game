@@ -39,8 +39,8 @@ public:
 
 	virtual void BindUIEvent() override;
 
-public:
-	// void OnPlayerAdded(int32 LocalUserNum);
+private:
+	void OnSpawnPlayActor();
 
 	UFUNCTION()
 	void UpdateUIBars(int32 DamageVal);

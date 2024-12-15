@@ -48,7 +48,7 @@ void UMixUITestSubsystem::BindUIEvent()
 {
 	Super::BindUIEvent();
 
-	// 尝试在创建UMG时，通过反射Bind变量，非必要不创建cpp父类
+	// 在创建UMG时，通过反射Bind变量，非必要不创建cpp父类
 	// TestBtnUI->BtnAdd->OnClicked.AddDynamic(this, &ThisClass::TestAdd);
 	// TestBtnUI->BtnRemove->OnClicked.AddDynamic(this, &ThisClass::TestRemove);
 

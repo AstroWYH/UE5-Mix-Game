@@ -3,6 +3,7 @@
 
 #include "MixUIBarsSubsystem.h"
 
+#include "MixGameInstance.h"
 #include "Character/Host/MixHost.h"
 #include "Component/Health/MixCharacterHealthComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -13,34 +14,41 @@
 void UMixUIBarsSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
+
+	UMixGameInstance* GameInstance = Cast<UMixGameInstance>(GetGameInstance());
+	// GameInstance->OnSpawnPlayActor.AddUObject(this, &ThisClass::OnSpawnPlayActor);
+}
+
+void UMixUIBarsSubsystem::OnSpawnPlayActor()
+{
+	AMixHost* Host = Cast<AMixHost>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (!ensure(Host)) return;
+	if (!ensure(Host->CharacterHeathComponent)) return;
+
+	Host->CharacterHeathComponent->OnCharacterTakeDamage.AddDynamic(this, &ThisClass::UpdateUIBars);
 }
 
 void UMixUIBarsSubsystem::Tick(float DeltaTime)
 {
+	// Character会在GameInstance的AddLocalPlayer添加，可以注册GameInstance或GameViewportClient的委托
+	// GameInstance: OnLocalPlayerAddedEvent
+	// GameViewportClient: PlayerAddedDelegate
+	// 前者保证Subsystem->Initialize()时，生命周期存在
+	// 后者则不存在，需要借助static CreatedDelegate，流程更复杂
+
+	// 在Tick里执行，只有初次起作用，后续存在浪费
 	ACharacter* Character = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 	if (Character)
 	{
 		AMixHost* Host = Cast<AMixHost>(Character);
 		if (!ensure(Host)) return;
 		if (!ensure(Host->CharacterHeathComponent)) return;
-
+	
 		if (!Host->CharacterHeathComponent->OnCharacterTakeDamage.IsBound())
 		{
 			Host->CharacterHeathComponent->OnCharacterTakeDamage.AddDynamic(this, &ThisClass::UpdateUIBars);
 		}
 	}
-
-	// UGameViewportClient* GameViewportClient = GetGameInstance()->GetGameViewportClient();
-	// if (GameViewportClient)
-	// {
-	// 	if (!GameViewportClient->OnPlayerAdded().IsBound())
-	// 	{
-	// 		OnTest.AddUObject(
-	// 			this, &UMixUIBarsSubsystem::OnPlayerAdded);
-	// 		GetGameInstance()->GetGameViewportClient()->OnPlayerAdded().AddUObject(
-	// 			this, &UMixUIBarsSubsystem::OnPlayerAdded);
-	// 	}
-	// }
 }
 
 void UMixUIBarsSubsystem::LoadUIClass()
@@ -85,15 +93,6 @@ void UMixUIBarsSubsystem::BindUIEvent()
 {
 	Super::BindUIEvent();
 }
-
-// void UMixUIBarsSubsystem::OnPlayerAdded(int32 LocalUserNum)
-// {
-// 	AMixHost* Host = Cast<AMixHost>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-// 	if (!ensure(Host)) return;
-// 	if (!ensure(Host->CharacterHeathComponent)) return;
-//
-// 	Host->CharacterHeathComponent->OnCharacterTakeDamage.AddDynamic(this, &ThisClass::UpdateUIBars);
-// }
 
 void UMixUIBarsSubsystem::UpdateUIBars(int32 DamageVal)
 {

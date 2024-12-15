@@ -40,9 +40,8 @@ void UMixUIMgr::LoadUIAssets()
 	if (!ensure(WorldSettings)) return;
 	
 	TSubclassOf<UMixUIAsset> UIAssetsClass = WorldSettings->GetMixUIAssets();
-	const UMixUIAsset* UIAssets = GetDefault<UMixUIAsset>(UIAssetsClass);
-	if (!ensure(UIAssets)) return;
-
+	// const UMixUIAsset* UIAssets = Cast<UMixUIAsset>(StaticLoadObject(UMixUIAsset::StaticClass(), nullptr, *UIAssetsClass->GetPathName()));
+	UIAssets = LoadObject<UMixUIAsset>(nullptr, *UIAssetsClass->GetPathName());
 	UIAssetMap = MakeShareable<const TMap<FName, FUIClassArray>>(&(UIAssets->GetAllUIAsset()));
 }
 

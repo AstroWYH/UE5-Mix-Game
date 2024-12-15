@@ -29,6 +29,9 @@ public:
 private:
 	TSharedPtr<const TMap<FName, FUIClassArray>> UIAssetMap;
 
+	UPROPERTY()
+	const UMixUIAsset* UIAssets;
+
 public:
 	TSharedPtr<const TMap<FName, FUIClassArray>> GetAllUIAssets() const
 	{

@@ -19,7 +19,7 @@ public:
 	AMixWorldSettings(const FObjectInitializer& ObjectInitializer);
 
 public:
-	TSoftClassPtr<class UMixUIAsset> GetMixUIAssets() const
+	TSubclassOf<class UMixUIAsset> GetMixUIAssets() const
 	{
 		return MixUIAssets;
 	}
@@ -27,6 +27,6 @@ public:
 protected:
 	// The default experience to use when a server opens this map if it is not overridden by the user-facing experience
 	UPROPERTY(EditDefaultsOnly, Category = GameMode)
-	TSoftClassPtr<class UMixUIAsset> MixUIAssets;
+	TSubclassOf<class UMixUIAsset> MixUIAssets;
 
 };

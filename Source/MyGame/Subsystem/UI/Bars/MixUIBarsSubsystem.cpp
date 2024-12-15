@@ -50,9 +50,9 @@ void UMixUIBarsSubsystem::LoadUIClass()
 	UMixUIMgr* UIMgr = GetGameInstance()->GetSubsystem<UMixUIMgr>();
 	const auto& UIAssetMap = UIMgr->GetAllUIAssets();
 	if (!ensure(UIAssetMap.IsValid())) return;
-	if (!ensure(UIAssetMap->Contains(ThisClass::GetFName()))) return;
+	if (!ensure(UIAssetMap->Contains(GetClass()->GetFName()))) return;
 
-	FUIClassArray UIClassArray = (*UIAssetMap)[ThisClass::GetFName()];
+	FUIClassArray UIClassArray = (*UIAssetMap)[GetClass()->GetFName()];
 	for (TSubclassOf<UUserWidget> UIClass : UIClassArray.UIClasses)
 	{
 		if (UIClass->IsChildOf(UMixBarsContainerWidget::StaticClass()))

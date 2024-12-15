@@ -1,6 +1,7 @@
 #include "MixUIMgr.h"
 
 #include "MixUIAsset.h"
+#include "MixWorldSettings.h"
 #include "Engine/AssetManager.h"
 #include "UI/MixUIPersistantInterface.h"
 
@@ -17,19 +18,28 @@ void UMixUIMgr::Initialize(FSubsystemCollectionBase& Collection)
 
 void UMixUIMgr::LoadUIAssets()
 {
-	UAssetManager& AssetManager = UAssetManager::Get();
-	FPrimaryAssetType UIAssetType = UMixUIAsset::StaticClass()->GetFName();
-	TSharedPtr<FStreamableHandle> Handle = AssetManager.LoadPrimaryAssetsWithType(UIAssetType);
-	if (ensure(Handle.IsValid()))
-	{
-		Handle->WaitUntilComplete();
-	}
+	// UAssetManager& AssetManager = UAssetManager::Get();
+	// FPrimaryAssetType UIAssetType = UMixUIAsset::StaticClass()->GetFName();
+	// TSharedPtr<FStreamableHandle> Handle = AssetManager.LoadPrimaryAssetsWithType(UIAssetType);
+	// if (ensure(Handle.IsValid()))
+	// {
+	// 	Handle->WaitUntilComplete();
+	// }
+	//
+	// TArray<UObject*> LoadUIAssets;
+	// AssetManager.GetPrimaryAssetObjectList(UIAssetType, LoadUIAssets);
+	// if (!ensure(LoadUIAssets.Num() == 1)) return;
+	//
+	// UMixUIAsset* UIAssets = Cast<UMixUIAsset>(LoadUIAssets[0]);
+	// if (!ensure(UIAssets)) return;
+	//
+	// UIAssetMap = MakeShareable<const TMap<FName, FUIClassArray>>(&(UIAssets->GetAllUIAsset()));
 
-	TArray<UObject*> LoadUIAssets;
-	AssetManager.GetPrimaryAssetObjectList(UIAssetType, LoadUIAssets);
-	if (!ensure(LoadUIAssets.Num() == 1)) return;
-
-	UMixUIAsset* UIAssets = Cast<UMixUIAsset>(LoadUIAssets[0]);
+	AMixWorldSettings* WorldSettings = Cast<AMixWorldSettings>(GetWorld()->GetWorldSettings());
+	if (!ensure(WorldSettings)) return;
+	
+	TSubclassOf<UMixUIAsset> UIAssetsClass = WorldSettings->GetMixUIAssets();
+	const UMixUIAsset* UIAssets = GetDefault<UMixUIAsset>(UIAssetsClass);
 	if (!ensure(UIAssets)) return;
 
 	UIAssetMap = MakeShareable<const TMap<FName, FUIClassArray>>(&(UIAssets->GetAllUIAsset()));

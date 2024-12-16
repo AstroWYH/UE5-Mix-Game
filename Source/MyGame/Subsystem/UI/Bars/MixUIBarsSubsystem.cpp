@@ -6,6 +6,7 @@
 #include "MixGameInstance.h"
 #include "Character/Host/MixHost.h"
 #include "Component/Health/MixCharacterHealthComponent.h"
+#include "Components/NamedSlot.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/Bars/MixBarsContainerWidget.h"
 #include "UI/Bars/MixHealthBarWidget.h"
@@ -15,18 +16,18 @@ void UMixUIBarsSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 
-	UMixGameInstance* GameInstance = Cast<UMixGameInstance>(GetGameInstance());
+	// UMixGameInstance* GameInstance = Cast<UMixGameInstance>(GetGameInstance());
 	// GameInstance->OnSpawnPlayActor.AddUObject(this, &ThisClass::OnSpawnPlayActor);
 }
 
-void UMixUIBarsSubsystem::OnSpawnPlayActor()
-{
-	AMixHost* Host = Cast<AMixHost>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	if (!ensure(Host)) return;
-	if (!ensure(Host->CharacterHeathComponent)) return;
-
-	Host->CharacterHeathComponent->OnCharacterTakeDamage.AddDynamic(this, &ThisClass::UpdateUIBars);
-}
+// void UMixUIBarsSubsystem::OnSpawnPlayActor()
+// {
+// 	AMixHost* Host = Cast<AMixHost>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+// 	if (!ensure(Host)) return;
+// 	if (!ensure(Host->CharacterHeathComponent)) return;
+//
+// 	Host->CharacterHeathComponent->OnCharacterTakeDamage.AddDynamic(this, &ThisClass::UpdateUIBars);
+// }
 
 void UMixUIBarsSubsystem::Tick(float DeltaTime)
 {
@@ -51,42 +52,15 @@ void UMixUIBarsSubsystem::Tick(float DeltaTime)
 	}
 }
 
-void UMixUIBarsSubsystem::LoadUIClass()
-{
-	Super::LoadUIClass();
-
-	UMixUIMgr* UIMgr = GetGameInstance()->GetSubsystem<UMixUIMgr>();
-	const auto& UIAssetMap = UIMgr->GetAllUIAssets();
-	if (!ensure(UIAssetMap.IsValid())) return;
-	if (!ensure(UIAssetMap->Contains(GetClass()->GetFName()))) return;
-
-	FUIClassArray UIClassArray = (*UIAssetMap)[GetClass()->GetFName()];
-	for (TSubclassOf<UUserWidget> UIClass : UIClassArray.UIClasses)
-	{
-		if (UIClass->IsChildOf(UMixBarsContainerWidget::StaticClass()))
-		{
-			BpBarContainerClass = UIClass;
-		}
-		if (UIClass->IsChildOf(UMixHealthBarWidget::StaticClass()))
-		{
-			BpHealthClass = UIClass;
-		}
-		if (UIClass->IsChildOf(UMixMagicBarWidget::StaticClass()))
-		{
-			BpMagicClass = UIClass;
-		}
-	}
-}
-
 void UMixUIBarsSubsystem::CreateUI()
 {
 	Super::CreateUI();
 
-	BarsContainerUI = Cast<UMixBarsContainerWidget>(
-		UUserWidget::CreateWidgetInstance(*GetGameInstance(), BpBarContainerClass, TEXT("BarsContainer")));
+	BarsContainerUI = Cast<UUserWidget>(UUserWidget::CreateWidgetInstance(*GetGameInstance(), UIMgr->GetUIClass(GetClass()->GetFName(), "BarsContainer"), TEXT("BarsContainer")));
 	if (!ensure(BarsContainerUI)) return;
 
-	BarsContainerUI->AddToViewport();
+	UNamedSlot* BarsNS = Cast<UNamedSlot>(UIMgr->GetMainLayoutSlots()["Bars"]);
+	BarsNS->SetContent(BarsContainerUI);
 }
 
 void UMixUIBarsSubsystem::BindUIEvent()

@@ -25,8 +25,6 @@ public:
 	virtual void CreateUI() override;
 
 public:
-	virtual void LoadUIClass() override;
-
 	virtual void BindUIEvent() override;
 
 public:
@@ -38,11 +36,5 @@ public:
 
 private:
 	UPROPERTY()
-	UClass* BpTestUIClass = nullptr;
-
-	UPROPERTY()
 	TObjectPtr<class UUserWidget> TestBtnUI;
-
-	UPROPERTY()
-	TMap<FName, UObject*> BPVarDataMap;
 };

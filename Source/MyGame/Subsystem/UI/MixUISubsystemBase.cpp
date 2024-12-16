@@ -12,10 +12,8 @@ void UMixUISubsystemBase::Initialize(FSubsystemCollectionBase& Collection)
 
 	// 注册所有的UISubsystem，用于UIMgr统一管理
 	RegisterSelf();
-}
 
-void UMixUISubsystemBase::LoadUIClass()
-{
+	UIMgr = Collection.InitializeDependency<UMixUIMgr>();
 }
 
 void UMixUISubsystemBase::CreateUI()

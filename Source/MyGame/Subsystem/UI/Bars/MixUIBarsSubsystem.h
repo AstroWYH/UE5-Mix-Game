@@ -34,28 +34,15 @@ public:
 public:
 	virtual void CreateUI() override;
 
-public:
-	virtual void LoadUIClass() override;
-
 	virtual void BindUIEvent() override;
 
 private:
-	void OnSpawnPlayActor();
+	// void OnSpawnPlayActor();
 
 	UFUNCTION()
 	void UpdateUIBars(int32 DamageVal);
 
 private:
 	UPROPERTY()
-	UClass* BpBarContainerClass = nullptr;
-
-	UPROPERTY()
-	UClass* BpHealthClass = nullptr;
-
-	UPROPERTY()
-	UClass* BpMagicClass = nullptr;
-
-private:
-	UPROPERTY()
-	TObjectPtr<class UMixBarsContainerWidget> BarsContainerUI;
+	TObjectPtr<class UUserWidget> BarsContainerUI;
 };

@@ -137,7 +137,6 @@ void UMixHostAttackComponent::AttackSpawn()
 
 			HostAmmo->Target = SelectCharacterTarget;
 			HostAmmo->Shooter = Host;
-			HostAmmo->AttackVal = AttackVal;
 		};
 		AMixHostAmmo* SpawnedActor = GetWorld()->SpawnActor<AMixHostAmmo>(AmmoClass, BowEmitterTransform, SpawnParams);
 	}));

@@ -23,10 +23,14 @@ public:
 	virtual void Deinitialize() override;
 
 public:
-	virtual void LoadUIClass() override;
-
 	virtual void CreateUI() override;
 
 	virtual void BindUIEvent() override;
+
+protected:
+	TWeakObjectPtr<UMixUIMgr> UIMgr;
+
+	UPROPERTY()
+	TMap<FName, UObject*> BPVarDataMap;
 
 };

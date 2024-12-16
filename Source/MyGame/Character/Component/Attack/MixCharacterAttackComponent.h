@@ -37,9 +37,6 @@ public:
 	TWeakObjectPtr<class AMixCharacter> SelectCharacterTarget;
 
 public:
-	// 攻击参数
-	int32 AttackVal = 0;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixCharacterAttackComponent")
 	float AttackRange = 0.0f;
 

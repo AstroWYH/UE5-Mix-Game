@@ -4,6 +4,7 @@
 #include "MixUIInventorySubsystem.h"
 
 #include "Components/Image.h"
+#include "Components/NamedSlot.h"
 #include "Components/UniformGridPanel.h"
 #include "Inventory/MixInventoryItem.h"
 #include "Inventory/MixInventorySubsystem.h"
@@ -15,38 +16,15 @@ void UMixUIInventorySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	Super::Initialize(Collection);
 }
 
-void UMixUIInventorySubsystem::LoadUIClass()
-{
-	Super::LoadUIClass();
-
-	UMixUIMgr* UIMgr = GetGameInstance()->GetSubsystem<UMixUIMgr>();
-	const auto& UIAssetMap = UIMgr->GetAllUIAssets();
-	if (!ensure(UIAssetMap.IsValid())) return;
-	if (!ensure(UIAssetMap->Contains(GetClass()->GetFName()))) return;
-
-	FUIClassArray UIClassArray = (*UIAssetMap)[GetClass()->GetFName()];
-	for (TSubclassOf<UUserWidget> UIClass : UIClassArray.UIClasses)
-	{
-		if (UIClass->IsChildOf(UMixInventoryWidget::StaticClass()))
-		{
-			BpInventoryClass = UIClass;
-		}
-		if (UIClass->IsChildOf(UMixItemWidget::StaticClass()))
-		{
-			BpItemClass = UIClass;
-		}
-	}
-}
-
 void UMixUIInventorySubsystem::CreateUI()
 {
 	Super::CreateUI();
-	
-	InventoryUI = Cast<UMixInventoryWidget>(
-		UUserWidget::CreateWidgetInstance(*GetGameInstance(), BpInventoryClass, TEXT("Inventory")));
+
+	InventoryUI = Cast<UMixInventoryWidget>(UUserWidget::CreateWidgetInstance(*GetGameInstance(), UIMgr->GetUIClass(GetClass()->GetFName(), "Inventory"), TEXT("Inventory")));
 	if (!ensure(InventoryUI)) return;
-	
-	InventoryUI->AddToViewport();
+
+	UNamedSlot* InventoryNS = Cast<UNamedSlot>(UIMgr->GetMainLayoutSlots()["Inventory"]);
+	InventoryNS->SetContent(InventoryUI);
 }
 
 void UMixUIInventorySubsystem::BindUIEvent()
@@ -80,9 +58,7 @@ void UMixUIInventorySubsystem::UpdateInventory()
 		if (!ensure(InventorySubsystem->AllItemsCfg[InventoryItem->TID]->Icon)) continue;
 
 		// 生成ItemWidget
-		UMixItemWidget* ItemWidget = Cast<UMixItemWidget>(
-			UUserWidget::CreateWidgetInstance(*GetGameInstance(), BpItemClass,
-			                                  FName(*FString::Printf(TEXT("Item_%d"), ItemTID))));
+		UMixItemWidget* ItemWidget = Cast<UMixItemWidget>(UUserWidget::CreateWidgetInstance(*GetGameInstance(), UIMgr->GetUIClass(GetClass()->GetFName(), "Item"), FName(*FString::Printf(TEXT("Item_%d"), ItemTID))));
 		if (!ensure(ItemWidget)) continue;
 
 		ItemWidget->OwnerWidget = InventoryUI;

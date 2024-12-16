@@ -11,34 +11,13 @@ void UMixUITestSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	Super::Initialize(Collection);
 }
 
-void UMixUITestSubsystem::LoadUIClass()
-{
-	Super::LoadUIClass();
-
-	UMixUIMgr* UIMgr = GetGameInstance()->GetSubsystem<UMixUIMgr>();
-	const auto& UIAssetMap = UIMgr->GetAllUIAssets();
-	if (!ensure(UIAssetMap.IsValid())) return;
-	if (!ensure(UIAssetMap->Contains(GetClass()->GetFName()))) return;
-
-	FUIClassArray UIClassArray = (*UIAssetMap)[GetClass()->GetFName()];
-	for (TSubclassOf<UUserWidget> UIClass : UIClassArray.UIClasses)
-	{
-		if (UIClass->IsChildOf(UMixTestBtnWidget::StaticClass()))
-		{
-			BpTestUIClass = UIClass;
-		}
-	}
-}
-
 void UMixUITestSubsystem::CreateUI()
 {
 	Super::CreateUI();
-	
-	TestBtnUI = Cast<UUserWidget>(
-		UUserWidget::CreateWidgetInstance(*GetGameInstance(), BpTestUIClass, TEXT("TestBtn")));
+
+	TestBtnUI = Cast<UUserWidget>(UUserWidget::CreateWidgetInstance(*GetGameInstance(), UIMgr->GetUIClass(GetClass()->GetFName(), "TestBtn"), TEXT("TestBtn")));
 	if (!ensure(TestBtnUI)) return;
 
-	UMixUIMgr* UIMgr = GetGameInstance()->GetSubsystem<UMixUIMgr>();
 	UIMgr->GetUIBPData(TestBtnUI, BPVarDataMap);
 
 	TestBtnUI->AddToViewport();

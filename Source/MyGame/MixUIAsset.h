@@ -12,7 +12,7 @@ struct FUIClassArray
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, Category = "UI")
-	TArray<TSubclassOf<UUserWidget>> UIClasses;
+	TMap<FName, TSubclassOf<UUserWidget>> UIClasses;
 };
 
 UCLASS()
@@ -25,7 +25,7 @@ private:
 	TMap<FName, FUIClassArray> AllUIAsset;
 
 public:
-	const TMap<FName, FUIClassArray>& GetAllUIAsset() const
+	const TMap<FName, FUIClassArray>& GetAllUIAssets() const
 	{
 		return AllUIAsset;
 	}

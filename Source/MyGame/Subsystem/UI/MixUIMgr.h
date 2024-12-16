@@ -3,8 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MixUIAsset.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "MixUIMgr.generated.h"
+
+struct FUIClassArray;
 
 UCLASS()
 class MYGAME_API UMixUIMgr : public UGameInstanceSubsystem
@@ -21,20 +24,26 @@ public:
 private:
 	void LoadUIAssets();
 
+	void CreateMainLayout();
+
 public:
 	void InitAllPersistantUI();
 
 	void GetUIBPData(UUserWidget* Widget, TMap<FName, UObject*>& BPVarDataMap);
 
 private:
-	TSharedPtr<const TMap<FName, FUIClassArray>> UIAssetMap;
+	UPROPERTY()
+	TObjectPtr<UMixUIAsset> UIAssets;
 
 	UPROPERTY()
-	const UMixUIAsset* UIAssets;
+	TMap<FName, UObject*> MainLayoutSlots;
 
 public:
-	TSharedPtr<const TMap<FName, FUIClassArray>> GetAllUIAssets() const
+	TMap<FName, UObject*> GetMainLayoutSlots() const
 	{
-		return UIAssetMap;
+		return MainLayoutSlots;
 	}
+
+	TSubclassOf<UUserWidget> GetUIClass(FName Module, FName Name);
+
 };

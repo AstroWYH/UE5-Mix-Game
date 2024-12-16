@@ -1,8 +1,6 @@
 #include "MixUIMgr.h"
 
-#include "MixUIAsset.h"
 #include "MixWorldSettings.h"
-#include "Engine/AssetManager.h"
 #include "UI/MixUIPersistantInterface.h"
 #include "Blueprint\UserWidget.h"
 
@@ -19,49 +17,42 @@ void UMixUIMgr::Initialize(FSubsystemCollectionBase& Collection)
 
 void UMixUIMgr::LoadUIAssets()
 {
-	// UAssetManager& AssetManager = UAssetManager::Get();
-	// FPrimaryAssetType UIAssetType = UMixUIAsset::StaticClass()->GetFName();
-	// TSharedPtr<FStreamableHandle> Handle = AssetManager.LoadPrimaryAssetsWithType(UIAssetType);
-	// if (ensure(Handle.IsValid()))
-	// {
-	// 	Handle->WaitUntilComplete();
-	// }
-	//
-	// TArray<UObject*> LoadUIAssets;
-	// AssetManager.GetPrimaryAssetObjectList(UIAssetType, LoadUIAssets);
-	// if (!ensure(LoadUIAssets.Num() == 1)) return;
-	//
-	// UMixUIAsset* UIAssets = Cast<UMixUIAsset>(LoadUIAssets[0]);
-	// if (!ensure(UIAssets)) return;
-	//
-	// UIAssetMap = MakeShareable<const TMap<FName, FUIClassArray>>(&(UIAssets->GetAllUIAsset()));
-
 	AMixWorldSettings* WorldSettings = Cast<AMixWorldSettings>(GetWorld()->GetWorldSettings());
 	if (!ensure(WorldSettings)) return;
-	
-	TSubclassOf<UMixUIAsset> UIAssetsClass = WorldSettings->GetMixUIAssets();
-	// const UMixUIAsset* UIAssets = Cast<UMixUIAsset>(StaticLoadObject(UMixUIAsset::StaticClass(), nullptr, *UIAssetsClass->GetPathName()));
-	UIAssets = LoadObject<UMixUIAsset>(nullptr, *UIAssetsClass->GetPathName());
-	UIAssetMap = MakeShareable<const TMap<FName, FUIClassArray>>(&(UIAssets->GetAllUIAsset()));
+
+	// DA类就直接这样加载是最合理且方便的
+	UIAssets = WorldSettings->UIAssets;
+
+	// 不要用蓝图类来装配置数据，容易加载出nullptr
+	// UIAssets = Cast<UMixUIAsset>(StaticLoadObject(UMixUIAsset::StaticClass(), nullptr, *UIAssetsClass->GetPathName()));
+	// UIAssets = Cast<UMixUIAsset>(StaticLoadObject(UMixUIAsset::StaticClass(), nullptr, TEXT("/Script/MyGame.MixUIAsset'/Game/MixGame/UI/DA_UIAssets.DA_UIAssets'")));
 }
 
-// UClass* UMixUIMgr::LoadUIClass(const FString& ModulePath, const FString& BlueprintName)
-// {
-// 	FString GameBasePath;
-// 	GConfig->GetString(TEXT("/Script/Engine.GameSettings"), TEXT("GameBasePath"), GameBasePath, GGameIni);
-// 	FString FullPath = FString::Printf(
-// 		TEXT("/Script/UMGEditor.WidgetBlueprint'%s%s%s'"), *GameBasePath, *ModulePath, *BlueprintName);
-//
-// 	UClass* LoadedClass = LoadClass<UObject>(nullptr, *FullPath);
-// 	if (!ensure(LoadedClass)) return nullptr;
-//
-// 	return LoadedClass;
-// }
+TSubclassOf<UUserWidget> UMixUIMgr::GetUIClass(FName Module, FName Name)
+{
+	const TMap<FName, FUIClassArray>& AllUIAssets = UIAssets->GetAllUIAssets();
+	if (!ensure(AllUIAssets.Contains(Module))) return TSubclassOf<UUserWidget>();
+
+	const TMap<FName, TSubclassOf<UUserWidget>>& ModuleClasses = AllUIAssets[Module].UIClasses;
+	if (!ensure(ModuleClasses.Contains(Name))) return TSubclassOf<UUserWidget>();
+
+	return ModuleClasses[Name];
+}
 
 void UMixUIMgr::PostInit()
 {
+	CreateMainLayout();
+
 	// 统一创建PersistantUI
 	InitAllPersistantUI();
+}
+
+void UMixUIMgr::CreateMainLayout()
+{
+	UUserWidget* MainLayout = Cast<UUserWidget>(UUserWidget::CreateWidgetInstance(*GetGameInstance(), GetUIClass(GetClass()->GetFName(), "MainLayout"), "MainLayout"));
+
+	GetUIBPData(MainLayout, MainLayoutSlots);
+	MainLayout->AddToViewport();
 }
 
 void UMixUIMgr::InitAllPersistantUI()
@@ -69,7 +60,6 @@ void UMixUIMgr::InitAllPersistantUI()
 	const auto& UIPersistantList = IMixUIPersistantInterface::GetUIPersistantList();
 	for (const auto& UIPersistantUISub : UIPersistantList)
 	{
-		UIPersistantUISub->LoadUIClass();
 		UIPersistantUISub->CreateUI();
 		UIPersistantUISub->BindUIEvent();
 	}
@@ -105,7 +95,18 @@ void UMixUIMgr::GetUIBPData(UUserWidget* Widget, TMap<FName, UObject*>& BPVarDat
 void UMixUIMgr::Deinitialize()
 {
 	Super::Deinitialize();
-
-	// 清理持久UI的List，否则PIE重启游戏error，放到UISubsystemBase去做
-	// IMixUIPersistantInterface::GetUIPersistantList().Empty();
 }
+
+// 配置在DefaultGame.ini的方式
+// UClass* UMixUIMgr::LoadUIClass(const FString& ModulePath, const FString& BlueprintName)
+// {
+// 	FString GameBasePath;
+// 	GConfig->GetString(TEXT("/Script/Engine.GameSettings"), TEXT("GameBasePath"), GameBasePath, GGameIni);
+// 	FString FullPath = FString::Printf(
+// 		TEXT("/Script/UMGEditor.WidgetBlueprint'%s%s%s'"), *GameBasePath, *ModulePath, *BlueprintName);
+//
+// 	UClass* LoadedClass = LoadClass<UObject>(nullptr, *FullPath);
+// 	if (!ensure(LoadedClass)) return nullptr;
+//
+// 	return LoadedClass;
+// }

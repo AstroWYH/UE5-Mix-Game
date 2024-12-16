@@ -24,9 +24,6 @@ public:
 public:
 	virtual void CreateUI() override;
 
-public:
-	virtual void LoadUIClass() override;
-
 	virtual void BindUIEvent() override;
 
 public:
@@ -40,10 +37,4 @@ private:
 	UPROPERTY()
 	TArray<TObjectPtr<class UMixItemWidget>> ItemUIPool;
 
-private:
-	UPROPERTY()
-	UClass* BpInventoryClass = nullptr;
-
-	UPROPERTY()
-	UClass* BpItemClass = nullptr;
 };

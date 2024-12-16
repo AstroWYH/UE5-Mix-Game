@@ -68,7 +68,6 @@ void UMixBatmanAttackComponent::AttackSpawn()
 
 			BatmanAmmo->Target = SelectCharacterTarget;
 			BatmanAmmo->Shooter = Batman;
-			BatmanAmmo->AttackVal = AttackVal;
 		};
 		AMixBatmanAmmo* SpawnedActor = GetWorld()->SpawnActor<AMixBatmanAmmo>(AmmoClass, EmitterTransform, SpawnParams);
 	}));

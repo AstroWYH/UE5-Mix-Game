@@ -27,8 +27,6 @@ public:
 		UIPersistantList.Remove(this);
 	}
 
-	virtual void LoadUIClass() = 0;
-
 	virtual void CreateUI() = 0;
 
 	virtual void BindUIEvent() = 0;

@@ -4,17 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "MixCharacterComponent.generated.h"
+#include "MixCreatureComponent.generated.h"
 
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class MYGAME_API UMixCharacterComponent : public UActorComponent
+UCLASS()
+class MYGAME_API UMixCreatureComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this component's properties
-	UMixCharacterComponent();
+	UMixCreatureComponent();
 
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -24,5 +24,5 @@ public:
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
-	TWeakObjectPtr<class AMixCharacter> MixCharacter;
+	TWeakObjectPtr<class AMixCreature> Creature;
 };

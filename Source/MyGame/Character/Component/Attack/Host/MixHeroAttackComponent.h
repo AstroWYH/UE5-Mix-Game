@@ -2,17 +2,17 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Character/Component/Attack/MixCharacterAttackComponent.h"
+#include "Character/Component/Attack/MixCreatureAttackComponent.h"
 
-#include "MixHostAttackComponent.generated.h"
+#include "MixHeroAttackComponent.generated.h"
 
 UCLASS()
-class MYGAME_API UMixHostAttackComponent : public UMixCharacterAttackComponent
+class MYGAME_API UMixHeroAttackComponent : public UMixCreatureAttackComponent
 {
     GENERATED_BODY()
 
 public:
-    UMixHostAttackComponent();
+    UMixHeroAttackComponent();
 
     void BeginPlay() override;
 
@@ -31,8 +31,8 @@ public:
 	void SetAttackRangeHidden(bool bHidden);
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixHostAttackComponent")
-    TWeakObjectPtr<class AMixHost> Host;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixHeroAttackComponent")
+    TWeakObjectPtr<class AMixHero> Host;
 
 public:
     TArray<TWeakObjectPtr<class AMixBatman>> BatmanInRange;

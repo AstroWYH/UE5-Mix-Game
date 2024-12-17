@@ -4,12 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Character/Character/MixCharacter.h"
+#include "Character/Character/MixCreature.h"
 
 #include "MixBatman.generated.h"
 
 UCLASS(config=Game)
-class MYGAME_API AMixBatman : public AMixCharacter
+class MYGAME_API AMixBatman : public AMixCreature
 {
 	GENERATED_BODY()
 
@@ -23,7 +23,7 @@ public:
 // 	UStaticMeshComponent* TestMesh;
 // 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 // 	TObjectPtr<UStaticMeshComponent> TestMesh2;
-// 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AMixCharacter, meta = (AllowPrivateAccess = "true"))
+// 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AMixCreature, meta = (AllowPrivateAccess = "true"))
 // 	TObjectPtr<class UMixBatmanAttackComponent> BatmanAttackComponent;
 
 };

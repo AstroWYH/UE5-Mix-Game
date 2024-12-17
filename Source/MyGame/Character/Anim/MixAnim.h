@@ -24,6 +24,6 @@ public:
 	void NativeUpdateAnimation(float DeltaTime);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UMixAnim")
-	TWeakObjectPtr<class AMixCharacter> MixCharacter;
+	TWeakObjectPtr<class AMixCreature> Creature;
 
 };

@@ -7,7 +7,7 @@
 #include "BehaviorTree\BlackboardComponent.h"
 #include "Perception\AIPerceptionTypes.h"
 #include "Perception\AIPerceptionComponent.h"
-#include "Character/Character/Host/MixHost.h"
+#include "Character/Character/Host/MixHero.h"
 #include "Kismet\GameplayStatics.h"
 
 // 此时无法获取Pawn
@@ -61,7 +61,7 @@ void AMixAIBatmanController::PostBpBeginPlay()
 
 // void AMixAIBatmanController::TraceTarget()
 // {
-// 	AMixHost* Host = Cast<AMixHost>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+// 	AMixHero* Host = Cast<AMixHero>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 // 	// 接近300停止 
 // 	MoveToActor(Host, 300.0f);
 // }
@@ -113,7 +113,7 @@ void AMixAIBatmanController::PostBpBeginPlay()
 
 void AMixAIBatmanController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
-	AMixHost* Host = Cast<AMixHost>(Actor);
+	AMixHero* Host = Cast<AMixHero>(Actor);
 	if (Host)
 	{
 		// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,

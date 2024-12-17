@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MixHostController.h"
+#include "MixHeroController.h"
 #include "GameFramework/Character.h"
 #include "Components/InputComponent.h"
 #include "EnhancedInputComponent.h"
@@ -9,14 +9,14 @@
 #include "Blueprint\UserWidget.h"
 #include "Blueprint\WidgetLayoutLibrary.h"
 #include "Kismet\GameplayStatics.h"
-#include "Character/Character/Host/MixHost.h"
+#include "Character/Character/Host/MixHero.h"
 #include "Engine\EngineTypes.h"
-#include "Character/Component/Attack/Host/MixHostAttackComponent.h"
+#include "Character/Component/Attack/Host/MixHeroAttackComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "NiagaraSystem.h"
 #include "NiagaraFunctionLibrary.h"
 
-void AMixHostController::Move(const FInputActionValue& Value)
+void AMixHeroController::Move(const FInputActionValue& Value)
 {
 	// // input is a Vector2D
 	// FVector2D MovementVector = Value.Get<FVector2D>();
@@ -39,7 +39,7 @@ void AMixHostController::Move(const FInputActionValue& Value)
 	// }
 }
 
-void AMixHostController::Look(const FInputActionValue& Value)
+void AMixHeroController::Look(const FInputActionValue& Value)
 {
 	// // input is a Vector2D
 	// FVector2D LookAxisVector = Value.Get<FVector2D>();
@@ -52,7 +52,7 @@ void AMixHostController::Look(const FInputActionValue& Value)
 	// }
 }
 
-void AMixHostController::SetupInputComponent()
+void AMixHeroController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
@@ -60,20 +60,20 @@ void AMixHostController::SetupInputComponent()
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent))
 	{
 		// // Jumping
-		// EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AMixHostController::Jump);
-		// EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &AMixHostController::StopJumping);
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMixHostController::Move);
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMixHostController::Look);
+		// EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AMixHeroController::Jump);
+		// EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &AMixHeroController::StopJumping);
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMixHeroController::Move);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMixHeroController::Look);
 
-		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &AMixHostController::Attack);
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &AMixHeroController::Attack);
 		EnhancedInputComponent->BindAction(RightClickAction, ETriggerEvent::Started, this,
-		                                   &AMixHostController::RightClick);
+		                                   &AMixHeroController::RightClick);
 		EnhancedInputComponent->BindAction(LeftClickAction, ETriggerEvent::Started, this,
-		                                   &AMixHostController::LeftClick);
+		                                   &AMixHeroController::LeftClick);
 	}
 }
 
-void AMixHostController::BeginPlay()
+void AMixHeroController::BeginPlay()
 {
 	// 蓝图中的Event BeginPlay事件会在C++的BeginPlay被调用时触发
 	// 如果不调用这句，则蓝图的EventBegin()不会被调用
@@ -89,13 +89,13 @@ void AMixHostController::BeginPlay()
 	// 初始化鼠标图像
 	InitMouseCursor();
 
-	Host = Cast<AMixHost>(GetPawn());
+	Host = Cast<AMixHero>(GetPawn());
 	if (!ensure(Host.IsValid())) return;
 
 	WalkPosition = Host->GetActorLocation();
 }
 
-void AMixHostController::Tick(float DeltaSeconds)
+void AMixHeroController::Tick(float DeltaSeconds)
 {
 	// if (!ensure(Host.IsValid())) return;
 	//
@@ -116,7 +116,7 @@ void AMixHostController::Tick(float DeltaSeconds)
 	// }
 }
 
-void AMixHostController::InitMouseCursor()
+void AMixHeroController::InitMouseCursor()
 {
 	// 创建默认鼠标图像
 	CursorDefaultClass = FindObject<UClass>(nullptr, CursorDefaultPath);
@@ -136,18 +136,18 @@ void AMixHostController::InitMouseCursor()
 	CursorAttackWidget = UUserWidget::CreateWidgetInstance(*this, CursorAttackClass, TEXT("CursorAttack"));
 }
 
-void AMixHostController::Attack(const FInputActionValue& Value)
+void AMixHeroController::Attack(const FInputActionValue& Value)
 {
 	SetMouseCursorWidget(EMouseCursor::Default, CursorAttackWidget);
 	bPrepareAttack = true;
 
-	UMixHostAttackComponent* HostAttackComponent = Cast<UMixHostAttackComponent>(Host->CharacterAttackComponent2);
+	UMixHeroAttackComponent* HostAttackComponent = Cast<UMixHeroAttackComponent>(Host->CreatureAttackComponent);
 	if (!ensure(HostAttackComponent)) return;
 
 	HostAttackComponent->SetAttackRangeHidden(false);
 }
 
-FVector AMixHostController::GetMouseClickFloorPosition()
+FVector AMixHeroController::GetMouseClickFloorPosition()
 {
 	// // 这里只能用GetMousePositionOnViewport()，结果才正确
 	// FVector2D MousePosition = UWidgetLayoutLibrary::GetMousePositionOnViewport(GetWorld());
@@ -173,7 +173,7 @@ FVector AMixHostController::GetMouseClickFloorPosition()
 	return Hit.Location;
 }
 
-void AMixHostController::RightClick(const FInputActionValue& Value)
+void AMixHeroController::RightClick(const FInputActionValue& Value)
 {
 	// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("right mouse click")));
 
@@ -185,14 +185,14 @@ void AMixHostController::RightClick(const FInputActionValue& Value)
 	                                               FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None, true);
 
 	// 打断角色旋转朝向敌方单位
-	UMixHostAttackComponent* HostAttackComponent = Cast<UMixHostAttackComponent>(Host->CharacterAttackComponent2);
+	UMixHeroAttackComponent* HostAttackComponent = Cast<UMixHeroAttackComponent>(Host->CreatureAttackComponent);
 	if (!ensure(HostAttackComponent)) return;
 
 	HostAttackComponent->bIsRotating = false;
 	HostAttackComponent->SetAttackRangeHidden(true);
 }
 
-void AMixHostController::LeftClick(const FInputActionValue& Value)
+void AMixHeroController::LeftClick(const FInputActionValue& Value)
 {
 	// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("left mouse click")));
 
@@ -204,7 +204,7 @@ void AMixHostController::LeftClick(const FInputActionValue& Value)
 		                                               FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true,
 		                                               ENCPoolMethod::None, true);
 
-		UMixHostAttackComponent* HostAttackComponent = Cast<UMixHostAttackComponent>(Host->CharacterAttackComponent2);
+		UMixHeroAttackComponent* HostAttackComponent = Cast<UMixHeroAttackComponent>(Host->CreatureAttackComponent);
 		if (!ensure(HostAttackComponent)) return;
 
 		HostAttackComponent->LastMouseClickPos = GetMouseClickFloorPosition();

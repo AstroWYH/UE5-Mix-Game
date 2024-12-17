@@ -1,19 +1,19 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "MixHost.h"
+#include "MixHero.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Character/Component/Attack/Host/MixHostAttackComponent.h"
-#include "Component/Health/Host/MixHostHealthComponent.h"
+#include "Character/Component/Attack/Host/MixHeroAttackComponent.h"
+#include "Component/Health/Host/MixHeroHealthComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
-// AMixHost
+// AMixHero
 
-AMixHost::AMixHost() : Super()
+AMixHero::AMixHero() : Super()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
@@ -52,11 +52,11 @@ AMixHost::AMixHost() : Super()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 
-	CharacterAttackComponent2 = CreateDefaultSubobject<UMixHostAttackComponent>(TEXT("HostAttackComponent2"));
-	CharacterHeathComponent = CreateDefaultSubobject<UMixHostHealthComponent>(TEXT("HostHealthComponent"));
+	CreatureAttackComponent = CreateDefaultSubobject<UMixHeroAttackComponent>(TEXT("HeroAttackComponent"));
+	CreatureHeathComponentSup = CreateDefaultSubobject<UMixHeroHealthComponent>(TEXT("HeroHealthComponentSup"));
 }
 
-void AMixHost::BeginPlay()
+void AMixHero::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();

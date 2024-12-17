@@ -20,7 +20,7 @@ void UMixBatmanAttackComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Batman = Cast<AMixBatman>(MixCharacter);
+	Batman = Cast<AMixBatman>(Creature);
 }
 
 void UMixBatmanAttackComponent::StopMovement()
@@ -33,7 +33,7 @@ void UMixBatmanAttackComponent::StopMovement()
 
 bool UMixBatmanAttackComponent::SelectTarget()
 {
-	SelectCharacterTarget = Cast<AMixCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	SelectCharacterTarget = Cast<AMixCreature>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (!ensure(SelectCharacterTarget.IsValid())) return false;
 
 	return true;

@@ -1,15 +1,15 @@
-#include "MixHostAttackComponent.h"
-#include "Character/Character/Host/MixHost.h"
+#include "MixHeroAttackComponent.h"
+#include "Character/Character/Host/MixHero.h"
 #include "Kismet\KismetSystemLibrary.h"
 #include "Engine\EngineTypes.h"
 #include "Character/Character/Batman/MixBatman.h"
 #include "Algo/MinElement.h"
 #include "GameFramework\CharacterMovementComponent.h"
-#include "Character/Controller/Host/MixHostController.h"
-#include "Ammo\Host\MixHostAmmo.h"
+#include "Character/Controller/Host/MixHeroController.h"
+#include "Ammo\Host\MixHeroAmmo.h"
 #include "Engine\AssetManager.h"
 
-UMixHostAttackComponent::UMixHostAttackComponent() : Super()
+UMixHeroAttackComponent::UMixHeroAttackComponent() : Super()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 
@@ -20,14 +20,14 @@ UMixHostAttackComponent::UMixHostAttackComponent() : Super()
 	AmmoPath = TEXT("/Script/Engine.Blueprint'/Game/MixGame/Ammo/HostAmmo/HostArrow.HostArrow_C'");
 }
 
-void UMixHostAttackComponent::BeginPlay()
+void UMixHeroAttackComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Host = Cast<AMixHost>(MixCharacter);
+	Host = Cast<AMixHero>(Creature);
 }
 
-TWeakObjectPtr<AMixBatman> UMixHostAttackComponent::SelectClosestTarget()
+TWeakObjectPtr<AMixBatman> UMixHeroAttackComponent::SelectClosestTarget()
 {
 	FVector HostPos = Host->GetActorLocation();
 	FVector HostPosPoint = FVector(HostPos.X, HostPos.Y, 100);
@@ -45,7 +45,7 @@ TWeakObjectPtr<AMixBatman> UMixHostAttackComponent::SelectClosestTarget()
 	return *ClosestBatman;
 }
 
-bool UMixHostAttackComponent::SelectTarget()
+bool UMixHeroAttackComponent::SelectTarget()
 {
 	// 获取范围内敌方单位
 	BatmanInRange.Empty();
@@ -81,23 +81,23 @@ bool UMixHostAttackComponent::SelectTarget()
 	return true;
 }
 
-void UMixHostAttackComponent::StopMovement()
+void UMixHeroAttackComponent::StopMovement()
 {
 	// 停止角色位移
-	AMixHostController* HostController = Cast<AMixHostController>(Host->GetController());
+	AMixHeroController* HostController = Cast<AMixHeroController>(Host->GetController());
 	if (!ensure(HostController)) return;
 
 	HostController->WalkPosition = Host->GetActorLocation();
 	HostController->StopMovement();
 }
 
-void UMixHostAttackComponent::TickComponent(float DeltaTime, enum ELevelTick TickType,
+void UMixHeroAttackComponent::TickComponent(float DeltaTime, enum ELevelTick TickType,
                                             FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
-void UMixHostAttackComponent::SetAttackRangeHidden(bool bHidden)
+void UMixHeroAttackComponent::SetAttackRangeHidden(bool bHidden)
 {
 	TArray<UActorComponent*> TaggedComponents = Host->GetComponentsByTag(
 		UActorComponent::StaticClass(), "AttackRangeComponent");
@@ -116,7 +116,7 @@ void UMixHostAttackComponent::SetAttackRangeHidden(bool bHidden)
 	}
 }
 
-void UMixHostAttackComponent::AttackSpawn()
+void UMixHeroAttackComponent::AttackSpawn()
 {
 	// 资源加载存在多种方式，一般资源类，可以采取LoadObject（同步），采取FStreamableManager.RequestAsyncLoad（异步）
 	// 蓝图类，也可以采取FStreamableManager.RequestAsyncLoad（异步），也可以采取TSubClassOf()的存放，然后同步或异步加载
@@ -132,12 +132,12 @@ void UMixHostAttackComponent::AttackSpawn()
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		SpawnParams.CustomPreSpawnInitalization = [this](AActor* SpawnedActor)
 		{
-			AMixHostAmmo* HostAmmo = Cast<AMixHostAmmo>(SpawnedActor);
+			AMixHeroAmmo* HostAmmo = Cast<AMixHeroAmmo>(SpawnedActor);
 			if (!ensure(HostAmmo)) return;
 
 			HostAmmo->Target = SelectCharacterTarget;
 			HostAmmo->Shooter = Host;
 		};
-		AMixHostAmmo* SpawnedActor = GetWorld()->SpawnActor<AMixHostAmmo>(AmmoClass, BowEmitterTransform, SpawnParams);
+		AMixHeroAmmo* SpawnedActor = GetWorld()->SpawnActor<AMixHeroAmmo>(AmmoClass, BowEmitterTransform, SpawnParams);
 	}));
 }

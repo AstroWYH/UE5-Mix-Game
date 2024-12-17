@@ -3,18 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Component/Health/MixCharacterHealthComponent.h"
-#include "MixHostHealthComponent.generated.h"
+#include "Component/Health/MixCreatureHealthComponent.h"
+#include "MixHeroHealthComponent.generated.h"
 
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class MYGAME_API UMixHostHealthComponent : public UMixCharacterHealthComponent
+UCLASS()
+class MYGAME_API UMixHeroHealthComponent : public UMixCreatureHealthComponent
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this component's properties
-	UMixHostHealthComponent();
+	UMixHeroHealthComponent();
 
 protected:
 	// Called when the game starts

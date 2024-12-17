@@ -4,12 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Character/Character/MixCharacter.h"
+#include "Character/Character/MixCreature.h"
 
-#include "MixHost.generated.h"
+#include "MixHero.generated.h"
 
 UCLASS(config=Game)
-class MYGAME_API AMixHost : public AMixCharacter
+class MYGAME_API AMixHero : public AMixCreature
 {
 	GENERATED_BODY()
 
@@ -22,7 +22,7 @@ class MYGAME_API AMixHost : public AMixCharacter
 	class UCameraComponent* FollowCamera;
 
 public:
-	AMixHost();
+	AMixHero();
 
 protected:
 	// APawn interface

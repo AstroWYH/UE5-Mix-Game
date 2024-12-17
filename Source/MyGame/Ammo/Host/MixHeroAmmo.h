@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "Ammo/MixAmmo.h"
-#include "MixHostAmmo.generated.h"
+#include "MixHeroAmmo.generated.h"
 
 UCLASS()
-class MYGAME_API AMixHostAmmo : public AMixAmmo
+class MYGAME_API AMixHeroAmmo : public AMixAmmo
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
-	AMixHostAmmo();
+	AMixHeroAmmo();
 
 public:
 	// Called when the game starts or when spawned

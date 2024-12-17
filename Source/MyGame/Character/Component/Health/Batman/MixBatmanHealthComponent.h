@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Component/Health/MixCharacterHealthComponent.h"
+#include "Component/Health/MixCreatureHealthComponent.h"
 #include "MixBatmanHealthComponent.generated.h"
 
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class MYGAME_API UMixBatmanHealthComponent : public UMixCharacterHealthComponent
+UCLASS()
+class MYGAME_API UMixBatmanHealthComponent : public UMixCreatureHealthComponent
 {
 	GENERATED_BODY()
 

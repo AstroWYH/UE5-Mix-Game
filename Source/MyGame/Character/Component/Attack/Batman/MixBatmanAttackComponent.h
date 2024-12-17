@@ -2,12 +2,12 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Character/Component/Attack/MixCharacterAttackComponent.h"
+#include "Character/Component/Attack/MixCreatureAttackComponent.h"
 
 #include "MixBatmanAttackComponent.generated.h"
 
 UCLASS()
-class MYGAME_API UMixBatmanAttackComponent : public UMixCharacterAttackComponent
+class MYGAME_API UMixBatmanAttackComponent : public UMixCreatureAttackComponent
 {
 	GENERATED_BODY()
 

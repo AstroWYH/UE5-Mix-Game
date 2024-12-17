@@ -6,13 +6,13 @@
 #include "GameFramework/PlayerController.h"
 #include "InputActionValue.h"
 
-#include "MixHostController.generated.h"
+#include "MixHeroController.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MYGAME_API AMixHostController : public APlayerController
+class MYGAME_API AMixHeroController : public APlayerController
 {
 	GENERATED_BODY()
 
@@ -27,7 +27,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputMappingContext* DefaultMappingContext;
 
-	// ¿∂Õº¿Ô≈‰÷√
+	// ?????????
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* JumpAction;
@@ -101,6 +101,6 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Host Controller")
-	TWeakObjectPtr<class AMixHost> Host;
+	TWeakObjectPtr<class AMixHero> Host;
 
 };

@@ -1,12 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MixCharacterComponent.h"
-#include "Character/MixCharacter.h"
+#include "MixCreatureComponent.h"
+#include "Character/MixCreature.h"
 
 
 // Sets default values for this component's properties
-UMixCharacterComponent::UMixCharacterComponent()
+UMixCreatureComponent::UMixCreatureComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -17,17 +17,17 @@ UMixCharacterComponent::UMixCharacterComponent()
 
 
 // Called when the game starts
-void UMixCharacterComponent::BeginPlay()
+void UMixCreatureComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	MixCharacter = Cast<AMixCharacter>(GetOwner());
-	if (!ensure(MixCharacter.IsValid())) return;
+	Creature = Cast<AMixCreature>(GetOwner());
+	if (!ensure(Creature.IsValid())) return;
 }
 
 
 // Called every frame
-void UMixCharacterComponent::TickComponent(float DeltaTime, ELevelTick TickType,
+void UMixCreatureComponent::TickComponent(float DeltaTime, ELevelTick TickType,
                                            FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);

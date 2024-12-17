@@ -2,8 +2,8 @@
 
 #include "Ammo/MixAmmo.h"
 #include "TimerManager.h"
-#include "Character/MixCharacter.h"
-#include "Component/Health/MixCharacterHealthComponent.h"
+#include "Character/MixCreature.h"
+#include "Component/Health/MixCreatureHealthComponent.h"
 
 // Sets default values
 AMixAmmo::AMixAmmo()
@@ -31,8 +31,8 @@ void AMixAmmo::HitTarget(UPrimitiveComponent* OverlappedComponent, AActor* Other
 
 void AMixAmmo::MakeDamage(int32 DamageVal)
 {
-	AMixCharacter* TargetCharacter = Cast<AMixCharacter>(Target);
+	AMixCreature* TargetCharacter = Cast<AMixCreature>(Target);
 	if (!ensure(TargetCharacter)) return;
 
-	TargetCharacter->CharacterHeathComponent->TakeDamage(DamageVal);
+	TargetCharacter->CreatureHeathComponentSup->TakeDamage(DamageVal);
 }

@@ -3,7 +3,7 @@
 
 #include "Ammo/Batman/MixBatmanAmmo.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
-#include "Character/Character/Host/MixHost.h"
+#include "Character/Character/Host/MixHero.h"
 #include "Ammo\MixAIAmmoController.h"
 
 void AMixBatmanAmmo::BeginPlay()
@@ -27,7 +27,7 @@ void AMixBatmanAmmo::HitTarget(UPrimitiveComponent* OverlappedComponent, AActor*
 {
 	// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("OtherActor: %s"), *OtherActor->GetName()));
 
-	AMixHost* Host = Cast<AMixHost>(OtherActor);
+	AMixHero* Host = Cast<AMixHero>(OtherActor);
 	if (!ensure(Host)) return;
 
 	AMixAIAmmoController* AmmoController = Cast<AMixAIAmmoController>(GetController());

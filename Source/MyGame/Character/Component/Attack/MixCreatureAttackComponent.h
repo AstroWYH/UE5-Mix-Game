@@ -1,12 +1,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Component/MixCharacterComponent.h"
+#include "Component/MixCreatureComponent.h"
 #include "Components/ActorComponent.h"
-#include "MixCharacterAttackComponent.generated.h"
+#include "MixCreatureAttackComponent.generated.h"
 
 UCLASS()
-class MYGAME_API UMixCharacterAttackComponent : public UMixCharacterComponent
+class MYGAME_API UMixCreatureAttackComponent : public UMixCreatureComponent
 {
 	GENERATED_BODY()
 
@@ -17,7 +17,7 @@ public:
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
-	UFUNCTION(BlueprintCallable, Category = "UMixCharacterAttackComponent")
+	UFUNCTION(BlueprintCallable, Category = "UMixCreatureAttackComponent")
 	virtual void PreAttack();
 
 	virtual void StopMovement();
@@ -30,17 +30,17 @@ public:
 
 	virtual void PlayAttackMontage();
 
-	UFUNCTION(BlueprintCallable, Category = "UMixCharacterAttackComponent")
+	UFUNCTION(BlueprintCallable, Category = "UMixCreatureAttackComponent")
 	virtual void AttackSpawn();
 
 public:
-	TWeakObjectPtr<class AMixCharacter> SelectCharacterTarget;
+	TWeakObjectPtr<class AMixCreature> SelectCharacterTarget;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixCharacterAttackComponent")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixCreatureAttackComponent")
 	float AttackRange = 0.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixCharacterAttackComponent")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixCreatureAttackComponent")
 	bool bIsAttacking = false;
 
 	// 朝向目标参数
@@ -54,9 +54,9 @@ public:
 	float YawPerFrame = 0.0f;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixCharacterAttackComponent")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixCreatureAttackComponent")
 	FSoftObjectPath AttackMontagePath;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixCharacterAttackComponent")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixCreatureAttackComponent")
 	FSoftObjectPath AmmoPath;
 };

@@ -1,6 +1,6 @@
-#include "MixCharacterHealthComponent.h"
+#include "MixCreatureHealthComponent.h"
 
-void UMixCharacterHealthComponent::TakeDamage(int32 DamageVal)
+void UMixCreatureHealthComponent::TakeDamage(int32 DamageVal)
 {
 	CurHealth -= DamageVal;
 
@@ -13,7 +13,7 @@ void UMixCharacterHealthComponent::TakeDamage(int32 DamageVal)
 	OnCharacterTakeDamage.Broadcast(DamageVal, CurHealth, MaxHealth);
 }
 
-void UMixCharacterHealthComponent::Death()
+void UMixCreatureHealthComponent::Death()
 {
 	OnCharacterDeath.Broadcast();
 }

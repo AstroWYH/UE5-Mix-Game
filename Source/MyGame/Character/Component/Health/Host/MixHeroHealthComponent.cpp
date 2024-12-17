@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MixHostHealthComponent.h"
+#include "MixHeroHealthComponent.h"
 
 
 // Sets default values for this component's properties
-UMixHostHealthComponent::UMixHostHealthComponent()
+UMixHeroHealthComponent::UMixHeroHealthComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -18,7 +18,7 @@ UMixHostHealthComponent::UMixHostHealthComponent()
 
 
 // Called when the game starts
-void UMixHostHealthComponent::BeginPlay()
+void UMixHeroHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -28,7 +28,7 @@ void UMixHostHealthComponent::BeginPlay()
 
 
 // Called every frame
-void UMixHostHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType,
+void UMixHeroHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType,
                                             FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);

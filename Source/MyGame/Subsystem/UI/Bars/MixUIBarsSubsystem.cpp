@@ -4,8 +4,8 @@
 #include "MixUIBarsSubsystem.h"
 
 #include "MixGameInstance.h"
-#include "Character/Host/MixHost.h"
-#include "Component/Health/MixCharacterHealthComponent.h"
+#include "Character/Host/MixHero.h"
+#include "Component/Health/MixCreatureHealthComponent.h"
 #include "Components/NamedSlot.h"
 #include "Components/ProgressBar.h"
 #include "Kismet/GameplayStatics.h"
@@ -23,11 +23,11 @@ void UMixUIBarsSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 // void UMixUIBarsSubsystem::OnSpawnPlayActor()
 // {
-// 	AMixHost* Host = Cast<AMixHost>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+// 	AMixHero* Host = Cast<AMixHero>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 // 	if (!ensure(Host)) return;
-// 	if (!ensure(Host->CharacterHeathComponent)) return;
+// 	if (!ensure(Host->CreatureHeathComponentSup)) return;
 //
-// 	Host->CharacterHeathComponent->OnCharacterTakeDamage.AddDynamic(this, &ThisClass::UpdateUIBars);
+// 	Host->CreatureHeathComponentSup->OnCharacterTakeDamage.AddDynamic(this, &ThisClass::UpdateUIBars);
 // }
 
 void UMixUIBarsSubsystem::Tick(float DeltaTime)
@@ -42,13 +42,13 @@ void UMixUIBarsSubsystem::Tick(float DeltaTime)
 	ACharacter* Character = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 	if (Character)
 	{
-		AMixHost* Host = Cast<AMixHost>(Character);
+		AMixHero* Host = Cast<AMixHero>(Character);
 		if (!ensure(Host)) return;
-		if (!ensure(Host->CharacterHeathComponent)) return;
+		if (!ensure(Host->CreatureHeathComponentSup)) return;
 	
-		if (!Host->CharacterHeathComponent->OnCharacterTakeDamage.IsBound())
+		if (!Host->CreatureHeathComponentSup->OnCharacterTakeDamage.IsBound())
 		{
-			Host->CharacterHeathComponent->OnCharacterTakeDamage.AddDynamic(this, &ThisClass::UpdateUIBars);
+			Host->CreatureHeathComponentSup->OnCharacterTakeDamage.AddDynamic(this, &ThisClass::UpdateUIBars);
 		}
 	}
 }

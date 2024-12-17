@@ -2,7 +2,7 @@
 
 
 #include "Ammo/MixAIAmmoController.h"
-#include "Ammo\Host\MixHostAmmo.h"
+#include "Ammo\Host\MixHeroAmmo.h"
 
 void AMixAIAmmoController::BeginPlay()
 {

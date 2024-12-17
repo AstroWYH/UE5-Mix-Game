@@ -1,19 +1,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Component/MixCreatureComponent.h"
 #include "Components/ActorComponent.h"
-#include "MixCharacterHealthComponent.generated.h"
+#include "MixCreatureHealthComponent.generated.h"
 
 UCLASS()
-class MYGAME_API UMixCharacterHealthComponent : public UActorComponent
+class MYGAME_API UMixCreatureHealthComponent : public UMixCreatureComponent
 {
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixCharacterHealthComponent")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixCreatureHealthComponent")
 	int32 MaxHealth = 100.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UMixCharacterHealthComponent")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UMixCreatureHealthComponent")
 	int32 CurHealth = 100.0f;
 
 public:

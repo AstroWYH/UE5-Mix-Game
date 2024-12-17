@@ -25,9 +25,9 @@ void UMixUIBarsSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 // {
 // 	AMixHero* Host = Cast<AMixHero>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 // 	if (!ensure(Host)) return;
-// 	if (!ensure(Host->CreatureHeathComponentSup)) return;
+// 	if (!ensure(Host->CreatureHeathComponent)) return;
 //
-// 	Host->CreatureHeathComponentSup->OnCharacterTakeDamage.AddDynamic(this, &ThisClass::UpdateUIBars);
+// 	Host->CreatureHeathComponent->OnCharacterTakeDamage.AddDynamic(this, &ThisClass::UpdateUIBars);
 // }
 
 void UMixUIBarsSubsystem::Tick(float DeltaTime)
@@ -44,11 +44,11 @@ void UMixUIBarsSubsystem::Tick(float DeltaTime)
 	{
 		AMixHero* Host = Cast<AMixHero>(Character);
 		if (!ensure(Host)) return;
-		if (!ensure(Host->CreatureHeathComponentSup)) return;
+		if (!ensure(Host->CreatureHeathComponent)) return;
 	
-		if (!Host->CreatureHeathComponentSup->OnCharacterTakeDamage.IsBound())
+		if (!Host->CreatureHeathComponent->OnCharacterTakeDamage.IsBound())
 		{
-			Host->CreatureHeathComponentSup->OnCharacterTakeDamage.AddDynamic(this, &ThisClass::UpdateUIBars);
+			Host->CreatureHeathComponent->OnCharacterTakeDamage.AddDynamic(this, &ThisClass::UpdateUIBars);
 		}
 	}
 }

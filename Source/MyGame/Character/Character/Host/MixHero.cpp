@@ -53,7 +53,7 @@ AMixHero::AMixHero() : Super()
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 
 	CreatureAttackComponent = CreateDefaultSubobject<UMixHeroAttackComponent>(TEXT("HeroAttackComponent"));
-	CreatureHeathComponentSup = CreateDefaultSubobject<UMixHeroHealthComponent>(TEXT("HeroHealthComponentSup"));
+	CreatureHeathComponent = CreateDefaultSubobject<UMixHeroHealthComponent>(TEXT("HeroHealthComponent"));
 }
 
 void AMixHero::BeginPlay()

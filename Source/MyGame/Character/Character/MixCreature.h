@@ -17,11 +17,11 @@ public:
 	AMixCreature();
 
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AMixCreature)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AMixCreature)
 	TObjectPtr<class UMixCreatureAttackComponent> CreatureAttackComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AMixCreature)
-	TObjectPtr<class UMixCreatureHealthComponent> CreatureHeathComponentSup;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AMixCreature)
+	TObjectPtr<class UMixCreatureHealthComponent> CreatureHeathComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AMixCreature)
 	TObjectPtr<class UWidgetComponent> HeadComponent;

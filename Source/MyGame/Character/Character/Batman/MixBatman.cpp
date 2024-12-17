@@ -7,7 +7,7 @@
 AMixBatman::AMixBatman() : Super()
 {
 	CreatureAttackComponent = CreateDefaultSubobject<UMixBatmanAttackComponent>(TEXT("BatmanAttackComponent2"));
-	CreatureHeathComponentSup = CreateDefaultSubobject<UMixBatmanHealthComponent>(TEXT("BatmanHealthComponent"));
+	CreatureHeathComponent = CreateDefaultSubobject<UMixBatmanHealthComponent>(TEXT("BatmanHealthComponent"));
 }
 
 void AMixBatman::BeginPlay()

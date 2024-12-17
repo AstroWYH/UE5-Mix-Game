@@ -34,5 +34,5 @@ void AMixAmmo::MakeDamage(int32 DamageVal)
 	AMixCreature* TargetCharacter = Cast<AMixCreature>(Target);
 	if (!ensure(TargetCharacter)) return;
 
-	TargetCharacter->CreatureHeathComponentSup->TakeDamage(DamageVal);
+	TargetCharacter->CreatureHeathComponent->TakeDamage(DamageVal);
 }

@@ -18,7 +18,7 @@ void UMixUITestSubsystem::CreateUI()
 	TestBtnUI = Cast<UUserWidget>(UUserWidget::CreateWidgetInstance(*GetGameInstance(), UIMgr->GetUIClass(GetClass()->GetFName(), "TestBtn"), TEXT("TestBtn")));
 	if (!ensure(TestBtnUI)) return;
 
-	UIMgr->GetUIBPData(TestBtnUI, BPVarDataMap);
+	UIMgr->GetUIBPData(TestBtnUI, BPUIProps);
 
 	TestBtnUI->AddToViewport();
 }
@@ -31,10 +31,10 @@ void UMixUITestSubsystem::BindUIEvent()
 	// TestBtnUI->BtnAdd->OnClicked.AddDynamic(this, &ThisClass::TestAdd);
 	// TestBtnUI->BtnRemove->OnClicked.AddDynamic(this, &ThisClass::TestRemove);
 
-	UButton* BtnAdd = Cast<UButton>(BPVarDataMap["BtnAdd"]);
+	UButton* BtnAdd = Cast<UButton>(BPUIProps["BtnAdd"]);
 	BtnAdd->OnClicked.AddDynamic(this, &ThisClass::TestAdd);
 
-	UButton* BtnRemove = Cast<UButton>(BPVarDataMap["BtnRemove"]);
+	UButton* BtnRemove = Cast<UButton>(BPUIProps["BtnRemove"]);
 	BtnRemove->OnClicked.AddDynamic(this, &ThisClass::TestRemove);
 }
 

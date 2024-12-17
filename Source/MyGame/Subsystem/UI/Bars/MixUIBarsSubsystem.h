@@ -40,9 +40,12 @@ private:
 	// void OnSpawnPlayActor();
 
 	UFUNCTION()
-	void UpdateUIBars(int32 DamageVal);
+	void UpdateUIBars(int32 DamageVal, int32 CurHealthVal, int32 MaxHealthVal);
 
 private:
 	UPROPERTY()
 	TObjectPtr<class UUserWidget> BarsContainerUI;
+
+	UPROPERTY()
+	TObjectPtr<class UProgressBar> HealthProgress;
 };

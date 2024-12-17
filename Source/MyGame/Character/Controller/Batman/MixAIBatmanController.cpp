@@ -116,10 +116,10 @@ void AMixAIBatmanController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulu
 	AMixHost* Host = Cast<AMixHost>(Actor);
 	if (Host)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,
-		                                 FString::Printf(
-			                                 TEXT("bSensed: %d Actor:%s"), Stimulus.WasSuccessfullySensed(),
-			                                 *Actor->GetName()));
+		// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,
+		//                                  FString::Printf(
+		// 	                                 TEXT("bSensed: %d Actor:%s"), Stimulus.WasSuccessfullySensed(),
+		// 	                                 *Actor->GetName()));
 
 		bIsDetectHost = Stimulus.WasSuccessfullySensed();
 		BatmanBlackboard->SetValueAsBool("IsDetectHost", bIsDetectHost);

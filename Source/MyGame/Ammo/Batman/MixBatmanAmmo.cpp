@@ -25,8 +25,7 @@ void AMixBatmanAmmo::HitTarget(UPrimitiveComponent* OverlappedComponent, AActor*
                                UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
                                const FHitResult& SweepResult)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,
-	                                 FString::Printf(TEXT("OtherActor: %s"), *OtherActor->GetName()));
+	// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("OtherActor: %s"), *OtherActor->GetName()));
 
 	AMixHost* Host = Cast<AMixHost>(OtherActor);
 	if (!ensure(Host)) return;

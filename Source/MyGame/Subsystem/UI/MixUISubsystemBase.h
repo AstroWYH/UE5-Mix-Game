@@ -31,6 +31,6 @@ protected:
 	TWeakObjectPtr<UMixUIMgr> UIMgr;
 
 	UPROPERTY()
-	TMap<FName, UObject*> BPVarDataMap;
+	TMap<FName, UObject*> BPUIProps;
 
 };

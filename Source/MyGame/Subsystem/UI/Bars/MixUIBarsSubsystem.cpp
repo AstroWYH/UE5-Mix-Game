@@ -7,6 +7,7 @@
 #include "Character/Host/MixHost.h"
 #include "Component/Health/MixCharacterHealthComponent.h"
 #include "Components/NamedSlot.h"
+#include "Components/ProgressBar.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/Bars/MixBarsContainerWidget.h"
 #include "UI/Bars/MixHealthBarWidget.h"
@@ -61,6 +62,11 @@ void UMixUIBarsSubsystem::CreateUI()
 
 	UNamedSlot* BarsNS = Cast<UNamedSlot>(UIMgr->GetMainLayoutSlots()["Bars"]);
 	BarsNS->SetContent(BarsContainerUI);
+
+	UIMgr->GetUIBPData(BarsContainerUI, BPUIProps);
+	UUserWidget* HealthBar = Cast<UUserWidget>(BPUIProps["HealthBar"]);
+	UIMgr->GetUIBPData(HealthBar, BPUIProps);
+	HealthProgress = Cast<UProgressBar>(BPUIProps["Progress"]);
 }
 
 void UMixUIBarsSubsystem::BindUIEvent()
@@ -68,10 +74,11 @@ void UMixUIBarsSubsystem::BindUIEvent()
 	Super::BindUIEvent();
 }
 
-void UMixUIBarsSubsystem::UpdateUIBars(int32 DamageVal)
+void UMixUIBarsSubsystem::UpdateUIBars(int32 DamageVal, int32 CurHealthVal, int32 MaxHealthVal)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,
-	                                 FString::Printf(TEXT("GetDamage: %d"), DamageVal));
+	// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("GetDamage: %d"), DamageVal));
+
+	HealthProgress->SetPercent((float)CurHealthVal / MaxHealthVal);
 }
 
 void UMixUIBarsSubsystem::Deinitialize()

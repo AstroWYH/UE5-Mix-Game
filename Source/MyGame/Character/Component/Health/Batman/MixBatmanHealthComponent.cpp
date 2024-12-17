@@ -11,8 +11,8 @@ UMixBatmanHealthComponent::UMixBatmanHealthComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// TODO: 后续改为配表
-	CurrentHealth = 300;
+	// TODO: 鍚庣画鏀逛负閰嶈〃
+	CurHealth = 300;
 	MaxHealth = 300;
 }
 

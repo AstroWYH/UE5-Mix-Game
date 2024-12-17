@@ -2,15 +2,15 @@
 
 void UMixCharacterHealthComponent::TakeDamage(int32 DamageVal)
 {
-	CurrentHealth -= DamageVal;
+	CurHealth -= DamageVal;
 
-	if (CurrentHealth <= 0)
+	if (CurHealth <= 0)
 	{
-		CurrentHealth = 0;
+		CurHealth = 0;
 		Death();
 	}
 
-	OnCharacterTakeDamage.Broadcast(DamageVal);
+	OnCharacterTakeDamage.Broadcast(DamageVal, CurHealth, MaxHealth);
 }
 
 void UMixCharacterHealthComponent::Death()

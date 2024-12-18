@@ -16,6 +16,10 @@ class MYGAME_API AMixCreature : public ACharacter
 public:
 	AMixCreature();
 
+	virtual void BeginPlay() override;
+
+	virtual void PostRegisterAllComponents() override;
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AMixCreature)
 	TObjectPtr<class UMixCreatureAttackComponent> CreatureAttackComponent;
@@ -23,6 +27,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AMixCreature)
 	TObjectPtr<class UMixCreatureHealthComponent> CreatureHeathComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AMixCreature)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AMixCreature)
 	TObjectPtr<class UWidgetComponent> HeadComponent;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AMixCreature)
+	TSubclassOf<UUserWidget> HeadUIClass;
+
+	UPROPERTY()
+	TObjectPtr<UUserWidget> HeadUI;
 };

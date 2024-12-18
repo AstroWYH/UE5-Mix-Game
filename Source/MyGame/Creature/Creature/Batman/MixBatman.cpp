@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "MixBatman.h"
+
+#include "Components/WidgetComponent.h"
 #include "Creature/Component/Attack/Batman/MixBatmanAttackComponent.h"
 #include "Creature/Component/Health/Batman/MixBatmanHealthComponent.h"
 

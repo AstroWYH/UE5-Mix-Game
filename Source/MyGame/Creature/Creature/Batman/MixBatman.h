@@ -18,12 +18,4 @@ public:
 
 	void BeginPlay() override;
 
-public:
-// 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-// 	UStaticMeshComponent* TestMesh;
-// 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-// 	TObjectPtr<UStaticMeshComponent> TestMesh2;
-// 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AMixCreature, meta = (AllowPrivateAccess = "true"))
-// 	TObjectPtr<class UMixBatmanAttackComponent> BatmanAttackComponent;
-
 };

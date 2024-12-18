@@ -3,9 +3,9 @@
 
 #include "MixUIBarsSubsystem.h"
 
-#include "MixGameInstance.h"
-#include "Character/Host/MixHero.h"
-#include "Component/Health/MixCreatureHealthComponent.h"
+#include "Game/MixGameInstance.h"
+#include "Creature/Creature/Hero/MixHero.h"
+#include "Creature/Component/Health/MixCreatureHealthComponent.h"
 #include "Components/NamedSlot.h"
 #include "Components/ProgressBar.h"
 #include "Kismet/GameplayStatics.h"

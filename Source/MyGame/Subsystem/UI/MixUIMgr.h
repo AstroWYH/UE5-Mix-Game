@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MixUIAsset.h"
+#include "DataTable/UI/MixUIAsset.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "MixUIMgr.generated.h"
 

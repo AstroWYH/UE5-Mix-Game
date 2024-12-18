@@ -1,6 +1,6 @@
 #include "MixUIMgr.h"
 
-#include "MixWorldSettings.h"
+#include "Game/MixWorldSettings.h"
 #include "UI/MixUIPersistantInterface.h"
 #include "Blueprint\UserWidget.h"
 

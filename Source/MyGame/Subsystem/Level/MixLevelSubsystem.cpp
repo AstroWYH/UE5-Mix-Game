@@ -3,7 +3,7 @@
 
 #include "MixLevelSubsystem.h"
 
-#include "Character/Batman/MixBatman.h"
+#include "Creature/Creature/Batman/MixBatman.h"
 #include "Kismet/GameplayStatics.h"
 
 void UMixLevelSubsystem::Initialize(FSubsystemCollectionBase& Collection)

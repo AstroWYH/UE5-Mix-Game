@@ -3,7 +3,7 @@
 
 #include "Subsystem/Inventory/MixInventorySubsystem.h"
 #include "Engine/DataTable.h"
-#include "DataTable/MixData.h"
+#include "DataTable/Item/MixData.h"
 #include "MixItem.h"
 #include "MixInventoryItem.h"
 #include "Data/MixDataSubsystem.h"

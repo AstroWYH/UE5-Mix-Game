@@ -33,8 +33,8 @@ void UMixBatmanAttackComponent::StopMovement()
 
 bool UMixBatmanAttackComponent::SelectTarget()
 {
-	SelectCharacterTarget = Cast<AMixCreature>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	if (!ensure(SelectCharacterTarget.IsValid())) return false;
+	SelectCreatureTarget = Cast<AMixCreature>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (!ensure(SelectCreatureTarget.IsValid())) return false;
 
 	return true;
 }
@@ -66,7 +66,7 @@ void UMixBatmanAttackComponent::AttackSpawn()
 			AMixBatmanAmmo* BatmanAmmo = Cast<AMixBatmanAmmo>(SpawnedActor);
 			if (!ensure(BatmanAmmo)) return;
 
-			BatmanAmmo->Target = SelectCharacterTarget;
+			BatmanAmmo->Target = SelectCreatureTarget;
 			BatmanAmmo->Shooter = Batman;
 		};
 		AMixBatmanAmmo* SpawnedActor = GetWorld()->SpawnActor<AMixBatmanAmmo>(AmmoClass, EmitterTransform, SpawnParams);

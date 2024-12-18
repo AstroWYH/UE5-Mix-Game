@@ -71,5 +71,5 @@ public:
 	class UBlackboardComponent* BatmanBlackboard = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMixAIBatmanController")
-	bool bIsDetectHost = false;
+	bool bIsDetectHero = false;
 };

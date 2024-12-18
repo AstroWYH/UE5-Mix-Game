@@ -75,8 +75,8 @@ bool UMixHeroAttackComponent::SelectTarget()
 	if (BatmanInRange.IsEmpty()) return false;
 
 	// 筛选范围内最近敌方单位，准备攻击
-	SelectCharacterTarget = SelectClosestTarget();
-	if (!ensure(SelectCharacterTarget.IsValid())) return false;
+	SelectCreatureTarget = SelectClosestTarget();
+	if (!ensure(SelectCreatureTarget.IsValid())) return false;
 
 	return true;
 }
@@ -135,7 +135,7 @@ void UMixHeroAttackComponent::AttackSpawn()
 			AMixHeroAmmo* HostAmmo = Cast<AMixHeroAmmo>(SpawnedActor);
 			if (!ensure(HostAmmo)) return;
 
-			HostAmmo->Target = SelectCharacterTarget;
+			HostAmmo->Target = SelectCreatureTarget;
 			HostAmmo->Shooter = Host;
 		};
 		AMixHeroAmmo* SpawnedActor = GetWorld()->SpawnActor<AMixHeroAmmo>(AmmoClass, BowEmitterTransform, SpawnParams);

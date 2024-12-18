@@ -29,7 +29,7 @@ void UMixCreatureAttackComponent::TurnToTarget()
 	// 面向目标旋转
 	SelfLocation = Creature->GetActorLocation();
 	SelfRotation = FRotator(0.0f, Creature->GetActorRotation().Yaw, 0.0f);
-	TargetLocation = SelectCharacterTarget->GetActorLocation();
+	TargetLocation = SelectCreatureTarget->GetActorLocation();
 	SelfLookAtRotation = FRotator(0.0f, (TargetLocation - SelfLocation).Rotation().Yaw, 0.0f);
 
 	// 用于确保朝角度较小的方向旋转
@@ -61,7 +61,7 @@ void UMixCreatureAttackComponent::TickRotateToTarget()
 		{
 			// 最后获取Host最新应该的朝向，用于矫正
 			FRotator FinalFixRotation = FRotator(
-				0.0f, (SelectCharacterTarget->GetActorLocation() - Creature->GetActorLocation()).Rotation().Yaw,
+				0.0f, (SelectCreatureTarget->GetActorLocation() - Creature->GetActorLocation()).Rotation().Yaw,
 				0.0f);
 			Creature->SetActorRotation(FinalFixRotation);
 			bIsRotating = false;

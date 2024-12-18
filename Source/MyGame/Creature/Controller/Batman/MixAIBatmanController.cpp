@@ -61,14 +61,14 @@ void AMixAIBatmanController::PostBpBeginPlay()
 
 // void AMixAIBatmanController::TraceTarget()
 // {
-// 	AMixHero* Host = Cast<AMixHero>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+// 	AMixHero* Hero = Cast<AMixHero>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 // 	// 接近300停止 
-// 	MoveToActor(Host, 300.0f);
+// 	MoveToActor(Hero, 300.0f);
 // }
 // 
 // void AMixAIBatmanController::TraceTargetAbort()
 // {
-// 	if (!bIsDetectHost)
+// 	if (!bIsDetectHero)
 // 	{
 // 		StopMovement();
 // 
@@ -93,7 +93,7 @@ void AMixAIBatmanController::PostBpBeginPlay()
 // 
 // void AMixAIBatmanController::TracePathPointAbort()
 // {
-// 	if (bIsDetectHost)
+// 	if (bIsDetectHero)
 // 	{
 // 		StopMovement();
 // 
@@ -113,16 +113,16 @@ void AMixAIBatmanController::PostBpBeginPlay()
 
 void AMixAIBatmanController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
-	AMixHero* Host = Cast<AMixHero>(Actor);
-	if (Host)
+	AMixHero* Hero = Cast<AMixHero>(Actor);
+	if (Hero)
 	{
 		// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,
 		//                                  FString::Printf(
 		// 	                                 TEXT("bSensed: %d Actor:%s"), Stimulus.WasSuccessfullySensed(),
 		// 	                                 *Actor->GetName()));
 
-		bIsDetectHost = Stimulus.WasSuccessfullySensed();
-		BatmanBlackboard->SetValueAsBool("IsDetectHost", bIsDetectHost);
+		bIsDetectHero = Stimulus.WasSuccessfullySensed();
+		BatmanBlackboard->SetValueAsBool("IsDetectHost", bIsDetectHero);
 	}
 }
 

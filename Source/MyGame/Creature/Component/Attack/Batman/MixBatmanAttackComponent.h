@@ -24,6 +24,6 @@ public:
 	void AttackSpawn() override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixHostAttackComponent")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixBatmanAttackComponent")
 	TWeakObjectPtr<class AMixBatman> Batman;
 };

@@ -3,15 +3,12 @@
 
 #include "MixUIBarsSubsystem.h"
 
-#include "Game/MixGameInstance.h"
 #include "Creature/Creature/Hero/MixHero.h"
 #include "Creature/Component/Health/MixCreatureHealthComponent.h"
 #include "Components/NamedSlot.h"
 #include "Components/ProgressBar.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/Bars/MixBarsContainerWidget.h"
-#include "UI/Bars/MixHealthBarWidget.h"
-#include "UI/Bars/MixMagicBarWidget.h"
 
 void UMixUIBarsSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
@@ -23,11 +20,11 @@ void UMixUIBarsSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 // void UMixUIBarsSubsystem::OnSpawnPlayActor()
 // {
-// 	AMixHero* Host = Cast<AMixHero>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-// 	if (!ensure(Host)) return;
-// 	if (!ensure(Host->CreatureHeathComponent)) return;
+// 	AMixHero* Hero = Cast<AMixHero>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+// 	if (!ensure(Hero)) return;
+// 	if (!ensure(Hero->CreatureHeathComponent)) return;
 //
-// 	Host->CreatureHeathComponent->OnCharacterTakeDamage.AddDynamic(this, &ThisClass::UpdateUIBars);
+// 	Hero->CreatureHeathComponent->OnCharacterTakeDamage.AddDynamic(this, &ThisClass::UpdateUIBars);
 // }
 
 void UMixUIBarsSubsystem::Tick(float DeltaTime)
@@ -39,16 +36,16 @@ void UMixUIBarsSubsystem::Tick(float DeltaTime)
 	// 后者则不存在，需要借助static CreatedDelegate，流程更复杂
 
 	// 在Tick里执行，只有初次起作用，后续存在浪费
-	ACharacter* Character = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	if (Character)
+	ACharacter* Creature = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	if (Creature)
 	{
-		AMixHero* Host = Cast<AMixHero>(Character);
-		if (!ensure(Host)) return;
-		if (!ensure(Host->CreatureHeathComponent)) return;
+		AMixHero* Hero = Cast<AMixHero>(Creature);
+		if (!ensure(Hero)) return;
+		if (!ensure(Hero->CreatureHeathComponent)) return;
 	
-		if (!Host->CreatureHeathComponent->OnCharacterTakeDamage.IsBound())
+		if (!Hero->CreatureHeathComponent->OnCharacterTakeDamage.IsBound())
 		{
-			Host->CreatureHeathComponent->OnCharacterTakeDamage.AddDynamic(this, &ThisClass::UpdateUIBars);
+			Hero->CreatureHeathComponent->OnCharacterTakeDamage.AddDynamic(this, &ThisClass::UpdateUIBars);
 		}
 	}
 }

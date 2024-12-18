@@ -34,7 +34,7 @@ public:
 	virtual void AttackSpawn();
 
 public:
-	TWeakObjectPtr<class AMixCreature> SelectCharacterTarget;
+	TWeakObjectPtr<class AMixCreature> SelectCreatureTarget;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixCreatureAttackComponent")

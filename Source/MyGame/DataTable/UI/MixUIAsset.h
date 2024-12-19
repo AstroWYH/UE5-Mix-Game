@@ -22,11 +22,11 @@ class MYGAME_API UMixUIAsset : public UPrimaryDataAsset
 
 private:
 	UPROPERTY(EditAnywhere, Category = "UI")
-	TMap<FName, FUIClassArray> AllUIAsset;
+	TMap<FName, FUIClassArray> AllUIAssets;
 
 public:
 	const TMap<FName, FUIClassArray>& GetAllUIAssets() const
 	{
-		return AllUIAsset;
+		return AllUIAssets;
 	}
 };

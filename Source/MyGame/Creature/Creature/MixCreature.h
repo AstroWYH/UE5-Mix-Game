@@ -31,9 +31,6 @@ public:
 	TObjectPtr<class UWidgetComponent> HeadComponent;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AMixCreature)
-	TSubclassOf<UUserWidget> HeadUIClass;
-
 	UPROPERTY()
 	TObjectPtr<UUserWidget> HeadUI;
 };

@@ -25,6 +25,6 @@ void AMixCreature::PostRegisterAllComponents()
 	if (!ensure(HeadUIAsset.Classes.Contains(GetClass()->GetFName()))) return;
 
 	TSubclassOf<UUserWidget> HeadUIClass = HeadUIAsset.Classes[GetClass()->GetFName()];
-	HeadUI = CreateWidget<UUserWidget>(GetGameInstance(), HeadUIClass);
+	HeadUI = CreateWidget<UUserWidget>(GetWorld(), HeadUIClass);
 	HeadComponent->SetWidget(HeadUI);
 }

@@ -23,6 +23,14 @@ void UMixUIMgr::LoadUIAssets()
 	// DA类就直接这样加载是最合理且方便的
 	UIAssets = WorldSettings->UIAssets;
 
+	// FString A = UIAssets.GetPathName();
+	// FString B = UIAssets.GetPath();
+	// FString C = UIAssets.GetFullName();
+	// FString D = FPackageName::LongPackageNameToFilename(A);
+	// FString E = FPaths::ConvertRelativePathToFull(D);
+	// FString F = IFileManager::Get().GetFilenameOnDisk(*E);
+	// FString G = FPlatformFileManager::Get().GetPlatformFile().GetFilenameOnDisk(*E);
+
 	// 不要用蓝图类来装配置数据，容易加载出nullptr
 	// UIAssets = Cast<UMixUIAsset>(StaticLoadObject(UMixUIAsset::StaticClass(), nullptr, *UIAssetsClass->GetPathName()));
 	// UIAssets = Cast<UMixUIAsset>(StaticLoadObject(UMixUIAsset::StaticClass(), nullptr, TEXT("/Script/MyGame.MixUIAsset'/Game/MixGame/UI/DA_UIAssets.DA_UIAssets'")));

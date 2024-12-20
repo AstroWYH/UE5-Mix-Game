@@ -63,6 +63,7 @@ UPrimaryDataAsset* UMixAssetManager::LoadAssetDataOfClass(TSubclassOf<UPrimaryDa
 	}
 	else
 	{
+		return nullptr;
 		// It is not acceptable to fail to load any GameData asset. It will result in soft failures that are hard to diagnose.
 		UE_LOG(LogTemp, Fatal, TEXT("Failed to load GameData asset at %s. Type %s. This is not recoverable and likely means you do not have the correct data to run %s."), *DataClassPath.ToString(), *PrimaryAssetType.ToString(), FApp::GetProjectName());
 	}

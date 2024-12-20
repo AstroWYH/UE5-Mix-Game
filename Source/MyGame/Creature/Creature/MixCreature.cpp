@@ -21,10 +21,10 @@ void AMixCreature::PostRegisterAllComponents()
 {
 	Super::PostRegisterAllComponents();
 
-	const UMixWidgetComponentAsset& WidgetComponentAsset = UMixAssetManager::Get().GetHeadUIPath();
-	if (!ensure(WidgetComponentAsset.HeadUIs.Contains(GetClass()->GetFName()))) return;
+	const UMixWidgetComponentAsset& HeadUIAsset = UMixAssetManager::Get().GetHeadUIPath();
+	if (!ensure(HeadUIAsset.Classes.Contains(GetClass()->GetFName()))) return;
 
-	TSubclassOf<UUserWidget> HeadUIClass = WidgetComponentAsset.HeadUIs[GetClass()->GetFName()];
+	TSubclassOf<UUserWidget> HeadUIClass = HeadUIAsset.Classes[GetClass()->GetFName()];
 	HeadUI = CreateWidget<UUserWidget>(GetGameInstance(), HeadUIClass);
 	HeadComponent->SetWidget(HeadUI);
 }

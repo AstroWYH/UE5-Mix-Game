@@ -16,6 +16,6 @@ class MYGAME_API UMixWidgetComponentAsset : public UPrimaryDataAsset
 
 public:
 	UPROPERTY(EditAnywhere, Category = "HeadUI")
-	TMap<FName, TSubclassOf<UUserWidget>> HeadUIs;
+	TMap<FName, TSubclassOf<UUserWidget>> Classes;
 
 };

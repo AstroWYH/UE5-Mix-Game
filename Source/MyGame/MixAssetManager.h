@@ -12,7 +12,7 @@ class UMixWidgetComponentAsset;
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType, Blueprintable)
 class MYGAME_API UMixAssetManager : public UAssetManager
 {
 	GENERATED_BODY()
@@ -20,27 +20,33 @@ class MYGAME_API UMixAssetManager : public UAssetManager
 public:
 	const UMixWidgetComponentAsset& GetHeadUIPath()
 	{
-		return GetOrLoadTypedGameData<UMixWidgetComponentAsset>(HeadUIPath);
+		return GetOrLoadAssetData<UMixWidgetComponentAsset>(HeadUIPath);
 	}
 
 public:
 	static UMixAssetManager& Get();
 
-private:
-	UPROPERTY()
+public:
+	// 方法1：直接用TObjectPtr，优点是简单，不用调下面复杂的一堆逻辑；缺点是不能懒加载，上来就需要加载，虽然目前都是UClass，但保不齐有其他资源
+	// UPrimaryDataAsset都可以用TObjectPtr，启动加载，毕竟里面仅是UClass
+	// UPROPERTY(EditDefaultsOnly, Category = UMixAssetManager)
+	// TObjectPtr<UMixWidgetComponentAsset> HeadUIPath;
+
+	// 方法2：用TSoftObjectPtr懒加载，需要的时候加载，并存到AssetDataMap
+	UPROPERTY(EditDefaultsOnly, Category = UMixAssetManager)
 	TSoftObjectPtr<UMixWidgetComponentAsset> HeadUIPath;
 
 private:
-	template <typename GameDataClass>
-	const GameDataClass& GetOrLoadTypedGameData(const TSoftObjectPtr<GameDataClass>& DataPath)
+	template <typename AssetClass>
+	const AssetClass& GetOrLoadAssetData(const TSoftObjectPtr<AssetClass>& DataPath)
 	{
-		if (TObjectPtr<UPrimaryDataAsset> const* pResult = AssetDataMap.Find(GameDataClass::StaticClass()))
+		if (TObjectPtr<UPrimaryDataAsset> const* pResult = AssetDataMap.Find(AssetClass::StaticClass()))
 		{
-			return *CastChecked<GameDataClass>(*pResult);
+			return *CastChecked<AssetClass>(*pResult);
 		}
 
 		// Does a blocking load if needed
-		return *CastChecked<const GameDataClass>(LoadAssetDataOfClass(GameDataClass::StaticClass(), DataPath, GameDataClass::StaticClass()->GetFName()));
+		return *CastChecked<const AssetClass>(LoadAssetDataOfClass(AssetClass::StaticClass(), DataPath, AssetClass::StaticClass()->GetFName()));
 	}
 
 	UPrimaryDataAsset* LoadAssetDataOfClass(TSubclassOf<UPrimaryDataAsset> DataClass, const TSoftObjectPtr<UPrimaryDataAsset>& DataClassPath, FPrimaryAssetType PrimaryAssetType);

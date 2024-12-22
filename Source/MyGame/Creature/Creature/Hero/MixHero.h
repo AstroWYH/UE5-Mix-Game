@@ -8,6 +8,8 @@
 
 #include "MixHero.generated.h"
 
+class UMixHeroInfoBase;
+
 UCLASS(config=Game)
 class MYGAME_API AMixHero : public AMixCreature
 {
@@ -35,4 +37,13 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+private:
+	UPROPERTY()
+	TObjectPtr<UMixHeroInfoBase> HeroInfo;
+
+public:
+	void SetHeroInfo(const TObjectPtr<UMixHeroInfoBase>& InHeroInfo);
+
+	TObjectPtr<UMixHeroInfoBase> GetHeroInfo() const;
 };

@@ -61,3 +61,13 @@ void AMixHero::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 }
+
+void AMixHero::SetHeroInfo(const TObjectPtr<UMixHeroInfoBase>& InHeroInfo)
+{
+	HeroInfo = InHeroInfo;
+}
+
+TObjectPtr<UMixHeroInfoBase> AMixHero::GetHeroInfo() const
+{
+	return HeroInfo;
+}

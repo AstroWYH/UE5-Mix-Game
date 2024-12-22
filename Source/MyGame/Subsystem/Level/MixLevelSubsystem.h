@@ -20,9 +20,15 @@ public:
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 
 private:
+	void GenerateHero();
+
+	// TODO: 在Tick里周期生成
+	void GenerateBatman();
+
+private:
+	// TODO: 配置表
 	const TCHAR* BpSpawnPointPath = TEXT(
 		"/Script/Engine.Blueprint'/Game/MixGame/Character/EnemyBatman/Point/EnemySpawnPoint.EnemySpawnPoint_C'");
-
 	const TCHAR* BpBatmanClassPath = TEXT(
 		"/Script/Engine.Blueprint'/Game/MixGame/Character/EnemyBatman/BatmanBp.BatmanBp_C'");
 };

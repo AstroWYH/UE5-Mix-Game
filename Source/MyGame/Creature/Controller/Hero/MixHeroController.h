@@ -17,6 +17,7 @@ class MYGAME_API AMixHeroController : public APlayerController
 	GENERATED_BODY()
 
 public:
+	// 鼠标指针
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	class UNiagaraSystem* FXCursor;
 
@@ -27,7 +28,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputMappingContext* DefaultMappingContext;
 
-	// ?????????
+	// 基础移动Action
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* JumpAction;
@@ -49,16 +50,41 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* LeftClickAction;
 
+	// 技能Action
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* SkillAction_Q;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* SkillAction_W;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* SkillAction_E;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* SkillAction_R;
+
 public:
 	void Move(const FInputActionValue& Value);
 
 	void Look(const FInputActionValue& Value);
 
-	void Attack(const FInputActionValue& Value);
+	// 普通攻击
+	void NormalAttack(const FInputActionValue& Value);
 
+	// 右键行走
 	void RightClick(const FInputActionValue& Value);
 
+	// 左键辅助普攻
 	void LeftClick(const FInputActionValue& Value);
+
+	// 技能
+	void Skill_Q(const FInputActionValue& Value);
+
+	void Skill_W(const FInputActionValue& Value);
+
+	void Skill_E(const FInputActionValue& Value);
+
+	void Skill_R(const FInputActionValue& Value);
 
 protected:
 	virtual void BeginPlay();
@@ -73,6 +99,7 @@ private:
 	FVector GetMouseClickFloorPosition();
 
 private:
+	// TODO:配置表
 	const TCHAR* CursorDefaultPath = TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/MixGame/UI/MouseCursor/CursorDefault.CursorDefault_C'");
 	const TCHAR* CursorAttackPath = TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/MixGame/UI/MouseCursor/CursorAttack.CursorAttack_C'");
 
@@ -90,17 +117,17 @@ public:
     UUserWidget* CursorAttackWidget;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Host Controller")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hero Controller")
 	FVector WalkPosition;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Host Controller")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hero Controller")
 	bool bIsWalking = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Host Controller")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hero Controller")
 	bool bPrepareAttack = false;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Host Controller")
-	TWeakObjectPtr<class AMixHero> Host;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hero Controller")
+	TWeakObjectPtr<class AMixHero> Hero;
 
 };

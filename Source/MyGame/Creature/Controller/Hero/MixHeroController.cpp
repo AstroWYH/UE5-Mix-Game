@@ -15,6 +15,7 @@
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "NiagaraSystem.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Creature/Creature/Hero/MixHeroInfoBase.h"
 
 void AMixHeroController::Move(const FInputActionValue& Value)
 {
@@ -65,7 +66,7 @@ void AMixHeroController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMixHeroController::Move);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMixHeroController::Look);
 
-		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &AMixHeroController::Attack);
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &AMixHeroController::NormalAttack);
 		EnhancedInputComponent->BindAction(RightClickAction, ETriggerEvent::Started, this,
 		                                   &AMixHeroController::RightClick);
 		EnhancedInputComponent->BindAction(LeftClickAction, ETriggerEvent::Started, this,
@@ -89,17 +90,17 @@ void AMixHeroController::BeginPlay()
 	// 初始化鼠标图像
 	InitMouseCursor();
 
-	Host = Cast<AMixHero>(GetPawn());
-	if (!ensure(Host.IsValid())) return;
+	Hero = Cast<AMixHero>(GetPawn());
+	if (!ensure(Hero.IsValid())) return;
 
-	WalkPosition = Host->GetActorLocation();
+	WalkPosition = Hero->GetActorLocation();
 }
 
 void AMixHeroController::Tick(float DeltaSeconds)
 {
-	// if (!ensure(Host.IsValid())) return;
+	// if (!ensure(Hero.IsValid())) return;
 	//
-	// FVector HostPos = Host->GetActorLocation();
+	// FVector HostPos = Hero->GetActorLocation();
 	// FVector HostPosPoint = FVector(HostPos.X, HostPos.Y, 100);
 	// float Distance = FVector::Distance(HostPosPoint, WalkPosition);
 	//
@@ -108,7 +109,7 @@ void AMixHeroController::Tick(float DeltaSeconds)
 	// {
 	// 	bIsWalking = true;
 	// 	FVector Direction = (WalkPosition - HostPosPoint).GetSafeNormal();
-	// 	Host->AddMovementInput(Direction);
+	// 	Hero->AddMovementInput(Direction);
 	// }
 	// else
 	// {
@@ -136,12 +137,12 @@ void AMixHeroController::InitMouseCursor()
 	CursorAttackWidget = UUserWidget::CreateWidgetInstance(*this, CursorAttackClass, TEXT("CursorAttack"));
 }
 
-void AMixHeroController::Attack(const FInputActionValue& Value)
+void AMixHeroController::NormalAttack(const FInputActionValue& Value)
 {
 	SetMouseCursorWidget(EMouseCursor::Default, CursorAttackWidget);
 	bPrepareAttack = true;
 
-	UMixHeroAttackComponent* HostAttackComponent = Cast<UMixHeroAttackComponent>(Host->CreatureAttackComponent);
+	UMixHeroAttackComponent* HostAttackComponent = Cast<UMixHeroAttackComponent>(Hero->CreatureAttackComponent);
 	if (!ensure(HostAttackComponent)) return;
 
 	HostAttackComponent->SetAttackRangeHidden(false);
@@ -185,7 +186,7 @@ void AMixHeroController::RightClick(const FInputActionValue& Value)
 	                                               FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None, true);
 
 	// 打断角色旋转朝向敌方单位
-	UMixHeroAttackComponent* HostAttackComponent = Cast<UMixHeroAttackComponent>(Host->CreatureAttackComponent);
+	UMixHeroAttackComponent* HostAttackComponent = Cast<UMixHeroAttackComponent>(Hero->CreatureAttackComponent);
 	if (!ensure(HostAttackComponent)) return;
 
 	HostAttackComponent->bIsRotating = false;
@@ -204,11 +205,35 @@ void AMixHeroController::LeftClick(const FInputActionValue& Value)
 		                                               FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true,
 		                                               ENCPoolMethod::None, true);
 
-		UMixHeroAttackComponent* HostAttackComponent = Cast<UMixHeroAttackComponent>(Host->CreatureAttackComponent);
+		UMixHeroAttackComponent* HostAttackComponent = Cast<UMixHeroAttackComponent>(Hero->CreatureAttackComponent);
 		if (!ensure(HostAttackComponent)) return;
 
 		HostAttackComponent->LastMouseClickPos = GetMouseClickFloorPosition();
 		HostAttackComponent->PreAttack();
 		HostAttackComponent->SetAttackRangeHidden(true);
 	}
+}
+
+void AMixHeroController::Skill_Q(const FInputActionValue& Value)
+{
+	TObjectPtr<UMixHeroInfoBase> HeroInfo = Hero->GetHeroInfo();
+	HeroInfo->Skill_Q();
+}
+
+void AMixHeroController::Skill_W(const FInputActionValue& Value)
+{
+	TObjectPtr<UMixHeroInfoBase> HeroInfo = Hero->GetHeroInfo();
+	HeroInfo->Skill_W();
+}
+
+void AMixHeroController::Skill_E(const FInputActionValue& Value)
+{
+	TObjectPtr<UMixHeroInfoBase> HeroInfo = Hero->GetHeroInfo();
+	HeroInfo->Skill_E();
+}
+
+void AMixHeroController::Skill_R(const FInputActionValue& Value)
+{
+	TObjectPtr<UMixHeroInfoBase> HeroInfo = Hero->GetHeroInfo();
+	HeroInfo->Skill_R();
 }

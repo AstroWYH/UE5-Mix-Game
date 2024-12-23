@@ -6,6 +6,11 @@ UMixHeroInfoBase::UMixHeroInfoBase() : Super()
 {
 }
 
+void UMixHeroInfoBase::SetHero(AMixHero* InHero)
+{
+	Hero = InHero;
+}
+
 TWeakObjectPtr<AMixHero> UMixHeroInfoBase::GetHero() const
 {
 	return Hero;

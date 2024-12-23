@@ -121,10 +121,12 @@ void UMixHeroAttackComponent::AttackSpawn()
 {
 	// 资源加载存在多种方式，一般资源类，可以采取LoadObject（同步），采取FStreamableManager.RequestAsyncLoad（异步）
 	// 蓝图类，也可以采取FStreamableManager.RequestAsyncLoad（异步），也可以采取TSubClassOf()的存放，然后同步或异步加载
+
+	// TODO: 路径配在AssetMgr蓝图，UClass不需要异步，不需要重复加载
 	FStreamableManager& StreamableManager = UAssetManager::GetStreamableManager();
 	StreamableManager.RequestAsyncLoad(AmmoPath, FStreamableDelegate::CreateLambda([this]()
 	{
-		UClass* AmmoClass = Cast<UClass>(AmmoPath.TryLoad());
+		UClass* AmmoClass = Cast<UClass>(AmmoPath.ResolveObject());
 		if (!ensure(AmmoClass)) return;
 
 		FTransform BowEmitterTransform = Host->GetMesh()->GetSocketTransform("BowEmitterSocket");

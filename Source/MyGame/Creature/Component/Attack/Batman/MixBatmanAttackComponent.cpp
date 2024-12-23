@@ -41,10 +41,11 @@ bool UMixBatmanAttackComponent::SelectTarget()
 
 void UMixBatmanAttackComponent::AttackSpawn()
 {
+	// TODO: 路径配在AssetMgr蓝图，UClass不需要异步，不需要重复加载
 	FStreamableManager& StreamableManager = UAssetManager::GetStreamableManager();
 	StreamableManager.RequestAsyncLoad(AmmoPath, FStreamableDelegate::CreateLambda([this]()
 	{
-		UClass* AmmoClass = Cast<UClass>(AmmoPath.TryLoad());
+		UClass* AmmoClass = Cast<UClass>(AmmoPath.ResolveObject());
 		if (!ensure(AmmoClass)) return;
 
 		TArray<UActorComponent*> TaggedComponents = Batman->GetComponentsByTag(

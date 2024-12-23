@@ -57,9 +57,6 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMixAIBatmanController")
-	TSubclassOf<AActor> PathPointClass;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMixAIBatmanController")
 	TArray<FVector> PathPointsPos;
 
 // 	const TCHAR* BehaviorTreePath{ TEXT("/Script/AIModule.BehaviorTree'/Game/MixGame/Character/EnemyBatman/AI/BatmanBt.BatmanBt'") };

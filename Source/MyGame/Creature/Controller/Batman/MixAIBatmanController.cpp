@@ -2,6 +2,8 @@
 
 
 #include "MixAIBatmanController.h"
+
+#include "MixAssetManager.h"
 #include "Kismet\GameplayStatics.h"
 #include "BehaviorTree\BehaviorTree.h"
 #include "BehaviorTree\BlackboardComponent.h"
@@ -33,7 +35,7 @@ void AMixAIBatmanController::PostBpBeginPlay()
 {
 	// 存Batman路径点
 	TArray<AActor*> PathPonits;
-	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), PathPointClass, "PathPoint", PathPonits);
+	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), UMixAssetManager::Get().BatmanPathPointClass, "BatmanPathPoint", PathPonits);
 	for (const auto& PathPoint : PathPonits)
 	{
 		if (!ensure(PathPoint)) continue;

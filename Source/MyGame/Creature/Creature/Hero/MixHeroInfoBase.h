@@ -4,12 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Object.h"
+#include "MixHero.h"
 
 #include "MixHeroInfoBase.generated.h"
 
-/**
- * 
- */
+class AMixHero;
+
 UCLASS()
 class UMixHeroInfoBase : public UObject
 {
@@ -24,9 +24,11 @@ public:
 	virtual void Skill_E() {};
 	virtual void Skill_R() {};
 
-private:
-	TWeakObjectPtr<class AMixHero> Hero;
+protected:
+	TWeakObjectPtr<AMixHero> Hero;
 
 public:
-	TWeakObjectPtr<class AMixHero> GetHero() const;
+	void SetHero(AMixHero* InHero);
+
+	TWeakObjectPtr<AMixHero> GetHero() const;
 };

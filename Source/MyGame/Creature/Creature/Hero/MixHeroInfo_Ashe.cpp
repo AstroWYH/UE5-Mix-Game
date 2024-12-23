@@ -1,5 +1,8 @@
 #include "MixHeroInfo_Ashe.h"
 
+#include "MixAssetManager.h"
+#include "Engine/AssetManager.h"
+
 UMixHeroInfo_Ashe::UMixHeroInfo_Ashe() : Super()
 {
 }
@@ -8,7 +11,22 @@ void UMixHeroInfo_Ashe::Skill_Q()
 {
 	UE_LOG(LogTemp, Display, TEXT("艾希释放了Q技能"));
 
-	// Hero->PlayMontage(AshePath); // ...
+	auto Skill = [this]()
+	{
+			UAnimMontage* Skill_Ashe_Q = Cast<UAnimMontage>(UMixAssetManager::Get().Skill_Ashe_Q.ResolveObject());
+			if (!ensure(Skill_Ashe_Q)) return;
+
+			Hero->PlayAnimMontage(Skill_Ashe_Q);
+	};
+
+	if (UMixAssetManager::Get().Skill_Ashe_Q.IsValid())
+	{
+		Skill();
+	}
+	else
+	{
+		UAssetManager::GetStreamableManager().RequestAsyncLoad(UMixAssetManager::Get().Skill_Ashe_Q, FStreamableDelegate::CreateLambda(Skill));
+	}
 }
 
 void UMixHeroInfo_Ashe::Skill_W()

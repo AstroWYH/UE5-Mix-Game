@@ -71,6 +71,11 @@ void AMixHeroController::SetupInputComponent()
 		                                   &AMixHeroController::RightClick);
 		EnhancedInputComponent->BindAction(LeftClickAction, ETriggerEvent::Started, this,
 		                                   &AMixHeroController::LeftClick);
+
+		EnhancedInputComponent->BindAction(SkillAction_Q, ETriggerEvent::Started, this, &AMixHeroController::Skill_Q);
+		EnhancedInputComponent->BindAction(SkillAction_W, ETriggerEvent::Started, this, &AMixHeroController::Skill_W);
+		EnhancedInputComponent->BindAction(SkillAction_E, ETriggerEvent::Started, this, &AMixHeroController::Skill_E);
+		EnhancedInputComponent->BindAction(SkillAction_R, ETriggerEvent::Started, this, &AMixHeroController::Skill_R);
 	}
 }
 

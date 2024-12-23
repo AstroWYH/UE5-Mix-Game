@@ -27,7 +27,7 @@ void AMixCreature::PostRegisterAllComponents()
 {
 	Super::PostRegisterAllComponents();
 
-	const UMixWidgetComponentAsset& HeadUIAsset = UMixAssetManager::Get().GetHeadUIPath();
+	const UMixWidgetComponentAsset& HeadUIAsset = UMixAssetManager::Get().GetAsset_HeadUI();
 	if (!(HeadUIAsset.Classes.Contains(GetClass()->GetFName()))) return;
 
 	TSubclassOf<UUserWidget> HeadUIClass = HeadUIAsset.Classes[GetClass()->GetFName()];

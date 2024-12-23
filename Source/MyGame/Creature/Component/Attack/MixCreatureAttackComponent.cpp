@@ -74,10 +74,11 @@ void UMixCreatureAttackComponent::TickRotateToTarget()
 
 void UMixCreatureAttackComponent::PlayAttackMontage()
 {
+	// TODO: 路径配在AssetMgr蓝图，不需要重复加载
 	FStreamableManager& StreamableManager = UAssetManager::GetStreamableManager();
 	StreamableManager.RequestAsyncLoad(AttackMontagePath, FStreamableDelegate::CreateLambda([this]()
 	{
-		UAnimMontage* AttackAnimMontage = Cast<UAnimMontage>(AttackMontagePath.TryLoad());
+		UAnimMontage* AttackAnimMontage = Cast<UAnimMontage>(AttackMontagePath.ResolveObject());
 		if (!ensure(AttackAnimMontage)) return;
 
 		Creature->PlayAnimMontage(AttackAnimMontage);

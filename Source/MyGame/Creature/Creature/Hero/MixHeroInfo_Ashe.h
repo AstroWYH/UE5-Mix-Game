@@ -3,6 +3,8 @@
 #include "MixHeroInfoBase.h"
 #include "MixHeroInfo_Ashe.generated.h"
 
+struct FStreamableHandle;
+
 UCLASS()
 class UMixHeroInfo_Ashe :public UMixHeroInfoBase
 {
@@ -16,4 +18,5 @@ public:
 	virtual void Skill_W() override;
 	virtual void Skill_E() override;
 	virtual void Skill_R() override;
+
 };

@@ -8,6 +8,7 @@
 
 #include "MixHeroInfoBase.generated.h"
 
+struct FStreamableHandle;
 class AMixHero;
 
 UCLASS()
@@ -26,6 +27,12 @@ public:
 
 protected:
 	TWeakObjectPtr<AMixHero> Hero;
+
+protected:
+	TSharedPtr<FStreamableHandle> SkillMontageHandle_Q;
+	TSharedPtr<FStreamableHandle> SkillMontageHandle_W;
+	TSharedPtr<FStreamableHandle> SkillMontageHandle_E;
+	TSharedPtr<FStreamableHandle> SkillMontageHandle_R;
 
 public:
 	void SetHero(AMixHero* InHero);

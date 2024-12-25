@@ -19,13 +19,13 @@ void UMixHeroInfo_Ashe::Skill_Q()
 			Hero->PlayAnimMontage(Skill_Ashe_Q);
 	};
 
-	if (UMixAssetManager::Get().Skill_Ashe_Q.IsValid())
+	if (SkillMontageHandle_Q.IsValid())
 	{
 		Skill();
 	}
 	else
 	{
-		UAssetManager::GetStreamableManager().RequestAsyncLoad(UMixAssetManager::Get().Skill_Ashe_Q, FStreamableDelegate::CreateLambda(Skill));
+		SkillMontageHandle_Q = UAssetManager::GetStreamableManager().RequestAsyncLoad(UMixAssetManager::Get().Skill_Ashe_Q, FStreamableDelegate::CreateLambda(Skill));
 	}
 }
 

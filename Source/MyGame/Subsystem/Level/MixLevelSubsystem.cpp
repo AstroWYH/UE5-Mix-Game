@@ -37,7 +37,8 @@ void UMixLevelSubsystem::GenerateHero()
 	AMixHero* Hero = GetWorld()->SpawnActor<AMixHero>(UMixAssetManager::Get().HeroClass, SpawnTransform, SpawnParams);
 	if (!ensure(Hero)) return;
 
-	TObjectPtr<UMixHeroInfo_Ashe> Ashe = NewObject<UMixHeroInfo_Ashe>();
+	TObjectPtr<AMixHeroInfo_Ashe> Ashe = GetWorld()->SpawnActor<AMixHeroInfo_Ashe>(AMixHeroInfo_Ashe::StaticClass());
+	Ashe->Init();
 	Ashe->SetHero(Hero);
 	Hero->SetHeroInfo(Ashe);
 

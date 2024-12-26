@@ -1,45 +1,54 @@
 #include "MixHeroInfo_Ashe.h"
 
 #include "MixAssetManager.h"
+#include "Creature/Controller/Hero/MixHeroController.h"
 #include "Engine/AssetManager.h"
 
-UMixHeroInfo_Ashe::UMixHeroInfo_Ashe() : Super()
+AMixHeroInfo_Ashe::AMixHeroInfo_Ashe() : Super()
 {
 }
 
-void UMixHeroInfo_Ashe::Skill_Q()
+void AMixHeroInfo_Ashe::Skill(EHeroOperateKey SkillKey)
 {
-	UE_LOG(LogTemp, Display, TEXT("艾希释放了Q技能"));
+	CurSkillKey = SkillKey;
 
-	auto Skill = [this]()
+	switch (SkillKey)
 	{
-			UAnimMontage* Skill_Ashe_Q = Cast<UAnimMontage>(UMixAssetManager::Get().Skill_Ashe_Q.ResolveObject());
-			if (!ensure(Skill_Ashe_Q)) return;
-
-			Hero->PlayAnimMontage(Skill_Ashe_Q);
-	};
-
-	if (SkillMontageHandle_Q.IsValid())
-	{
-		Skill();
+	case EHeroOperateKey::Q:
+		SkillMontagePath = &UMixAssetManager::Get().Skill_Ashe_Montage_Q;
+		break;
+	case EHeroOperateKey::W:
+		SkillMontagePath = &UMixAssetManager::Get().Skill_Ashe_Montage_W;
+		break;
+	case EHeroOperateKey::E:
+		SkillMontagePath = &UMixAssetManager::Get().Skill_Ashe_Montage_E;
+		break;
+	case EHeroOperateKey::R:
+		SkillMontagePath = &UMixAssetManager::Get().Skill_Ashe_Montage_R;
+		break;
 	}
-	else
+
+	// TODO: 这有一部分代码可以移动到父类
+	StopMovement();
+	TurnToMousePos();
+}
+
+void AMixHeroInfo_Ashe::SkillSpawn()
+{
+	if (CurSkillKey == EHeroOperateKey::Q)
 	{
-		SkillMontageHandle_Q = UAssetManager::GetStreamableManager().RequestAsyncLoad(UMixAssetManager::Get().Skill_Ashe_Q, FStreamableDelegate::CreateLambda(Skill));
+		// 发射飞剑
+		FTransform SwordTrans = Hero->GetMesh()->GetSocketTransform("BowEmitterSocket");
+		FActorSpawnParameters SwordParams;
+		SwordParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		AActor* Sword = GetWorld()->SpawnActor<AActor>(UMixAssetManager::Get().Skill_Ashe_BP_Q, SwordTrans, SwordParams);
+
+		// 生成陨石雨
+		// 不能现取鼠标位置，应该用按键时候的鼠标位置
+		// FVector MouseLocation = Cast<AMixHeroController>(Hero->GetController())->GetMouseClickFloorPosition();
+		FTransform FallingStoneTrans(FQuat::Identity, SkillCastMousePos, FVector(1.0f, 1.0f, 1.0f));
+		FActorSpawnParameters FallingStoneParams;
+		FallingStoneParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		AActor* FallingStone = GetWorld()->SpawnActor<AActor>(UMixAssetManager::Get().Skill_Ashe_BP_Q_Ext, FallingStoneTrans, FallingStoneParams);
 	}
-}
-
-void UMixHeroInfo_Ashe::Skill_W()
-{
-	UE_LOG(LogTemp, Display, TEXT("艾希释放了W技能"));
-}
-
-void UMixHeroInfo_Ashe::Skill_E()
-{
-	UE_LOG(LogTemp, Display, TEXT("艾希释放了E技能"));
-}
-
-void UMixHeroInfo_Ashe::Skill_R()
-{
-	UE_LOG(LogTemp, Display, TEXT("艾希释放了R技能"));
 }

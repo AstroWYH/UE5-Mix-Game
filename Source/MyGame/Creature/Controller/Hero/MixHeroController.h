@@ -5,12 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "InputActionValue.h"
+#include "Creature/Creature/Hero/MixHeroInfo_Ashe.h"
 
 #include "MixHeroController.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class MYGAME_API AMixHeroController : public APlayerController
 {
@@ -68,23 +66,17 @@ public:
 
 	void Look(const FInputActionValue& Value);
 
-	// 普通攻击
-	void NormalAttack(const FInputActionValue& Value);
-
 	// 右键行走
 	void RightClick(const FInputActionValue& Value);
 
-	// 左键辅助普攻
+	// 预普通攻击，按A键
+	void PreNormalAttack(const FInputActionValue& Value);
+
+	// 已按A键时，左键普攻
 	void LeftClick(const FInputActionValue& Value);
 
-	// 技能
-	void Skill_Q(const FInputActionValue& Value);
-
-	void Skill_W(const FInputActionValue& Value);
-
-	void Skill_E(const FInputActionValue& Value);
-
-	void Skill_R(const FInputActionValue& Value);
+	// 技能Q/W/E/R
+	void Skill(const FInputActionValue& Value, EHeroOperateKey SkillKey);
 
 protected:
 	virtual void BeginPlay();
@@ -93,7 +85,7 @@ protected:
 
 	virtual void Tick(float DeltaSeconds);
 
-private:
+public:
 	void InitMouseCursor();
 
 	FVector GetMouseClickFloorPosition();
@@ -110,21 +102,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MouseCursor")
 	TSubclassOf<UUserWidget> CursorAttackClass;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MouseCursor")
+	UPROPERTY()
     UUserWidget* CursorDefaultWidget;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MouseCursor")
+	UPROPERTY()
     UUserWidget* CursorAttackWidget;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hero Controller")
 	FVector WalkPosition;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hero Controller")
 	bool bIsWalking = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hero Controller")
-	bool bPrepareAttack = false;
+	EHeroOperateKey HeroOperateKey = EHeroOperateKey::NoType;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hero Controller")

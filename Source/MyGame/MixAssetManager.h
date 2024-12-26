@@ -53,14 +53,25 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = Controller)
 	TSubclassOf<AActor> HeroController;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Montage|Skill|Ashe")
-	FSoftObjectPath Skill_Ashe_Q;
-	UPROPERTY(EditDefaultsOnly, Category = "Montage|Skill|Ashe")
-	FSoftObjectPath Skill_Ashe_W;
-	UPROPERTY(EditDefaultsOnly, Category = "Montage|Skill|Ashe")
-	FSoftObjectPath Skill_Ashe_E;
-	UPROPERTY(EditDefaultsOnly, Category = "Montage|Skill|Ashe")
-	FSoftObjectPath Skill_Ashe_R;
+	UPROPERTY(EditDefaultsOnly, Category = "Skill|Ashe|Montage")
+	FSoftObjectPath Skill_Ashe_Montage_Q;
+	UPROPERTY(EditDefaultsOnly, Category = "Skill|Ashe|Montage")
+	FSoftObjectPath Skill_Ashe_Montage_W;
+	UPROPERTY(EditDefaultsOnly, Category = "Skill|Ashe|Montage")
+	FSoftObjectPath Skill_Ashe_Montage_E;
+	UPROPERTY(EditDefaultsOnly, Category = "Skill|Ashe|Montage")
+	FSoftObjectPath Skill_Ashe_Montage_R;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Skill|Ashe|BP")
+	TSubclassOf<AActor> Skill_Ashe_BP_Q;
+	UPROPERTY(EditDefaultsOnly, Category = "Skill|Ashe|BP")
+	TSubclassOf<AActor> Skill_Ashe_BP_Q_Ext;
+	UPROPERTY(EditDefaultsOnly, Category = "Skill|Ashe|BP")
+	TSubclassOf<AActor> Skill_Ashe_BP_W;
+	UPROPERTY(EditDefaultsOnly, Category = "Skill|Ashe|BP")
+	TSubclassOf<AActor> Skill_Ashe_BP_E;
+	UPROPERTY(EditDefaultsOnly, Category = "Skill|Ashe|BP")
+	TSubclassOf<AActor> Skill_Ashe_BP_R;
 
 private:
 	template <typename AssetClass>

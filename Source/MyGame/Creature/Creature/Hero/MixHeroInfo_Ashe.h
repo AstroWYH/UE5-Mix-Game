@@ -6,17 +6,17 @@
 struct FStreamableHandle;
 
 UCLASS()
-class UMixHeroInfo_Ashe :public UMixHeroInfoBase
+class AMixHeroInfo_Ashe :public AMixHeroInfoBase
 {
 	GENERATED_BODY()
 
 public:
-	UMixHeroInfo_Ashe();
+	AMixHeroInfo_Ashe();
 
 public:
-	virtual void Skill_Q() override;
-	virtual void Skill_W() override;
-	virtual void Skill_E() override;
-	virtual void Skill_R() override;
+	virtual void Skill(EHeroOperateKey SkillKey) override;
+
+public:
+	virtual void SkillSpawn() override;
 
 };

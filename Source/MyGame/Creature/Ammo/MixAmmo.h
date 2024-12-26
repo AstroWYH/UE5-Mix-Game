@@ -23,6 +23,7 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 public:
+	// AI Controller使用MoveTo时，需要NavXXXMovementComponent，否则也无法移动
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AMixAmmo", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UFloatingPawnMovement> FloatingPawnMovement;
 

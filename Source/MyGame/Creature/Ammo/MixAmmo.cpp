@@ -31,8 +31,8 @@ void AMixAmmo::HitTarget(UPrimitiveComponent* OverlappedComponent, AActor* Other
 
 void AMixAmmo::MakeDamage(int32 DamageVal)
 {
-	AMixCreature* TargetCharacter = Cast<AMixCreature>(Target);
-	if (!ensure(TargetCharacter)) return;
+	AMixCreature* TargetCreature = Cast<AMixCreature>(Target);
+	if (!ensure(TargetCreature)) return;
 
-	TargetCharacter->CreatureHeathComponent->TakeDamage(DamageVal);
+	TargetCreature->CreatureHeathComponent->TakeDamage(DamageVal);
 }

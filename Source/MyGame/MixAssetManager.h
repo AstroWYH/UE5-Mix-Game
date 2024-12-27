@@ -53,6 +53,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = Controller)
 	TSubclassOf<AActor> HeroController;
 
+	// TODO: 艾希的内容，需要写到cpp吗
 	UPROPERTY(EditDefaultsOnly, Category = "Skill|Ashe|Montage")
 	FSoftObjectPath Skill_Ashe_Montage_Q;
 	UPROPERTY(EditDefaultsOnly, Category = "Skill|Ashe|Montage")
@@ -72,6 +73,9 @@ public:
 	TSubclassOf<AActor> Skill_Ashe_BP_E;
 	UPROPERTY(EditDefaultsOnly, Category = "Skill|Ashe|BP")
 	TSubclassOf<AActor> Skill_Ashe_BP_R;
+
+	UPROPERTY(EditDefaultsOnly, Category = "NormalAmmo|Ashe|BP")
+	TSubclassOf<AActor> NormalAmmo_Ashe_BP;
 
 private:
 	template <typename AssetClass>

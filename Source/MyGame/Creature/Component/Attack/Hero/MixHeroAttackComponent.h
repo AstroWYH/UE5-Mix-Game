@@ -32,7 +32,7 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixHeroAttackComponent")
-    TWeakObjectPtr<class AMixHero> Host;
+    TWeakObjectPtr<class AMixHero> Hero;
 
 public:
     TArray<TWeakObjectPtr<class AMixBatman>> BatmanInRange;

@@ -1,4 +1,6 @@
 #include "MixHeroAttackComponent.h"
+
+#include "MixAssetManager.h"
 #include "Creature/Creature/Hero/MixHero.h"
 #include "Kismet\KismetSystemLibrary.h"
 #include "Engine\EngineTypes.h"
@@ -18,7 +20,7 @@ UMixHeroAttackComponent::UMixHeroAttackComponent() : Super()
 
 	// TODO: 配置表
 	AttackMontagePath = TEXT(
-		"/Script/Engine.AnimMontage'/Game/MixGame/Character/Host/Animations/Primary_Fire_Med_Montage.Primary_Fire_Med_Montage'");
+		"/Script/Engine.AnimMontage'/Game/MixGame/Character/Hero/Animations/Primary_Fire_Med_Montage.Primary_Fire_Med_Montage'");
 	AmmoPath = TEXT("/Script/Engine.Blueprint'/Game/MixGame/Ammo/HostAmmo/HostArrow.HostArrow_C'");
 }
 
@@ -26,12 +28,12 @@ void UMixHeroAttackComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Host = Cast<AMixHero>(Creature);
+	Hero = Cast<AMixHero>(Creature);
 }
 
 TWeakObjectPtr<AMixBatman> UMixHeroAttackComponent::SelectClosestTarget()
 {
-	FVector HostPos = Host->GetActorLocation();
+	FVector HostPos = Hero->GetActorLocation();
 	FVector HostPosPoint = FVector(HostPos.X, HostPos.Y, 100);
 
 	TWeakObjectPtr<AMixBatman>* ClosestBatman = Algo::MinElementBy(BatmanInRange,
@@ -51,8 +53,8 @@ bool UMixHeroAttackComponent::SelectTarget()
 {
 	// 获取范围内敌方单位
 	BatmanInRange.Empty();
-	FVector StartPos = Host->GetActorLocation();
-	FVector EndPos = Host->GetActorLocation();
+	FVector StartPos = Hero->GetActorLocation();
+	FVector EndPos = Hero->GetActorLocation();
 	TArray<AActor*> ActorsToIgnore;
 	TArray<FHitResult> OutHits;
 	// DefaultEngine.ini配置了编辑器里新增的Cfg，ECC_GameTraceChannel1对应Enemy的ObjType
@@ -86,10 +88,10 @@ bool UMixHeroAttackComponent::SelectTarget()
 void UMixHeroAttackComponent::StopMovement()
 {
 	// 停止角色位移
-	AMixHeroController* HostController = Cast<AMixHeroController>(Host->GetController());
+	AMixHeroController* HostController = Cast<AMixHeroController>(Hero->GetController());
 	if (!ensure(HostController)) return;
 
-	HostController->WalkPosition = Host->GetActorLocation();
+	HostController->WalkPosition = Hero->GetActorLocation();
 	HostController->StopMovement();
 }
 
@@ -101,7 +103,7 @@ void UMixHeroAttackComponent::TickComponent(float DeltaTime, enum ELevelTick Tic
 
 void UMixHeroAttackComponent::SetAttackRangeHidden(bool bHidden)
 {
-	TArray<UActorComponent*> TaggedComponents = Host->GetComponentsByTag(
+	TArray<UActorComponent*> TaggedComponents = Hero->GetComponentsByTag(
 		UActorComponent::StaticClass(), "AttackRangeComponent");
 	for (UActorComponent* AttackRangeComponent : TaggedComponents)
 	{
@@ -120,28 +122,43 @@ void UMixHeroAttackComponent::SetAttackRangeHidden(bool bHidden)
 
 void UMixHeroAttackComponent::AttackSpawn()
 {
+	// 这段加载逻辑很繁琐，其实UClass直接用UMixAssetMgr加载就行了
 	// 资源加载存在多种方式，一般资源类，可以采取LoadObject（同步），采取FStreamableManager.RequestAsyncLoad（异步）
 	// 蓝图类，也可以采取FStreamableManager.RequestAsyncLoad（异步），也可以采取TSubClassOf()的存放，然后同步或异步加载
 
 	// TODO: 路径配在AssetMgr蓝图，UClass不需要异步，不需要重复加载
-	FStreamableManager& StreamableManager = UAssetManager::GetStreamableManager();
-	StreamableManager.RequestAsyncLoad(AmmoPath, FStreamableDelegate::CreateLambda([this]()
-	{
-		UClass* AmmoClass = Cast<UClass>(AmmoPath.ResolveObject());
-		if (!ensure(AmmoClass)) return;
+	// FStreamableManager& StreamableManager = UAssetManager::GetStreamableManager();
+	// StreamableManager.RequestAsyncLoad(AmmoPath, FStreamableDelegate::CreateLambda([this]()
+	// {
+	// 	UClass* AmmoClass = Cast<UClass>(AmmoPath.ResolveObject());
+	// 	if (!ensure(AmmoClass)) return;
+	//
+	// 	FTransform BowEmitterTransform = Hero->GetMesh()->GetSocketTransform("BowEmitterSocket");
+	// 	FActorSpawnParameters SpawnParams;
+	// 	SpawnParams.Instigator = Hero.Get();
+	// 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	// 	SpawnParams.CustomPreSpawnInitalization = [this](AActor* SpawnedActor)
+	// 	{
+	// 		AMixHeroAmmo* HostAmmo = Cast<AMixHeroAmmo>(SpawnedActor);
+	// 		if (!ensure(HostAmmo)) return;
+	//
+	// 		HostAmmo->Target = SelectCreatureTarget;
+	// 		HostAmmo->Shooter = Hero;
+	// 	};
+	// 	AMixHeroAmmo* SpawnedActor = GetWorld()->SpawnActor<AMixHeroAmmo>(AmmoClass, BowEmitterTransform, SpawnParams);
+	// }));
 
-		FTransform BowEmitterTransform = Host->GetMesh()->GetSocketTransform("BowEmitterSocket");
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.Instigator = Host.Get();
-		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		SpawnParams.CustomPreSpawnInitalization = [this](AActor* SpawnedActor)
+	FTransform BowEmitterTransform = Hero->GetMesh()->GetSocketTransform("BowEmitterSocket");
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Instigator = Hero.Get();
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.CustomPreSpawnInitalization = [this](AActor* SpawnedActor)
 		{
 			AMixHeroAmmo* HostAmmo = Cast<AMixHeroAmmo>(SpawnedActor);
 			if (!ensure(HostAmmo)) return;
 
 			HostAmmo->Target = SelectCreatureTarget;
-			HostAmmo->Shooter = Host;
+			HostAmmo->Shooter = Hero;
 		};
-		AMixHeroAmmo* SpawnedActor = GetWorld()->SpawnActor<AMixHeroAmmo>(AmmoClass, BowEmitterTransform, SpawnParams);
-	}));
+	AMixHeroAmmo* SpawnedActor = GetWorld()->SpawnActor<AMixHeroAmmo>(UMixAssetManager::Get().NormalAmmo_Ashe_BP, BowEmitterTransform, SpawnParams);
 }

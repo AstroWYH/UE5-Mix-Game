@@ -27,7 +27,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	void SetTrackController(AMixTrackRangedController* Controller);
+	void SetTrackController(AMixTrackRangedController* InController);
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))

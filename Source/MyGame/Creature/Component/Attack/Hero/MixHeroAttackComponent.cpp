@@ -127,17 +127,32 @@ void UMixHeroAttackComponent::AttackSpawn()
 	// 蓝图类，也可以采取FStreamableManager.RequestAsyncLoad（异步），也可以采取TSubClassOf()的存放，然后同步或异步加载
 
 	// TODO: 路径配在AssetMgr蓝图，UClass不需要异步，不需要重复加载
-	// FStreamableManager& StreamableManager = UAssetManager::GetStreamableManager();
-	// StreamableManager.RequestAsyncLoad(AmmoPath, FStreamableDelegate::CreateLambda([this]()
-	// {
-	// 	UClass* AmmoClass = Cast<UClass>(AmmoPath.ResolveObject());
-	// 	if (!ensure(AmmoClass)) return;
-	//
-	// 	FTransform BowEmitterTransform = Hero->GetMesh()->GetSocketTransform("BowEmitterSocket");
-	// 	FActorSpawnParameters SpawnParams;
-	// 	SpawnParams.Instigator = Hero.Get();
-	// 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	// 	SpawnParams.CustomPreSpawnInitalization = [this](AActor* SpawnedActor)
+	FStreamableManager& StreamableManager = UAssetManager::GetStreamableManager();
+	StreamableManager.RequestAsyncLoad(AmmoPath, FStreamableDelegate::CreateLambda([this]()
+	{
+		UClass* AmmoClass = Cast<UClass>(AmmoPath.ResolveObject());
+		if (!ensure(AmmoClass)) return;
+	
+		FTransform BowEmitterTransform = Hero->GetMesh()->GetSocketTransform("BowEmitterSocket");
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Instigator = Hero.Get();
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		SpawnParams.CustomPreSpawnInitalization = [this](AActor* SpawnedActor)
+		{
+			AMixHeroAmmo* HostAmmo = Cast<AMixHeroAmmo>(SpawnedActor);
+			if (!ensure(HostAmmo)) return;
+	
+			HostAmmo->Target = SelectCreatureTarget;
+			HostAmmo->Shooter = Hero;
+		};
+		AMixHeroAmmo* SpawnedActor = GetWorld()->SpawnActor<AMixHeroAmmo>(AmmoClass, BowEmitterTransform, SpawnParams);
+	}));
+
+	// FTransform BowEmitterTransform = Hero->GetMesh()->GetSocketTransform("BowEmitterSocket");
+	// FActorSpawnParameters SpawnParams;
+	// SpawnParams.Instigator = Hero.Get();
+	// SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	// SpawnParams.CustomPreSpawnInitalization = [this](AActor* SpawnedActor)
 	// 	{
 	// 		AMixHeroAmmo* HostAmmo = Cast<AMixHeroAmmo>(SpawnedActor);
 	// 		if (!ensure(HostAmmo)) return;
@@ -145,20 +160,5 @@ void UMixHeroAttackComponent::AttackSpawn()
 	// 		HostAmmo->Target = SelectCreatureTarget;
 	// 		HostAmmo->Shooter = Hero;
 	// 	};
-	// 	AMixHeroAmmo* SpawnedActor = GetWorld()->SpawnActor<AMixHeroAmmo>(AmmoClass, BowEmitterTransform, SpawnParams);
-	// }));
-
-	FTransform BowEmitterTransform = Hero->GetMesh()->GetSocketTransform("BowEmitterSocket");
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.Instigator = Hero.Get();
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	SpawnParams.CustomPreSpawnInitalization = [this](AActor* SpawnedActor)
-		{
-			AMixHeroAmmo* HostAmmo = Cast<AMixHeroAmmo>(SpawnedActor);
-			if (!ensure(HostAmmo)) return;
-
-			HostAmmo->Target = SelectCreatureTarget;
-			HostAmmo->Shooter = Hero;
-		};
-	AMixHeroAmmo* SpawnedActor = GetWorld()->SpawnActor<AMixHeroAmmo>(UMixAssetManager::Get().NormalAmmo_Ashe_BP, BowEmitterTransform, SpawnParams);
+	// AMixHeroAmmo* SpawnedActor = GetWorld()->SpawnActor<AMixHeroAmmo>(UMixAssetManager::Get().NormalAmmo_Ashe_BP, BowEmitterTransform, SpawnParams);
 }

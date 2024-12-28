@@ -28,8 +28,8 @@ void AMixTrackRangedAmmo::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AMixTrackRangedAmmo::SetTrackController(AMixTrackRangedController* Controller)
+void AMixTrackRangedAmmo::SetTrackController(AMixTrackRangedController* InController)
 {
-	TrackRangedController = Controller;
+	TrackRangedController = InController;
 }
 

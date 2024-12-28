@@ -42,10 +42,10 @@ public:
 
 	// 蓝图实现
 	UFUNCTION(BlueprintImplementableEvent)
-	virtual void BP_HitTarget(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	void BP_HitTarget(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	// 蓝图可重载
 	UFUNCTION(BlueprintNativeEvent)
-	virtual void DestroySelf();
+	void DestroySelf();
 };

@@ -10,7 +10,7 @@ public class MyGame : ModuleRules
 
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "EnhancedInput", "Slate", "SlateCore", "UMG", "NavigationSystem", "AIModule", "Niagara", "GameplayTasks" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "EnhancedInput", "Slate", "SlateCore", "UMG", "NavigationSystem", "AIModule", "Niagara", "GameplayTasks", "GameplayTags" });
 
         PublicIncludePaths.AddRange(new string[]
         {

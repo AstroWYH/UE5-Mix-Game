@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MixTickGameInstanceSubsystem.h"
+#include "MixGameSubsystem.h"
 
 #include "MixAbilityMgr.generated.h"
 
@@ -11,14 +11,25 @@ class AMixAbilityBase;
 struct FGameplayTag;
 
 UCLASS()
-class MYGAME_API UMixAbilityMgr : public UMixTickGameInstanceSubsystem
+class MYGAME_API UMixAbilityMgr : public UMixGameSubsystem
 {
 	GENERATED_BODY()
 
 public:
-	virtual bool Tick(float DeltaTime) override;
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+
+	virtual void Deinitialize() override;
+	
+	virtual bool Tick(float DeltaTime);
+
+	virtual void OnHeroSpawned() override;
+	
+private:
+	FTSTicker::FDelegateHandle TickHandle;
 
 public:
+	void StopMovement();
+	
 	void PerformAbility(FGameplayTag HeroName, FGameplayTag AbilityKey);
 
 private:
@@ -27,6 +38,7 @@ private:
 	void TickTurnToMousePos();
 	
 private:
-	TMap<FGameplayTag, TMap<FGameplayTag, AMixAbilityBase>> HeroAbilityData;
+	UPROPERTY()
+	TMap<FGameplayTag, TMap<FGameplayTag, AMixAbilityBase*>> HeroAbilityData;
 
 };

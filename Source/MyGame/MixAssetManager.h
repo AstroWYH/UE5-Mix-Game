@@ -77,6 +77,16 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "NormalAmmo|Ashe|BP")
 	TSubclassOf<AActor> NormalAmmo_Ashe_BP;
 
+	// 技能BP_Ability_Hero_Key
+	UPROPERTY(EditDefaultsOnly, Category = "Hero|Ability|Ashe|Q")
+	TSubclassOf<AMixAbilityBase> HeroAbilityAsheQ;
+	UPROPERTY(EditDefaultsOnly, Category = "Hero|Ability|Ashe|Q")
+	TSubclassOf<AMixAbilityBase> HeroAbilityAsheW;
+	UPROPERTY(EditDefaultsOnly, Category = "Hero|Ability|Ashe|Q")
+	TSubclassOf<AMixAbilityBase> HeroAbilityAsheE;
+	UPROPERTY(EditDefaultsOnly, Category = "Hero|Ability|Ashe|Q")
+	TSubclassOf<AMixAbilityBase> HeroAbilityAsheR;
+
 private:
 	template <typename AssetClass>
 	const AssetClass& GetOrLoadAssetData(const TSoftObjectPtr<AssetClass>& DataPath)

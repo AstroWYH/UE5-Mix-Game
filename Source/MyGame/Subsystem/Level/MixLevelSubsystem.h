@@ -24,4 +24,14 @@ private:
 
 	// TODO: 在Tick里周期生成
 	void GenerateBatman();
+
+private:
+	UPROPERTY()
+	TArray<AMixHero*> SpawnedHeros;
+
+public:
+	TArray<AMixHero*> GetSpawnedHeros() const
+	{
+		return SpawnedHeros;
+	}
 };

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "GameFramework/Character.h"
 #include "Creature/Creature/MixCreature.h"
 
@@ -46,4 +47,18 @@ public:
 	void SetHeroInfo(const TObjectPtr<AMixHeroInfoBase>& InHeroInfo);
 
 	TObjectPtr<AMixHeroInfoBase> GetHeroInfo() const;
+
+private:
+	FGameplayTag HeroName;
+
+public:
+	FGameplayTag GetHeroName() const
+	{
+		return HeroName;
+	}
+
+	void SetHeroName(const FGameplayTag& InHeroName)
+	{
+		HeroName = InHeroName;
+	}
 };

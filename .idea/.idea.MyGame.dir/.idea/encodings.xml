@@ -10,9 +10,9 @@
     <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Ammo/MixAmmo.cpp" charset="GB2312" />
     <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Ammo/MixAmmo.h" charset="GB2312" />
     <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Controller/Hero/MixHeroController.h" charset="GB2312" />
-    <file url="file://$PROJECT_DIR$/Source/MyGame/DataTable/Item/MixData.h" charset="GB2312" />
+    <file url="file://$PROJECT_DIR$/Source/MyGame/DataAsset/Item/MixItemAsset.h" charset="GB2312" />
+    <file url="file://$PROJECT_DIR$/Source/MyGame/DataAsset/UI/MixUIAsset.h" charset="GB2312" />
     <file url="file://$PROJECT_DIR$/Source/MyGame/DataTable/UI/MixUIAsset.cpp" charset="GB2312" />
-    <file url="file://$PROJECT_DIR$/Source/MyGame/DataTable/UI/MixUIAsset.h" charset="GB2312" />
     <file url="file://$PROJECT_DIR$/Source/MyGame/Game/MixGameInstance.cpp" charset="GB2312" />
     <file url="file://$PROJECT_DIR$/Source/MyGame/Game/MixGameInstance.h" charset="GB2312" />
     <file url="file://$PROJECT_DIR$/Source/MyGame/Game/MixGameMode.cpp" charset="GB2312" />

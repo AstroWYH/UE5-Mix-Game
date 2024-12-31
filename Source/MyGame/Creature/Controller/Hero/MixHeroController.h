@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "InputActionValue.h"
+#include "MixGameplayTags.h"
 #include "Creature/Creature/Hero/MixHeroInfo_Ashe.h"
 
 #include "MixHeroController.generated.h"
@@ -78,6 +79,9 @@ public:
 	// 技能Q/W/E/R
 	void Skill(const FInputActionValue& Value, EHeroOperateKey SkillKey);
 
+	// 技能QWER
+	void PerformAbility(const FInputActionValue& Value, FGameplayTag AbilityType);
+
 protected:
 	virtual void BeginPlay();
 
@@ -119,4 +123,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hero Controller")
 	TWeakObjectPtr<class AMixHero> Hero;
 
+	FGameplayTag Ability_Type_Q = MixGameplayTags::Ability_Type_Q;
+	FGameplayTag Ability_Type_W = MixGameplayTags::Ability_Type_W;
+	FGameplayTag Ability_Type_E = MixGameplayTags::Ability_Type_E;
+	FGameplayTag Ability_Type_R = MixGameplayTags::Ability_Type_R;
 };

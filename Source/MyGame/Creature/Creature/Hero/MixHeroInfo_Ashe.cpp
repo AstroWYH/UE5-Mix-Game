@@ -10,6 +10,7 @@ AMixHeroInfo_Ashe::AMixHeroInfo_Ashe() : Super()
 
 void AMixHeroInfo_Ashe::Skill(EHeroOperateKey SkillKey)
 {
+	// 废弃，这里不需要准备这么早这些数据
 	CurSkillKey = SkillKey;
 
 	switch (SkillKey)

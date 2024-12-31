@@ -5,7 +5,7 @@
 #include "MixAssetManager.h"
 #include "Components/WidgetComponent.h"
 #include "Creature/Component/Attack/MixCreatureAttackComponent.h"
-#include "DataTable\WidgetComponent\MixWidgetComponentAsset.h"
+#include "DataAsset\WidgetComponent\MixWidgetComponentAsset.h"
 
 AMixCreature::AMixCreature() : Super()
 {

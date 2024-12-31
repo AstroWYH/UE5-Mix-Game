@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 
-#include "MixData.generated.h" 
+#include "MixItemAsset.generated.h"
 
 USTRUCT(BlueprintType)
 struct FMixItemData : public FTableRowBase
@@ -11,13 +11,13 @@ struct FMixItemData : public FTableRowBase
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	int32 TID;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	FString Name;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	UTexture2D* Icon;
 
 };

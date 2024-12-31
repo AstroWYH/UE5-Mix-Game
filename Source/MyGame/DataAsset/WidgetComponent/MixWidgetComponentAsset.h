@@ -15,7 +15,7 @@ class MYGAME_API UMixWidgetComponentAsset : public UPrimaryDataAsset
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, Category = "HeadUI")
+	UPROPERTY(EditDefaultsOnly, Category = "HeadUI")
 	TMap<FName, TSubclassOf<UUserWidget>> Classes;
 
 };

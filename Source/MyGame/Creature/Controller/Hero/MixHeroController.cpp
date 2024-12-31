@@ -6,6 +6,7 @@
 #include "Components/InputComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "MixGameplayTags.h"
 #include "Blueprint\UserWidget.h"
 #include "Blueprint\WidgetLayoutLibrary.h"
 #include "Kismet\GameplayStatics.h"
@@ -15,8 +16,10 @@
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "NiagaraSystem.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Ability/MixAbilityMgr.h"
 #include "Creature/Creature/Hero/MixHeroInfoBase.h"
 #include "Creature/Creature/Hero/MixHeroInfo_Ashe.h"
+#include "MixGameplayTags.h"
 
 void AMixHeroController::Move(const FInputActionValue& Value)
 {
@@ -68,16 +71,30 @@ void AMixHeroController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMixHeroController::Move);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMixHeroController::Look);
 
-		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &AMixHeroController::PreNormalAttack);
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this,
+		                                   &AMixHeroController::PreNormalAttack);
 		EnhancedInputComponent->BindAction(RightClickAction, ETriggerEvent::Started, this,
 		                                   &AMixHeroController::RightClick);
 		EnhancedInputComponent->BindAction(LeftClickAction, ETriggerEvent::Started, this,
 		                                   &AMixHeroController::LeftClick);
 
-		EnhancedInputComponent->BindAction(SkillAction_Q, ETriggerEvent::Started, this, &AMixHeroController::Skill, EHeroOperateKey::Q);
-		EnhancedInputComponent->BindAction(SkillAction_W, ETriggerEvent::Started, this, &AMixHeroController::Skill, EHeroOperateKey::W);
-		EnhancedInputComponent->BindAction(SkillAction_E, ETriggerEvent::Started, this, &AMixHeroController::Skill, EHeroOperateKey::E);
-		EnhancedInputComponent->BindAction(SkillAction_R, ETriggerEvent::Started, this, &AMixHeroController::Skill, EHeroOperateKey::R);
+		// EnhancedInputComponent->BindAction(SkillAction_Q, ETriggerEvent::Started, this, &AMixHeroController::Skill,
+		//                                    EHeroOperateKey::Q);
+		// EnhancedInputComponent->BindAction(SkillAction_W, ETriggerEvent::Started, this, &AMixHeroController::Skill,
+		//                                    EHeroOperateKey::W);
+		// EnhancedInputComponent->BindAction(SkillAction_E, ETriggerEvent::Started, this, &AMixHeroController::Skill,
+		//                                    EHeroOperateKey::E);
+		// EnhancedInputComponent->BindAction(SkillAction_R, ETriggerEvent::Started, this, &AMixHeroController::Skill,
+		//                                    EHeroOperateKey::R);
+
+		EnhancedInputComponent->BindAction(SkillAction_Q, ETriggerEvent::Started, this,
+		                                   &AMixHeroController::PerformAbility, Ability_Type_Q);
+		EnhancedInputComponent->BindAction(SkillAction_W, ETriggerEvent::Started, this,
+		                                   &AMixHeroController::PerformAbility, Ability_Type_Q);
+		EnhancedInputComponent->BindAction(SkillAction_E, ETriggerEvent::Started, this,
+		                                   &AMixHeroController::PerformAbility, Ability_Type_E);
+		EnhancedInputComponent->BindAction(SkillAction_R, ETriggerEvent::Started, this,
+		                                   &AMixHeroController::PerformAbility, Ability_Type_R);
 	}
 }
 
@@ -98,7 +115,8 @@ void AMixHeroController::BeginPlay()
 	InitMouseCursor();
 
 	Hero = Cast<AMixHero>(GetPawn());
-	if (!ensure(Hero.IsValid())) return;
+	if (!ensure(Hero.IsValid()))
+		return;
 
 	WalkPosition = Hero->GetActorLocation();
 }
@@ -150,14 +168,16 @@ void AMixHeroController::PreNormalAttack(const FInputActionValue& Value)
 	HeroOperateKey = EHeroOperateKey::NormalAttack;
 
 	UMixHeroAttackComponent* HostAttackComponent = Cast<UMixHeroAttackComponent>(Hero->CreatureAttackComponent);
-	if (!ensure(HostAttackComponent)) return;
+	if (!ensure(HostAttackComponent))
+		return;
 
 	HostAttackComponent->SetAttackRangeHidden(false);
 }
 
 FVector AMixHeroController::GetMouseClickFloorPosition()
 {
-	// // 这里只能用GetMousePositionOnViewport()，结果才正确
+	// 老式手动的方法，但好像有一点误差
+	// 这里只能用GetMousePositionOnViewport()，结果才正确
 	// FVector2D MousePosition = UWidgetLayoutLibrary::GetMousePositionOnViewport(GetWorld());
 	// float Scale = UWidgetLayoutLibrary::GetViewportScale(GetWorld());
 	// FVector2D ScreenMousePosition = MousePosition * Scale;
@@ -190,11 +210,12 @@ void AMixHeroController::RightClick(const FInputActionValue& Value)
 
 	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, WalkPosition);
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, FXCursor, WalkPosition, FRotator::ZeroRotator,
-		FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None, true);
+	                                               FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None, true);
 
 	// 打断角色旋转朝向敌方单位
 	UMixHeroAttackComponent* HostAttackComponent = Cast<UMixHeroAttackComponent>(Hero->CreatureAttackComponent);
-	if (!ensure(HostAttackComponent)) return;
+	if (!ensure(HostAttackComponent))
+		return;
 
 	HostAttackComponent->bIsRotating = false;
 	HostAttackComponent->SetAttackRangeHidden(true);
@@ -209,17 +230,19 @@ void AMixHeroController::LeftClick(const FInputActionValue& Value)
 	if (HeroOperateKey == EHeroOperateKey::NormalAttack)
 	{
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, FXCursorAttack, GetMouseClickFloorPosition(),
-			FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true,
-			ENCPoolMethod::None, true);
+		                                               FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true,
+		                                               ENCPoolMethod::None, true);
 
 		UMixHeroAttackComponent* HostAttackComponent = Cast<UMixHeroAttackComponent>(Hero->CreatureAttackComponent);
-		if (!ensure(HostAttackComponent)) return;
+		if (!ensure(HostAttackComponent))
+			return;
 
 		HostAttackComponent->LastMouseClickPos = GetMouseClickFloorPosition();
 		HostAttackComponent->PreAttack();
 		HostAttackComponent->SetAttackRangeHidden(true);
 	}
-	else if (HeroOperateKey == EHeroOperateKey::Q || HeroOperateKey == EHeroOperateKey::W || HeroOperateKey == EHeroOperateKey::E || HeroOperateKey == EHeroOperateKey::R)
+	else if (HeroOperateKey == EHeroOperateKey::Q || HeroOperateKey == EHeroOperateKey::W || HeroOperateKey ==
+		EHeroOperateKey::E || HeroOperateKey == EHeroOperateKey::R)
 	{
 		TObjectPtr<AMixHeroInfoBase> HeroInfo = Hero->GetHeroInfo();
 		HeroInfo->Skill(HeroOperateKey);
@@ -230,6 +253,7 @@ void AMixHeroController::LeftClick(const FInputActionValue& Value)
 	HeroOperateKey = EHeroOperateKey::NoType;
 }
 
+// TODO: 废弃
 void AMixHeroController::Skill(const FInputActionValue& Value, EHeroOperateKey SkillKey)
 {
 	TObjectPtr<AMixHeroInfoBase> HeroInfo = Hero->GetHeroInfo();
@@ -242,4 +266,10 @@ void AMixHeroController::Skill(const FInputActionValue& Value, EHeroOperateKey S
 	}
 
 	HeroInfo->Skill(SkillKey);
+}
+
+void AMixHeroController::PerformAbility(const FInputActionValue& Value, FGameplayTag AbilityType)
+{
+	UMixAbilityMgr* AbilityMgr = GetGameInstance()->GetSubsystem<UMixAbilityMgr>();
+	AbilityMgr->PerformAbility(Hero->GetHeroName(), AbilityType);
 }

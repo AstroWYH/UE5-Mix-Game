@@ -4,10 +4,12 @@
 #include "MixLevelSubsystem.h"
 
 #include "MixAssetManager.h"
+#include "MixGameSubsystem.h"
 #include "Creature/Controller/Hero/MixHeroController.h"
 #include "Creature/Creature/Batman/MixBatman.h"
 #include "Creature/Creature/Hero/MixHero.h"
 #include "Creature/Creature/Hero/MixHeroInfo_Ashe.h"
+#include "Game/MixGameInstance.h"
 #include "Game/MixGameMode.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -20,7 +22,17 @@ void UMixLevelSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 {
 	Super::OnWorldBeginPlay(InWorld);
 
+	if (!(InWorld.GetName() == "LOL")) return;
+
 	GenerateHero();
+
+	TArray<UMixGameSubsystem*> GameSubsystems = InWorld.GetGameInstance()->GetSubsystemArray<UMixGameSubsystem>();
+	for (UMixGameSubsystem* GameSubsystem : GameSubsystems)
+	{
+		if (!ensure(GameSubsystem)) continue;
+		GameSubsystem->OnHeroSpawned();
+	}
+	
 	GenerateBatman();
 }
 
@@ -36,6 +48,7 @@ void UMixLevelSubsystem::GenerateHero()
 
 	AMixHero* Hero = GetWorld()->SpawnActor<AMixHero>(UMixAssetManager::Get().HeroClass, SpawnTransform, SpawnParams);
 	if (!ensure(Hero)) return;
+	SpawnedHeros.AddUnique(Hero);
 
 	TObjectPtr<AMixHeroInfo_Ashe> Ashe = GetWorld()->SpawnActor<AMixHeroInfo_Ashe>(AMixHeroInfo_Ashe::StaticClass());
 	Ashe->Init();

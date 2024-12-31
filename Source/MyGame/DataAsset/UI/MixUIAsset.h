@@ -11,7 +11,7 @@ struct FUIClassArray
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, Category = "UI")
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TMap<FName, TSubclassOf<UUserWidget>> UIClasses;
 };
 
@@ -20,13 +20,13 @@ class MYGAME_API UMixUIAsset : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
 
-private:
-	UPROPERTY(EditAnywhere, Category = "UI")
-	TMap<FName, FUIClassArray> AllUIAssets;
-
 public:
 	const TMap<FName, FUIClassArray>& GetAllUIAssets() const
 	{
 		return AllUIAssets;
 	}
+	
+private:
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TMap<FName, FUIClassArray> AllUIAssets;
 };

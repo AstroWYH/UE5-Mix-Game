@@ -6,7 +6,7 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "UI/MixUIPersistantInterface.h"
 #include "UI/MixUIMgr.h"
-#include "DataTable/UI/MixUIAsset.h"
+#include "DataAsset/UI/MixUIAsset.h"
 #include "MixUISubsystemBase.generated.h"
 
 /**

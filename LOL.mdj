@@ -14934,8 +14934,8 @@
 							"left": 1800,
 							"top": 1416,
 							"width": 280,
-							"height": 282,
-							"text": "俯视角游戏基础功能\n普通攻击（远程/近战）\n输入配置\n资产管理\n技能系统\nUI系统（持久化UI，ToggleUI）\n数据表配置\n背包系统\n商城系统\n经验升级系统\nAI行为\n网络联机\n小地图\n经验升级系统\n--------------------------------\nManager\nSubsystem\nComponent\n"
+							"height": 297,
+							"text": "俯视角游戏基础功能\n普通攻击（远程/近战）\n属性管理\n输入配置\n资产管理\n技能系统\nUI系统（持久化UI，ToggleUI）\n数据表配置\n背包系统\n商城系统\n经验升级系统\nAI行为\n网络联机\n小地图\n经验升级系统\n--------------------------------\nManager\nSubsystem\nComponent\n"
 						}
 					]
 				},

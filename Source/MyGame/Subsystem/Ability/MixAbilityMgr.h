@@ -10,6 +10,15 @@
 class AMixAbilityBase;
 struct FGameplayTag;
 
+USTRUCT(BlueprintType)
+struct FMixAbilityData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly, Category = "Ability")
+	TMap<FGameplayTag, AMixAbilityBase*> Data;
+};
+
 UCLASS()
 class MYGAME_API UMixAbilityMgr : public UMixGameSubsystem
 {
@@ -39,6 +48,6 @@ private:
 	
 private:
 	UPROPERTY()
-	TMap<FGameplayTag, TMap<FGameplayTag, AMixAbilityBase*>> HeroAbilityData;
+	TMap<FGameplayTag, FMixAbilityData> HeroAbilityData;
 
 };

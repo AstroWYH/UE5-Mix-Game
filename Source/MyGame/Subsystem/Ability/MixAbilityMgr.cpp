@@ -4,8 +4,11 @@
 
 #include "GameplayTagContainer.h"
 #include "MixAbilityBase.h"
+#include "MixAssetManager.h"
 #include "Creature/Controller/Hero/MixHeroController.h"
+#include "DataAsset/Ability/MixAbilityAsset.h"
 #include "Level/MixLevelSubsystem.h"
+#include "MixGameplayTags.h"
 
 void UMixAbilityMgr::Initialize(FSubsystemCollectionBase& Collection)
 {
@@ -38,11 +41,16 @@ void UMixAbilityMgr::OnHeroSpawned()
 	for (const AMixHero* Hero : Heros)
 	{
 		if (!ensure(Hero)) continue;
-		TMap<FGameplayTag, AMixAbilityBase*>& HeroAbility = HeroAbilityData.FindOrAdd(Hero->GetHeroName());
-		// TODO: 配置到AssetMgr
-		TSubclassOf<AMixAbilityBase> BPAbilityClass;
-		AMixAbilityBase* Ability = GetWorld()->SpawnActor<AMixAbilityBase>(BPAbilityClass);
-		HeroAbility.Add(MixGameplayTags::Ability_Type_Q, Ability);
+		FMixAbilityData& HeroAbility = HeroAbilityData.FindOrAdd(Hero->GetHeroName());
+		const UMixAbilityAsset& AbilityAsset = UMixAssetManager::Get().GetAsset_Ability();
+		
+		if (!ensure(AbilityAsset.HeroAbilitys.Contains(Hero->GetHeroName()))) return;
+		if (!ensure(AbilityAsset.HeroAbilitys[Hero->GetHeroName()].Ability.Contains(MixGameplayTags::Ability_Type_Q))) return;
+		
+		TSubclassOf<AActor> BPAbilityClass_Q = AbilityAsset.HeroAbilitys[Hero->GetHeroName()].Ability[MixGameplayTags::Ability_Type_Q];
+		AMixAbilityBase* Ability_Q = GetWorld()->SpawnActor<AMixAbilityBase>(BPAbilityClass_Q);
+		HeroAbility.Data.Add(MixGameplayTags::Ability_Type_Q, Ability_Q);
+		// TODO: WER也需要添加
 	}
 }
 
@@ -54,11 +62,11 @@ void UMixAbilityMgr::PerformAbility(FGameplayTag HeroName, FGameplayTag AbilityK
 
 void UMixAbilityMgr::StopMovement()
 {
-	AMixHeroController* HeroController = Cast<AMixHeroController>(Hero->GetController());
-	if (!ensure(HeroController))
-		return;
-
-	HeroController->StopMovement();
+	// AMixHeroController* HeroController = Cast<AMixHeroController>(Hero->GetController());
+	// if (!ensure(HeroController))
+	// 	return;
+	//
+	// HeroController->StopMovement();
 }
 
 void UMixAbilityMgr::TurnToMousePos()

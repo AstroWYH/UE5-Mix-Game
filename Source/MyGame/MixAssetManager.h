@@ -7,6 +7,7 @@
 #include "UObject/Object.h"
 #include "MixAssetManager.generated.h"
 
+class UMixAbilityAsset;
 class UPrimaryDataAsset;
 class UMixWidgetComponentAsset;
 /**
@@ -23,6 +24,10 @@ public:
 		return GetOrLoadAssetData<UMixWidgetComponentAsset>(HeadUIAsset);
 	}
 
+	const UMixAbilityAsset& GetAsset_Ability()
+	{
+		return GetOrLoadAssetData<UMixAbilityAsset>(AbilityAsset);
+	}
 public:
 	static UMixAssetManager& Get();
 
@@ -36,6 +41,9 @@ public:
 	// 以资产DA的形式存在，创建比较麻烦，但是使用更规范，也可以懒加载
 	UPROPERTY(EditDefaultsOnly, Category = HeadUI)
 	TSoftObjectPtr<UMixWidgetComponentAsset> HeadUIAsset;
+
+	UPROPERTY(EditDefaultsOnly, Category = Ability)
+	TSoftObjectPtr<UMixAbilityAsset> AbilityAsset;
 
 	// 方式3
 	// 以UClass的形式存在，方便，用来写这个PathClass；缺点是在BP_AssetManager里越放越多

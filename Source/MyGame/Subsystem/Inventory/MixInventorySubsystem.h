@@ -6,7 +6,7 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "UObject/NoExportTypes.h"
 #include "Templates/SharedPointer.h"
-#include "Item/MixItemAsset.h"
+#include "DataAsset/Item/MixItemAsset.h"
 #include "MixInventorySubsystem.generated.h"
 
 class UMixItem;

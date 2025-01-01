@@ -8,7 +8,7 @@
 #include "MixAbilityAsset.generated.h"
 
 USTRUCT(BlueprintType)
-struct FMixAbility
+struct FAbility
 {
 	GENERATED_BODY()
 
@@ -23,5 +23,5 @@ class MYGAME_API UMixAbilityAsset : public UPrimaryDataAsset
 	
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Ability")
-	TMap<FGameplayTag, FMixAbility> HeroAbilitys;
+	TMap<FGameplayTag, FAbility> HeroAbilitys;
 };

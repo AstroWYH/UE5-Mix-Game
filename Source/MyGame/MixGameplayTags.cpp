@@ -6,7 +6,7 @@
 #include "Engine/EngineTypes.h"
 #include "GameplayTagsManager.h"
 
-namespace LyraGameplayTags
+namespace MixGameplayTags
 {
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Hero_Name_Ashe, "Hero.Name.Ashe", "Hero.Name.Ashe");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Hero_Name_Zed, "Hero.Name.Zed", "Hero.Name.Zed");

@@ -123,8 +123,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hero Controller")
 	TWeakObjectPtr<class AMixHero> Hero;
 
-	FGameplayTag Ability_Type_Q = MixGameplayTags::Ability_Type_Q;
-	FGameplayTag Ability_Type_W = MixGameplayTags::Ability_Type_W;
-	FGameplayTag Ability_Type_E = MixGameplayTags::Ability_Type_E;
-	FGameplayTag Ability_Type_R = MixGameplayTags::Ability_Type_R;
+	FGameplayTag HeroAbilityType_Q = MixGameplayTags::Ability_Type_Q;
+	FGameplayTag HeroAbilityType_W = MixGameplayTags::Ability_Type_W;
+	FGameplayTag HeroAbilityType_E = MixGameplayTags::Ability_Type_E;
+	FGameplayTag HeroAbilityType_R = MixGameplayTags::Ability_Type_R;
 };

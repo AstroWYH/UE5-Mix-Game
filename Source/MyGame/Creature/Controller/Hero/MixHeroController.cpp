@@ -88,13 +88,13 @@ void AMixHeroController::SetupInputComponent()
 		//                                    EHeroOperateKey::R);
 
 		EnhancedInputComponent->BindAction(SkillAction_Q, ETriggerEvent::Started, this,
-		                                   &AMixHeroController::PerformAbility, Ability_Type_Q);
+		                                   &AMixHeroController::PerformAbility, HeroAbilityType_Q);
 		EnhancedInputComponent->BindAction(SkillAction_W, ETriggerEvent::Started, this,
-		                                   &AMixHeroController::PerformAbility, Ability_Type_Q);
+		                                   &AMixHeroController::PerformAbility, HeroAbilityType_W);
 		EnhancedInputComponent->BindAction(SkillAction_E, ETriggerEvent::Started, this,
-		                                   &AMixHeroController::PerformAbility, Ability_Type_E);
+		                                   &AMixHeroController::PerformAbility, HeroAbilityType_E);
 		EnhancedInputComponent->BindAction(SkillAction_R, ETriggerEvent::Started, this,
-		                                   &AMixHeroController::PerformAbility, Ability_Type_R);
+		                                   &AMixHeroController::PerformAbility, HeroAbilityType_R);
 	}
 }
 

@@ -34,11 +34,11 @@ public:
 	TObjectPtr<class UMixCreatureHealthComponent> CreatureHeathComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AMixCreature)
-	TObjectPtr<class UWidgetComponent> HeadComponent;
+	TObjectPtr<class UMixWidgetComponent> WidgetComponent;
 
 public:
 	UPROPERTY()
-	TObjectPtr<UUserWidget> HeadUI;
+	TObjectPtr<UMixHeadUIWidget> HeadUI;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = true))

@@ -3,15 +3,17 @@
 #include "MixCreature.h"
 
 #include "MixAssetManager.h"
+#include "MixWidgetComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Creature/Component/Attack/MixCreatureAttackComponent.h"
 #include "Data/Attribute/MixAttributeData.h"
 #include "Data\WidgetComponent\MixWidgetComponentAsset.h"
+#include "UI/HeadUI/MixHeadUIWidget.h"
 
 AMixCreature::AMixCreature() : Super()
 {
-	HeadComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("HeadComponent"));
-	HeadComponent->SetupAttachment(RootComponent);
+	WidgetComponent = CreateDefaultSubobject<UMixWidgetComponent>(TEXT("WidgetComponent"));
+	WidgetComponent->SetupAttachment(RootComponent);
 }
 
 void AMixCreature::BeginPlay()
@@ -32,8 +34,9 @@ void AMixCreature::PostRegisterAllComponents()
 	if (!(HeadUIAsset.Classes.Contains(GetClass()->GetFName()))) return;
 
 	TSubclassOf<UUserWidget> HeadUIClass = HeadUIAsset.Classes[GetClass()->GetFName()];
-	HeadUI = CreateWidget<UUserWidget>(GetWorld(), HeadUIClass);
+	HeadUI = CreateWidget<UMixHeadUIWidget>(GetWorld(), HeadUIClass);
 	if (!ensure(HeadUI)) return;
 
-	HeadComponent->SetWidget(HeadUI);
+	WidgetComponent->SetWidget(HeadUI);
+	HeadUI->SetOwner(this);
 }

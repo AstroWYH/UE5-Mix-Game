@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable, BlueprintType)
 class MYGAME_API UMixAttribute : public UObject
 {
 	GENERATED_BODY()
@@ -19,8 +19,32 @@ public:
 	int32 Health;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	int32 MaxHealth;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	int32 Speed;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	int32 AttackVal;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	int32 DefenseVal;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	int32 AttackRange;
+
+public:
+	void ApplyHealth(int32 Val);
+
+	void Death() const;
+
+public:
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMixOnDeath);
+	UPROPERTY(BlueprintAssignable)
+	FMixOnDeath OnDeath;
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FMixOnApplyHealth, int32, ApplyVal, int32, Health, int32, MaxHealth);
+	UPROPERTY(BlueprintAssignable)
+	FMixOnApplyHealth OnApplyHealth;
+
 };

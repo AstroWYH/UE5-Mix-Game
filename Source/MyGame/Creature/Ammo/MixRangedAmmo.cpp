@@ -4,6 +4,7 @@
 #include "MixRangedAmmo.h"
 
 #include "Creature/Component/Health/MixCreatureHealthComponent.h"
+#include "Creature/Creature/MixAttribute.h"
 #include "Creature/Creature/MixCreature.h"
 
 
@@ -33,7 +34,7 @@ void AMixRangedAmmo::CauseDamage()
 	AMixCreature* TargetCreature = Cast<AMixCreature>(Target);
 	if (!ensure(TargetCreature)) return;
 
-	TargetCreature->CreatureHeathComponent->TakeDamage(AttackVal);
+	TargetCreature->GetAttribute()->ApplyHealth(-AttackVal);
 }
 
 void AMixRangedAmmo::DestroySelf()

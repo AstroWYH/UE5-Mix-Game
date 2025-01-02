@@ -18,4 +18,7 @@ class MYGAME_API UMixHeroAttribute : public UMixAttribute
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	int32 Magic;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	int32 MaxMagic;
 };

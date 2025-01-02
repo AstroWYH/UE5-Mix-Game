@@ -54,6 +54,7 @@ void UMixLevelSubsystem::GenerateHero()
 	Ashe->Init();
 	Ashe->SetHero(Hero);
 	Hero->SetHeroInfo(Ashe);
+	Hero->SetHeroName(MixGameplayTags::Hero_Name_Ashe);
 
 	AMixHeroController* HeroController = GetWorld()->SpawnActor<AMixHeroController>(UMixAssetManager::Get().HeroController, SpawnTransform);
 	if (!ensure(HeroController)) return;

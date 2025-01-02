@@ -28,6 +28,8 @@ void UMixAbilityMgr::Deinitialize()
 
 bool UMixAbilityMgr::Tick(float DeltaTime)
 {
+	TickTurnToMousePos();
+	
 	return true;
 }
 
@@ -38,43 +40,93 @@ void UMixAbilityMgr::OnHeroSpawned()
 	if (!ensure(LevelSubsystem)) return;
 	
 	const TArray<AMixHero*> Heros = LevelSubsystem->GetSpawnedHeros();
-	for (const AMixHero* Hero : Heros)
+	for (AMixHero* EachHero : Heros)
 	{
-		if (!ensure(Hero)) continue;
-		FMixAbilityData& HeroAbility = HeroAbilityData.FindOrAdd(Hero->GetHeroName());
+		if (!ensure(EachHero)) continue;
+		FMixAbilityData& HeroAbility = HeroAbilityData.FindOrAdd(EachHero->GetHeroName());
 		const UMixAbilityAsset& AbilityAsset = UMixAssetManager::Get().GetAsset_Ability();
 		
-		if (!ensure(AbilityAsset.HeroAbilitys.Contains(Hero->GetHeroName()))) return;
-		if (!ensure(AbilityAsset.HeroAbilitys[Hero->GetHeroName()].Ability.Contains(MixGameplayTags::Ability_Type_Q))) return;
+		if (!ensure(AbilityAsset.HeroAbilitys.Contains(EachHero->GetHeroName()))) return;
+		if (!ensure(AbilityAsset.HeroAbilitys[EachHero->GetHeroName()].Ability.Contains(MixGameplayTags::Ability_Type_Q))) return;
 		
-		TSubclassOf<AActor> BPAbilityClass_Q = AbilityAsset.HeroAbilitys[Hero->GetHeroName()].Ability[MixGameplayTags::Ability_Type_Q];
+		TSubclassOf<AActor> BPAbilityClass_Q = AbilityAsset.HeroAbilitys[EachHero->GetHeroName()].Ability[MixGameplayTags::Ability_Type_Q];
 		AMixAbilityBase* Ability_Q = GetWorld()->SpawnActor<AMixAbilityBase>(BPAbilityClass_Q);
+		Ability_Q->Hero = EachHero;
 		HeroAbility.Data.Add(MixGameplayTags::Ability_Type_Q, Ability_Q);
 		// TODO: WER也需要添加
 	}
 }
 
-void UMixAbilityMgr::PerformAbility(FGameplayTag HeroName, FGameplayTag AbilityKey)
+void UMixAbilityMgr::PerformAbility(AMixHero* InHero, FGameplayTag AbilityKey, FVector InAbilityMouseLocation)
 {
+	CurAbilityKey = AbilityKey;
+	Hero = InHero;
+	AbilityMouseLocation = InAbilityMouseLocation;
 	StopMovement();
 	TurnToMousePos();
 }
 
 void UMixAbilityMgr::StopMovement()
 {
-	// AMixHeroController* HeroController = Cast<AMixHeroController>(Hero->GetController());
-	// if (!ensure(HeroController))
-	// 	return;
-	//
-	// HeroController->StopMovement();
+	AMixHeroController* HeroController = Cast<AMixHeroController>(Hero->GetController());
+	if (!ensure(HeroController))
+		return;
+	
+	HeroController->StopMovement();
 }
 
 void UMixAbilityMgr::TurnToMousePos()
 {
+	AMixHeroController* HeroController = Cast<AMixHeroController>(Hero->GetController());
+	if (!ensure(HeroController)) return;
 
+	// 面向目标旋转
+	SelfLocation = Hero->GetActorLocation();
+	SelfRotation = FRotator(0.0f, Hero->GetActorRotation().Yaw, 0.0f);
+	// TODO: 这个位置看起来不是很准目前
+	TargetLocation = HeroController->GetMouseClickFloorPosition();
+	SelfLookAtRotation = FRotator(0.0f, (TargetLocation - SelfLocation).Rotation().Yaw, 0.0f);
+
+	// 用于确保朝角度较小的方向旋转
+	TotalYawDifference = FMath::Fmod(SelfLookAtRotation.Yaw - SelfRotation.Yaw + 180.0f, 360.0f) - 180.0f;
+	YawPerFrame = TotalYawDifference / (KRotationTime / GetWorld()->GetDeltaSeconds());
+
+	// 置开始转向状态
+	bIsRotating = true;
 }
 
 void UMixAbilityMgr::TickTurnToMousePos()
 {
+	if (bIsRotating)
+	{
+		FRotator SelfNewRotation = FRotator(0.0f, Hero->GetActorRotation().Yaw + YawPerFrame, 0.0f);
+		Hero->SetActorRotation(SelfNewRotation);
 
+		float RotationDiff = FMath::Abs(
+			FMath::Fmod(SelfLookAtRotation.Yaw - SelfNewRotation.Yaw + 180.0f, 360.0f) - 180.0f);
+		// TODO: 参数配置
+		if (RotationDiff <= 6.0f)
+		{
+			// 最后获取Hero最新应该的朝向，用于矫正
+			FRotator FinalFixRotation = FRotator(
+				0.0f, (TargetLocation - Hero->GetActorLocation()).Rotation().Yaw,
+				0.0f);
+			Hero->SetActorRotation(FinalFixRotation);
+			bIsRotating = false;
+
+			// 记录技能施法的鼠标位置
+			AMixHeroController* HeroController = Cast<AMixHeroController>(Hero->GetController());
+			if (!ensure(HeroController)) return;
+
+			// Bp_Ability蓝图具体执行自己的逻辑
+			AMixAbilityBase* Ability = HeroAbilityData[Hero->GetHeroName()].Data[CurAbilityKey];
+			Ability->BP_PerformAbility();
+		}
+	}
+}
+
+void UMixAbilityMgr::OnMontageNoify()
+{
+	AMixAbilityBase* Ability = HeroAbilityData[Hero->GetHeroName()].Data[CurAbilityKey];
+	Ability->BP_OnMontageNotify(AbilityMouseLocation);
 }

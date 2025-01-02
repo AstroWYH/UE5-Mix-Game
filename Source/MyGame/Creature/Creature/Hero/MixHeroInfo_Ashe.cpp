@@ -47,7 +47,7 @@ void AMixHeroInfo_Ashe::SkillSpawn()
 		// 生成陨石雨
 		// 不能现取鼠标位置，应该用按键时候的鼠标位置
 		// FVector MouseLocation = Cast<AMixHeroController>(Hero->GetController())->GetMouseClickFloorPosition();
-		FTransform FallingStoneTrans(FQuat::Identity, SkillCastMousePos, FVector(1.0f, 1.0f, 1.0f));
+		FTransform FallingStoneTrans(FQuat::Identity, AbilityMousePos, FVector(1.0f, 1.0f, 1.0f));
 		FActorSpawnParameters FallingStoneParams;
 		FallingStoneParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		AActor* FallingStone = GetWorld()->SpawnActor<AActor>(UMixAssetManager::Get().Skill_Ashe_BP_Q_Ext, FallingStoneTrans, FallingStoneParams);

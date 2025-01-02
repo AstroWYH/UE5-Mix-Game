@@ -221,6 +221,9 @@ void AMixHeroController::RightClick(const FInputActionValue& Value)
 	HostAttackComponent->SetAttackRangeHidden(true);
 
 	Hero->GetHeroInfo()->SetIsRotating(false);
+
+	UMixAbilityMgr* AbilityMgr = GetGameInstance()->GetSubsystem<UMixAbilityMgr>();
+	AbilityMgr->SetIsRotating(false);
 }
 
 void AMixHeroController::LeftClick(const FInputActionValue& Value)
@@ -271,5 +274,5 @@ void AMixHeroController::Skill(const FInputActionValue& Value, EHeroOperateKey S
 void AMixHeroController::PerformAbility(const FInputActionValue& Value, FGameplayTag AbilityType)
 {
 	UMixAbilityMgr* AbilityMgr = GetGameInstance()->GetSubsystem<UMixAbilityMgr>();
-	AbilityMgr->PerformAbility(Hero->GetHeroName(), AbilityType);
+	AbilityMgr->PerformAbility(Hero.Get(), AbilityType, GetMouseClickFloorPosition());
 }

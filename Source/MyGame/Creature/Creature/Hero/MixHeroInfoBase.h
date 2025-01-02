@@ -82,7 +82,7 @@ protected:
 	float YawPerFrame = 0.0f;
 
 protected:
-	FVector SkillCastMousePos;
+	FVector AbilityMousePos;
 
 public:
 	void SetIsRotating(bool bIsRotating);

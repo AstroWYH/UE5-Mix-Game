@@ -121,6 +121,6 @@ void AMixHeroInfoBase::SetIsRotating(bool bInIsRotating)
 
 inline void AMixHeroInfoBase::SetSkillCastMousePos(FVector InSkillCastMousePos)
 {
-	SkillCastMousePos = InSkillCastMousePos;
+	AbilityMousePos = InSkillCastMousePos;
 }
 

@@ -24,4 +24,11 @@ public:
 	TWeakObjectPtr<AMixHero> Hero;
 
 	FGameplayTag Type;
+
+public:
+	UFUNCTION(BlueprintImplementableEvent)
+	void BP_PerformAbility();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void BP_OnMontageNotify(const FVector& MouseLocation);
 };

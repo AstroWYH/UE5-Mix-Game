@@ -20,7 +20,7 @@ UMixHeroAttackComponent::UMixHeroAttackComponent() : Super()
 
 	// TODO: 配置表
 	AttackMontagePath = TEXT(
-		"/Script/Engine.AnimMontage'/Game/MixGame/Character/Hero/Animations/Primary_Fire_Med_Montage.Primary_Fire_Med_Montage'");
+		"/Script/Engine.AnimMontage'/Game/MixGame/Character/Host/Animations/Primary_Fire_Med_Montage.Primary_Fire_Med_Montage'");
 	AmmoPath = TEXT("/Script/Engine.Blueprint'/Game/MixGame/Ammo/HostAmmo/HostArrow.HostArrow_C'");
 }
 

@@ -2,17 +2,18 @@
 
 
 #include "Subsystem/Inventory/MixInventorySubsystem.h"
-#include "Engine/DataTable.h"
-#include "DataAsset/Item/MixItemAsset.h"
+#include "Data/Item/MixItemData.h"
 #include "MixItem.h"
 #include "MixInventoryItem.h"
 #include "Data/MixDataSubsystem.h"
+#include "Engine/DataTable.h"
 
 void UMixInventorySubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
     Super::Initialize(Collection);
 
 	UMixDataSubsystem* DataSys = GetGameInstance()->GetSubsystem<UMixDataSubsystem>();
+	// TODO: AssetMgr
     TArray<FMixItemData*> AllFItemsCfg = DataSys->LoadDataTableFromPath<FMixItemData>(TEXT("/Script/Engine.DataTable'/Game/MixGame/UI/Inventory/Data/DT_Item.DT_Item'"), TEXT("ItemDataContext"));
 
 	for (FMixItemData* FItemData : AllFItemsCfg)

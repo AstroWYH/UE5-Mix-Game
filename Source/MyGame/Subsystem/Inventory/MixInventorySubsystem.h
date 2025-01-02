@@ -6,12 +6,13 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "UObject/NoExportTypes.h"
 #include "Templates/SharedPointer.h"
-#include "DataAsset/Item/MixItemAsset.h"
+#include "Data/Item/MixItemData.h"
 #include "MixInventorySubsystem.generated.h"
 
 class UMixItem;
 class UMixInventoryItem;
 
+// TODO: 这个类是多余的，直接用那个就行应该
 UCLASS(BlueprintType)
 class UMixItemCfg : public UObject
 {
@@ -65,7 +66,7 @@ public:
 	void ExchangeItem(int32 OldPosIdx, int32 NewPosIdx);
 
 public:
-	// 读表ItemData信息
+	// 读表ItemData信息，所有的装备信息表
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Inventory")
 	TMap<int32, TObjectPtr<UMixItemCfg>> AllItemsCfg;
 

@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "Engine/AssetManager.h"
 #include "UObject/Object.h"
+#include "Engine/DataTable.h"
+
 #include "MixAssetManager.generated.h"
 
 class UMixAbilityAsset;
@@ -19,6 +21,7 @@ class MYGAME_API UMixAssetManager : public UAssetManager
 	GENERATED_BODY()
 
 public:
+	// TODO: 可以干掉这俩了
 	const UMixWidgetComponentAsset& GetAsset_HeadUI()
 	{
 		return GetOrLoadAssetData<UMixWidgetComponentAsset>(HeadUIAsset);
@@ -28,9 +31,13 @@ public:
 	{
 		return GetOrLoadAssetData<UMixAbilityAsset>(AbilityAsset);
 	}
+	
 public:
 	static UMixAssetManager& Get();
 
+	UFUNCTION(BlueprintCallable)
+	static UMixAssetManager* GetPtr();
+	
 public:
 	// 方法1：直接用TObjectPtr，优点是简单，不用调下面复杂的一堆逻辑；缺点是不能懒加载，上来就需要加载，虽然目前都是UClass，但保不齐有其他资源
 	// UPrimaryDataAsset都可以用TObjectPtr，启动加载，毕竟里面仅是UClass
@@ -44,6 +51,11 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = Ability)
 	TSoftObjectPtr<UMixAbilityAsset> AbilityAsset;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Attribute)
+	TSoftObjectPtr<UDataTable> AttributeData;
+	UPROPERTY(EditDefaultsOnly, Category = Attribute)
+	TSoftObjectPtr<UDataTable> HeroAttributeData;
 
 	// 方式3
 	// 以UClass的形式存在，方便，用来写这个PathClass；缺点是在BP_AssetManager里越放越多
@@ -95,7 +107,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Hero|Ability|Ashe|Q")
 	TSubclassOf<AMixAbilityBase> HeroAbilityAsheR;
 
-private:
+public:
 	template <typename AssetClass>
 	const AssetClass& GetOrLoadAssetData(const TSoftObjectPtr<AssetClass>& DataPath)
 	{
@@ -107,9 +119,14 @@ private:
 		// Does a blocking load if needed
 		return *CastChecked<const AssetClass>(LoadAssetDataOfClass(AssetClass::StaticClass(), DataPath, AssetClass::StaticClass()->GetFName()));
 	}
-
+	
+private:
 	UPrimaryDataAsset* LoadAssetDataOfClass(TSubclassOf<UPrimaryDataAsset> DataClass, const TSoftObjectPtr<UPrimaryDataAsset>& DataClassPath, FPrimaryAssetType PrimaryAssetType);
 
 	UPROPERTY(Transient)
 	TMap<TObjectPtr<UClass>, TObjectPtr<UPrimaryDataAsset>> AssetDataMap;
+
+public:
+	UFUNCTION(BlueprintCallable)
+	const UDataTable* GetDataTable(const TSoftObjectPtr<UDataTable>& DataPath);
 };

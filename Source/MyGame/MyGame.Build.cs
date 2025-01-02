@@ -15,7 +15,6 @@ public class MyGame : ModuleRules
         PublicIncludePaths.AddRange(new string[]
         {
             "MyGame",
-            "MyGame/DataAsset",
             "MyGame/Subsystem",
         });
     }

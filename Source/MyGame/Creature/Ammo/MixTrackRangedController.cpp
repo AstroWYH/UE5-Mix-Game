@@ -20,7 +20,7 @@ void AMixTrackRangedController::OnPossess(APawn* InPawn)
 
 	TrackRangedAmmo = Cast<AMixTrackRangedAmmo>(GetPawn());
 	if (!ensure(TrackRangedAmmo.IsValid())) return;
-	if (!ensure(TrackRangedAmmo->Target.IsValid())) return;
+	if (!ensure(TrackRangedAmmo->GetTarget())) return;
 
 	TrackRangedAmmo->SetTrackController(this);
 
@@ -38,7 +38,7 @@ void AMixTrackRangedController::Tick(float DeltaTime)
 
 	if (bCanLaunch)
 	{
-		FVector TargetLocation = TrackRangedAmmo->Target->GetActorLocation();
+		FVector TargetLocation = TrackRangedAmmo->GetTarget()->GetActorLocation();
 		TargetLocation.Z += TrackRangedAmmo->AmmoOffset;
 		MoveToLocation(TargetLocation, 1.0f, true, false, false);
 	}

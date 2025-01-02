@@ -3,7 +3,7 @@
 
 #include "MixUISubsystemBase.h"
 
-#include "DataAsset/UI/MixUIAsset.h"
+#include "Data/UI/MixUIAsset.h"
 #include "MixUIMgr.h"
 
 void UMixUISubsystemBase::Initialize(FSubsystemCollectionBase& Collection)

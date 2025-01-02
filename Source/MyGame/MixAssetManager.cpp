@@ -21,6 +21,11 @@ UMixAssetManager& UMixAssetManager::Get()
 	return *NewObject<UMixAssetManager>();
 }
 
+UMixAssetManager* UMixAssetManager::GetPtr()
+{
+	return &UMixAssetManager::Get();
+}
+
 UPrimaryDataAsset* UMixAssetManager::LoadAssetDataOfClass(TSubclassOf<UPrimaryDataAsset> DataClass,
                                                           const TSoftObjectPtr<UPrimaryDataAsset>& DataClassPath, FPrimaryAssetType PrimaryAssetType)
 {
@@ -70,3 +75,11 @@ UPrimaryDataAsset* UMixAssetManager::LoadAssetDataOfClass(TSubclassOf<UPrimaryDa
 
 	return Asset;
 }
+
+const UDataTable* UMixAssetManager::GetDataTable(const TSoftObjectPtr<UDataTable>& DataPath)
+{
+	const UDataTable* DataTable = DataPath.LoadSynchronous();
+	return DataTable;
+}
+
+

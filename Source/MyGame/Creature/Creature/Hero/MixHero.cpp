@@ -1,6 +1,9 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "MixHero.h"
+
+#include "MixAssetManager.h"
+#include "MixGameplayTags.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -58,7 +61,6 @@ AMixHero::AMixHero() : Super()
 
 void AMixHero::BeginPlay()
 {
-	// Call the base class  
 	Super::BeginPlay();
 }
 

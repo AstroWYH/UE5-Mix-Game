@@ -23,29 +23,62 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TWeakObjectPtr<AActor> Target;
+protected:
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	AActor* Target;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TWeakObjectPtr<AActor> Shooter;
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	AActor* Shooter;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	int32 AttackVal = 0;
 
+private:
 	struct FTimerHandle DestroyTimerHandle;
 
 public:
-	// 蓝图调用
 	UFUNCTION(BlueprintCallable)
-	void CauseDamage(int32 DamageVal);
+	void CauseDamage();
 
-	// 蓝图实现
 	UFUNCTION(BlueprintImplementableEvent)
-	void BP_HitTarget(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	void BP_HitTarget(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-	// 蓝图可重载
-	UFUNCTION(BlueprintNativeEvent)
+private:
 	void DestroySelf();
+
+	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = true))
+	float DestroySelfTime = 2.0f;
+
+public:
+	UFUNCTION(BlueprintCallable)
+	AActor* GetTarget() const
+	{
+		return Target;
+	}
+
+	UFUNCTION(BlueprintCallable)
+	void SetTarget(AActor* InTarget)
+	{
+		Target = InTarget;
+	}
+
+	UFUNCTION(BlueprintCallable)
+	AActor* GetShooter() const
+	{
+		return Shooter;
+	}
+
+	UFUNCTION(BlueprintCallable)
+	void SetShooter(AActor* InShooter)
+	{
+		Shooter = InShooter;
+	}
+
+	UFUNCTION(BlueprintCallable)
+	int32 GetAttackVal() const
+	{
+		return AttackVal;
+	}
+
 };

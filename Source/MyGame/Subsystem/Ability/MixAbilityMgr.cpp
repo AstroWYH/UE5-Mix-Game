@@ -6,7 +6,7 @@
 #include "MixAbilityBase.h"
 #include "MixAssetManager.h"
 #include "Creature/Controller/Hero/MixHeroController.h"
-#include "DataAsset/Ability/MixAbilityAsset.h"
+#include "Data/Ability/MixAbilityAsset.h"
 #include "Level/MixLevelSubsystem.h"
 #include "MixGameplayTags.h"
 

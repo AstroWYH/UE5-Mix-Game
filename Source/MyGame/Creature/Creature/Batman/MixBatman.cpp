@@ -2,9 +2,12 @@
 
 #include "MixBatman.h"
 
+#include "MixAssetManager.h"
 #include "Components/WidgetComponent.h"
 #include "Creature/Component/Attack/Batman/MixBatmanAttackComponent.h"
 #include "Creature/Component/Health/Batman/MixBatmanHealthComponent.h"
+#include "Creature/Creature/MixAttribute.h"
+#include "Data/Attribute/MixAttributeData.h"
 
 AMixBatman::AMixBatman() : Super()
 {

@@ -28,21 +28,21 @@ void AMixRangedAmmo::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AMixRangedAmmo::CauseDamage(int32 DamageVal)
+void AMixRangedAmmo::CauseDamage()
 {
 	AMixCreature* TargetCreature = Cast<AMixCreature>(Target);
 	if (!ensure(TargetCreature)) return;
 
-	TargetCreature->CreatureHeathComponent->TakeDamage(DamageVal);
+	TargetCreature->CreatureHeathComponent->TakeDamage(AttackVal);
 }
 
-void AMixRangedAmmo::DestroySelf_Implementation()
+void AMixRangedAmmo::DestroySelf()
 {
 	// 2s后自毁，允许蓝图重新实现，这只是尝试教学
 	// 也可以把秒数拿来用UProperty配置
 	GetWorld()->GetTimerManager().SetTimer(DestroyTimerHandle, [this]()
-		{
-			Destroy();
-		}, 2.0f, false);
+	{
+		Destroy();
+	}, 2.0f, false);
 }
 

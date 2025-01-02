@@ -14,6 +14,10 @@ class MYGAME_API UMixDataSubsystem : public UGameInstanceSubsystem
 	GENERATED_BODY()
 
 public:
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+
+public:
+	// TODO: AssetMgr
 	template <typename T>
 	TArray<T*> LoadDataTableFromPath(const FString& Path, const FString& Context)
 	{

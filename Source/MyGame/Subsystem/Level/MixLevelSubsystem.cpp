@@ -6,10 +6,13 @@
 #include "MixAssetManager.h"
 #include "MixGameSubsystem.h"
 #include "Creature/Controller/Hero/MixHeroController.h"
+#include "Creature/Creature/MixAttribute.h"
+#include "Creature/Creature/MixHeroAttribute.h"
 #include "Creature/Creature/Batman/MixBatman.h"
 #include "Creature/Creature/Hero/MixHero.h"
 #include "Creature/Creature/Hero/MixHeroInfo_Ashe.h"
-#include "Game/MixGameInstance.h"
+#include "Data/Attribute/MixAttributeData.h"
+#include "Data/Attribute/MixHeroAttributeData.h"
 #include "Game/MixGameMode.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -53,8 +56,24 @@ void UMixLevelSubsystem::GenerateHero()
 	TObjectPtr<AMixHeroInfo_Ashe> Ashe = GetWorld()->SpawnActor<AMixHeroInfo_Ashe>(AMixHeroInfo_Ashe::StaticClass());
 	Ashe->Init();
 	Ashe->SetHero(Hero);
+	
 	Hero->SetHeroInfo(Ashe);
 	Hero->SetHeroName(MixGameplayTags::Hero_Name_Ashe);
+	Hero->SetCreatureType(MixGameplayTags::Creature_Type_Hero_Self);
+
+	// 读属性表
+	// TODO: 整理成一种更友好的方式
+	TSoftObjectPtr<UDataTable> AttributeDataSoftPtr = UMixAssetManager::Get().HeroAttributeData;
+	const UDataTable* AttributeDT = UMixAssetManager::Get().GetDataTable(AttributeDataSoftPtr);
+	if (!ensure(AttributeDT)) return;
+	FMixHeroAttributeData* AttributeData = AttributeDT->FindRow<FMixHeroAttributeData>(TEXT("Ashe"), "AttributeData");
+	
+	UMixHeroAttribute* HeroAttribute = NewObject<UMixHeroAttribute>();
+	HeroAttribute->Health = AttributeData->Health;
+	HeroAttribute->Speed = AttributeData->Speed;
+	HeroAttribute->AttackVal = AttributeData->AttackVal;
+	HeroAttribute->Magic = AttributeData->Magic;
+	Hero->SetAttribute(HeroAttribute);
 
 	AMixHeroController* HeroController = GetWorld()->SpawnActor<AMixHeroController>(UMixAssetManager::Get().HeroController, SpawnTransform);
 	if (!ensure(HeroController)) return;
@@ -83,4 +102,17 @@ void UMixLevelSubsystem::GenerateBatman()
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	FTransform SpawnTransform = OutActors[0]->GetActorTransform();
 	AMixBatman* Batman = GetWorld()->SpawnActor<AMixBatman>(UMixAssetManager::Get().BatmanClass, SpawnTransform, SpawnParams);
+	Batman->SetCreatureType(MixGameplayTags::Creature_Type_Batman_Enemy);
+
+	// 读属性表
+	TSoftObjectPtr<UDataTable> AttributeDataSoftPtr = UMixAssetManager::Get().AttributeData;
+	const UDataTable* AttributeDT = UMixAssetManager::Get().GetDataTable(AttributeDataSoftPtr);
+	if (!ensure(AttributeDT)) return;
+	FMixAttributeData* AttributeData = AttributeDT->FindRow<FMixAttributeData>(TEXT("Batman"), "AttributeData");
+	
+	UMixAttribute* Attribute = NewObject<UMixAttribute>();
+	Attribute->Health = AttributeData->Health;
+	Attribute->Speed = AttributeData->Speed;
+	Attribute->AttackVal = AttributeData->AttackVal;
+	Batman->SetAttribute(Attribute);
 }

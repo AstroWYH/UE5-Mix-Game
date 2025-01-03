@@ -40,7 +40,7 @@ private:
 public:
 	void StopMovement();
 
-	void PerformAbility(AMixHero* InHero, FGameplayTag AbilityKey, FVector InAbilityMouseLocation);
+	void PrepareAbility(AMixHero* InHero, FGameplayTag AbilityKey, FVector InAbilityMouseLocation);
 
 private:
 	void TurnToMousePos();

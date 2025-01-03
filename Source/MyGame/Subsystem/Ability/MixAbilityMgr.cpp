@@ -51,13 +51,13 @@ void UMixAbilityMgr::OnHeroSpawned()
 		
 		TSubclassOf<AActor> BPAbilityClass_Q = AbilityAsset.HeroAbilitys[EachHero->GetHeroName()].Ability[MixGameplayTags::Ability_Type_Q];
 		AMixAbilityBase* Ability_Q = GetWorld()->SpawnActor<AMixAbilityBase>(BPAbilityClass_Q);
-		Ability_Q->Hero = EachHero;
+		Ability_Q->SetHero(EachHero);
 		HeroAbility.Data.Add(MixGameplayTags::Ability_Type_Q, Ability_Q);
 		// TODO: WER也需要添加
 	}
 }
 
-void UMixAbilityMgr::PerformAbility(AMixHero* InHero, FGameplayTag AbilityKey, FVector InAbilityMouseLocation)
+void UMixAbilityMgr::PrepareAbility(AMixHero* InHero, FGameplayTag AbilityKey, FVector InAbilityMouseLocation)
 {
 	CurAbilityKey = AbilityKey;
 	Hero = InHero;

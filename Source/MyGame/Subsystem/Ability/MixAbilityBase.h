@@ -17,12 +17,25 @@ class MYGAME_API AMixAbilityBase : public AActor
 public:
 	AMixAbilityBase();
 
+protected:
 	UPROPERTY(EditDefaultsOnly)
 	TArray<FSoftObjectPath> Montages;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TWeakObjectPtr<AMixHero> Hero;
 
+public:
+	TWeakObjectPtr<AMixHero> GetHero() const
+	{
+		return Hero;
+	}
+
+	void SetHero(const TWeakObjectPtr<AMixHero>& InHero)
+	{
+		this->Hero = InHero;
+	}
+
+protected:
 	FGameplayTag Type;
 
 public:

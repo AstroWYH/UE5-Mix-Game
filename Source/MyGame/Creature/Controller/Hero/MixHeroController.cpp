@@ -274,5 +274,5 @@ void AMixHeroController::Skill(const FInputActionValue& Value, EHeroOperateKey S
 void AMixHeroController::PerformAbility(const FInputActionValue& Value, FGameplayTag AbilityType)
 {
 	UMixAbilityMgr* AbilityMgr = GetGameInstance()->GetSubsystem<UMixAbilityMgr>();
-	AbilityMgr->PerformAbility(Hero.Get(), AbilityType, GetMouseClickFloorPosition());
+	AbilityMgr->PrepareAbility(Hero.Get(), AbilityType, GetMouseClickFloorPosition());
 }

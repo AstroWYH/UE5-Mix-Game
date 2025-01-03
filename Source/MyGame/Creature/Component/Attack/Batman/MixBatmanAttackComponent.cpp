@@ -33,6 +33,7 @@ void UMixBatmanAttackComponent::StopMovement()
 
 bool UMixBatmanAttackComponent::SelectTarget()
 {
+	// Batman展开攻击时，不需要选人
 	SelectCreatureTarget = Cast<AMixCreature>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (!ensure(SelectCreatureTarget.IsValid())) return false;
 

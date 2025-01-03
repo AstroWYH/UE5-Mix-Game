@@ -6,6 +6,7 @@
 #include "AIController.h"
 #include "MixAIBatmanController.generated.h"
 
+class AMixBatman;
 /**
  * 
  */
@@ -69,4 +70,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMixAIBatmanController")
 	bool bIsDetectHero = false;
+
+private:
+	AMixBatman* Batman;
 };

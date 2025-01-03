@@ -6,7 +6,6 @@
 #include "GameFramework/PlayerController.h"
 #include "InputActionValue.h"
 #include "MixGameplayTags.h"
-#include "Creature/Creature/Hero/MixHeroInfo_Ashe.h"
 
 #include "MixHeroController.generated.h"
 
@@ -15,69 +14,53 @@ class MYGAME_API AMixHeroController : public APlayerController
 {
 	GENERATED_BODY()
 
-public:
-	// 鼠标指针
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+private:
+	// 鼠标点地板
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UNiagaraSystem* FXCursor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UNiagaraSystem* FXCursorAttack;
 
 	/** MappingContext */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputMappingContext* DefaultMappingContext;
 
-	// 基础移动Action
-	/** Jump Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* JumpAction;
-
-	/** Move Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* MoveAction;
-
-	/** Look Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* LookAction;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	// 基础行动
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* AttackAction;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* RightClickAction;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* LeftClickAction;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* StopAction;
+	
 	// 技能Action
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* SkillAction_Q;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* SkillAction_W;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* SkillAction_E;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* SkillAction_R;
 
 public:
-	void Move(const FInputActionValue& Value);
-
-	void Look(const FInputActionValue& Value);
-
 	// 右键行走
 	void RightClick(const FInputActionValue& Value);
 
-	// 预普通攻击，按A键
-	void PreNormalAttack(const FInputActionValue& Value);
+	// 按A键
+	void PrepareAttack(const FInputActionValue& Value);
 
-	// 已按A键时，左键普攻
+	// 已按A键时，鼠标左键普攻
 	void LeftClick(const FInputActionValue& Value);
-
-	// 技能Q/W/E/R
-	void Skill(const FInputActionValue& Value, EHeroOperateKey SkillKey);
 
 	// 技能QWER
 	void PerformAbility(const FInputActionValue& Value, FGameplayTag AbilityType);
@@ -98,12 +81,11 @@ private:
 	// TODO:配置表
 	const TCHAR* CursorDefaultPath = TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/MixGame/UI/MouseCursor/CursorDefault.CursorDefault_C'");
 	const TCHAR* CursorAttackPath = TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/MixGame/UI/MouseCursor/CursorAttack.CursorAttack_C'");
-
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MouseCursor")
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MouseCursor", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UUserWidget> CursorDefaultClass;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MouseCursor")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MouseCursor", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UUserWidget> CursorAttackClass;
 
 	UPROPERTY()
@@ -117,14 +99,14 @@ public:
 
 	bool bIsWalking = false;
 
-	EHeroOperateKey HeroOperateKey = EHeroOperateKey::NoType;
-
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hero Controller")
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TWeakObjectPtr<class AMixHero> Hero;
 
 	FGameplayTag HeroAbilityType_Q = MixGameplayTags::Ability_Type_Q;
 	FGameplayTag HeroAbilityType_W = MixGameplayTags::Ability_Type_W;
 	FGameplayTag HeroAbilityType_E = MixGameplayTags::Ability_Type_E;
 	FGameplayTag HeroAbilityType_R = MixGameplayTags::Ability_Type_R;
+
+	UMixAttackComponent* AttackComponent;
 };

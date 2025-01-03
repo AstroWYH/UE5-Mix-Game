@@ -5,6 +5,7 @@
 #include "MixAssetManager.h"
 #include "MixWidgetComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Creature/Component/MixAttackComponent.h"
 #include "Creature/Component/Attack/MixCreatureAttackComponent.h"
 #include "Data/Attribute/MixAttributeData.h"
 #include "Data\WidgetComponent\MixWidgetComponentAsset.h"
@@ -14,6 +15,8 @@ AMixCreature::AMixCreature() : Super()
 {
 	WidgetComponentFix = CreateDefaultSubobject<UMixWidgetComponent>(TEXT("WidgetComponentFix"));
 	WidgetComponentFix->SetupAttachment(RootComponent);
+
+	AttackComponent = CreateDefaultSubobject<UMixAttackComponent>(TEXT("AttackComponent"));
 }
 
 void AMixCreature::BeginPlay()

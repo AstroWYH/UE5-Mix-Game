@@ -28,16 +28,26 @@ public:
 	virtual void PostRegisterAllComponents() override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AMixCreature)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UMixCreatureAttackComponent> CreatureAttackComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AMixCreature)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UMixCreatureHealthComponent> CreatureHeathComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AMixCreature)
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UMixWidgetComponent> WidgetComponentFix;
 
-protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UMixAttackComponent> AttackComponent;
+
+public:
+	TObjectPtr<class UMixAttackComponent> GetAttackComponent() const
+	{
+		return AttackComponent;
+	}
+
+private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	TObjectPtr<UMixHeadUIWidget> HeadUI;
 
@@ -53,7 +63,7 @@ public:
 	}
 
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	FGameplayTag CreatureType;
 
 public:
@@ -67,6 +77,21 @@ public:
 	FGameplayTag GetCreatureType() const
 	{
 		return CreatureType;
+	}
+
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	FGameplayTag AttackType;
+
+public:
+	FGameplayTag GetAttackType() const
+	{
+		return AttackType;
+	}
+
+	void SetAttackType(const FGameplayTag& InAttackType)
+	{
+		this->AttackType = InAttackType;
 	}
 
 protected:

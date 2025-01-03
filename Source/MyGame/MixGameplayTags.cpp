@@ -8,13 +8,21 @@
 
 namespace MixGameplayTags
 {
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Type_Hero, "Creature.Type.Hero", "");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Type_Hero_Self, "Creature.Type.Hero.Self", "");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Type_Hero_Other, "Creature.Type.Hero.Other", "");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Type_Hero_Friend, "Creature.Type.Hero.Friend", "");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Type_Hero_Enemy, "Creature.Type.Hero.Enemy", "");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Type_Batman, "Creature.Type.Batman", "");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Type_Batman_Friend, "Creature.Type.Batman.Friend", "");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Type_Batman_Enemy, "Creature.Type.Batman.Enemy", "");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Type_Tower, "Creature.Type.Tower", "");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Type_Tower_Friend, "Creature.Type.Tower.Friend", "");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Type_Tower_Enemy, "Creature.Type.Tower.Enemy", "");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Type_Monster, "Creature.Type.Monster", "");
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attack_Ranged, "Attack.Ranged", "");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attack_Melee, "Attack.Melee", "");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Hero_Name_Ashe, "Hero.Name.Ashe", "");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Hero_Name_Zed, "Hero.Name.Zed", "");

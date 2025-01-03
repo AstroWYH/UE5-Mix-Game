@@ -17,12 +17,11 @@
 #include "NiagaraSystem.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Ability/MixAbilityMgr.h"
-#include "Creature/Creature/Hero/MixHeroInfoBase.h"
-#include "Creature/Creature/Hero/MixHeroInfo_Ashe.h"
 #include "MixGameplayTags.h"
+#include "Creature/Component/MixAttackComponent.h"
 
-void AMixHeroController::Move(const FInputActionValue& Value)
-{
+// void AMixHeroController::Move(const FInputActionValue& Value)
+// {
 	// // input is a Vector2D
 	// FVector2D MovementVector = Value.Get<FVector2D>();
 	//
@@ -42,10 +41,10 @@ void AMixHeroController::Move(const FInputActionValue& Value)
 	// 	AddMovementInput(ForwardDirection, MovementVector.Y);
 	// 	AddMovementInput(RightDirection, MovementVector.X);
 	// }
-}
+// }
 
-void AMixHeroController::Look(const FInputActionValue& Value)
-{
+// void AMixHeroController::Look(const FInputActionValue& Value)
+// {
 	// // input is a Vector2D
 	// FVector2D LookAxisVector = Value.Get<FVector2D>();
 	//
@@ -55,7 +54,7 @@ void AMixHeroController::Look(const FInputActionValue& Value)
 	// 	AddControllerYawInput(LookAxisVector.X);
 	// 	AddControllerPitchInput(LookAxisVector.Y);
 	// }
-}
+// }
 
 void AMixHeroController::SetupInputComponent()
 {
@@ -68,24 +67,15 @@ void AMixHeroController::SetupInputComponent()
 		// EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AMixHeroController::Jump);
 		// EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &AMixHeroController::StopJumping);
 
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMixHeroController::Move);
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMixHeroController::Look);
+		// EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMixHeroController::Move);
+		// EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMixHeroController::Look);
 
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this,
-		                                   &AMixHeroController::PreNormalAttack);
+		                                   &AMixHeroController::PrepareAttack);
 		EnhancedInputComponent->BindAction(RightClickAction, ETriggerEvent::Started, this,
 		                                   &AMixHeroController::RightClick);
 		EnhancedInputComponent->BindAction(LeftClickAction, ETriggerEvent::Started, this,
 		                                   &AMixHeroController::LeftClick);
-
-		// EnhancedInputComponent->BindAction(SkillAction_Q, ETriggerEvent::Started, this, &AMixHeroController::Skill,
-		//                                    EHeroOperateKey::Q);
-		// EnhancedInputComponent->BindAction(SkillAction_W, ETriggerEvent::Started, this, &AMixHeroController::Skill,
-		//                                    EHeroOperateKey::W);
-		// EnhancedInputComponent->BindAction(SkillAction_E, ETriggerEvent::Started, this, &AMixHeroController::Skill,
-		//                                    EHeroOperateKey::E);
-		// EnhancedInputComponent->BindAction(SkillAction_R, ETriggerEvent::Started, this, &AMixHeroController::Skill,
-		//                                    EHeroOperateKey::R);
 
 		EnhancedInputComponent->BindAction(SkillAction_Q, ETriggerEvent::Started, this,
 		                                   &AMixHeroController::PerformAbility, HeroAbilityType_Q);
@@ -115,9 +105,12 @@ void AMixHeroController::BeginPlay()
 	InitMouseCursor();
 
 	Hero = Cast<AMixHero>(GetPawn());
-	if (!ensure(Hero.IsValid()))
-		return;
+	if (!ensure(Hero.IsValid())) return;
 
+	AttackComponent = Hero->GetAttackComponent();
+	ensure(AttackComponent);
+
+	// 获取初始位置
 	WalkPosition = Hero->GetActorLocation();
 }
 
@@ -162,16 +155,12 @@ void AMixHeroController::InitMouseCursor()
 	CursorAttackWidget = UUserWidget::CreateWidgetInstance(*this, CursorAttackClass, TEXT("CursorAttack"));
 }
 
-void AMixHeroController::PreNormalAttack(const FInputActionValue& Value)
+void AMixHeroController::PrepareAttack(const FInputActionValue& Value)
 {
 	SetMouseCursorWidget(EMouseCursor::Default, CursorAttackWidget);
-	HeroOperateKey = EHeroOperateKey::NormalAttack;
-
-	UMixHeroAttackComponent* HostAttackComponent = Cast<UMixHeroAttackComponent>(Hero->CreatureAttackComponent);
-	if (!ensure(HostAttackComponent))
-		return;
-
-	HostAttackComponent->SetAttackRangeHidden(false);
+	
+	// 玩家按A键，显示绿色攻击范围
+	AttackComponent->SetAttackRangeHidden(false);
 }
 
 FVector AMixHeroController::GetMouseClickFloorPosition()
@@ -184,13 +173,18 @@ FVector AMixHeroController::GetMouseClickFloorPosition()
 	//
 	// FVector CameraWorldPosition;
 	// FVector CamerToMouseWorldDirection;
-	// UGameplayStatics::DeprojectScreenToWorld(this, ScreenMousePosition, CameraWorldPosition, CamerToMouseWorldDirection);
+	// UGameplayStatics::DeprojectScreenToWorld(this, ScreenMousePosition, CameraWorldPosition,
+	//                                          CamerToMouseWorldDirection);
 	//
 	// TArray<AActor*> IgnoreActors;
 	// FHitResult HitResult;
-	// // DefaultEngine.ini配置了编辑器里新增的Cfg，ECC_GameTraceChannel2对应WalkFloor的ObjType
-	// TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes{ UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel2) };
-	// UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), CameraWorldPosition, CamerToMouseWorldDirection * 10000 + CameraWorldPosition, ObjectTypes, false, IgnoreActors, EDrawDebugTrace::None, HitResult, true, FLinearColor::Green);
+	// DefaultEngine.ini配置了编辑器里新增的Cfg，ECC_GameTraceChannel2对应WalkFloor的ObjType
+	// TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes{
+	// 	UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel2)};
+	// UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), CameraWorldPosition,
+	//                                                 CamerToMouseWorldDirection * 10000 + CameraWorldPosition,
+	//                                                 ObjectTypes, false, IgnoreActors, EDrawDebugTrace::None, HitResult,
+	//                                                 true, FLinearColor::Green);
 	//
 	// return FVector(HitResult.Location.X, HitResult.Location.Y, 100);
 
@@ -203,76 +197,44 @@ FVector AMixHeroController::GetMouseClickFloorPosition()
 
 void AMixHeroController::RightClick(const FInputActionValue& Value)
 {
-	// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("right mouse click")));
-
 	SetMouseCursorWidget(EMouseCursor::Default, CursorDefaultWidget);
 	WalkPosition = GetMouseClickFloorPosition();
 
+	// 很好用的函数，能驱动普通的AController位移
 	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, WalkPosition);
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, FXCursor, WalkPosition, FRotator::ZeroRotator,
 	                                               FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None, true);
 
-	// 打断角色旋转朝向敌方单位
-	UMixHeroAttackComponent* HostAttackComponent = Cast<UMixHeroAttackComponent>(Hero->CreatureAttackComponent);
-	if (!ensure(HostAttackComponent))
-		return;
-
-	HostAttackComponent->bIsRotating = false;
-	HostAttackComponent->SetAttackRangeHidden(true);
-
-	Hero->GetHeroInfo()->SetIsRotating(false);
-
+	// 打断普攻旋转
+	AttackComponent->SetIsRotating(false);
+	AttackComponent->SetAttackRangeHidden(true);
+	
+	// 打断技能旋转
 	UMixAbilityMgr* AbilityMgr = GetGameInstance()->GetSubsystem<UMixAbilityMgr>();
 	AbilityMgr->SetIsRotating(false);
 }
 
 void AMixHeroController::LeftClick(const FInputActionValue& Value)
 {
-	// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("left mouse click")));
-
-	if (HeroOperateKey == EHeroOperateKey::NormalAttack)
-	{
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, FXCursorAttack, GetMouseClickFloorPosition(),
-		                                               FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true,
-		                                               ENCPoolMethod::None, true);
-
-		UMixHeroAttackComponent* HostAttackComponent = Cast<UMixHeroAttackComponent>(Hero->CreatureAttackComponent);
-		if (!ensure(HostAttackComponent))
-			return;
-
-		HostAttackComponent->LastMouseClickPos = GetMouseClickFloorPosition();
-		HostAttackComponent->PreAttack();
-		HostAttackComponent->SetAttackRangeHidden(true);
-	}
-	else if (HeroOperateKey == EHeroOperateKey::Q || HeroOperateKey == EHeroOperateKey::W || HeroOperateKey ==
-		EHeroOperateKey::E || HeroOperateKey == EHeroOperateKey::R)
-	{
-		TObjectPtr<AMixHeroInfoBase> HeroInfo = Hero->GetHeroInfo();
-		HeroInfo->Skill(HeroOperateKey);
-		HeroInfo->SetSkillCastMousePos(GetMouseClickFloorPosition());
-	}
-
 	SetMouseCursorWidget(EMouseCursor::Default, CursorDefaultWidget);
-	HeroOperateKey = EHeroOperateKey::NoType;
-}
 
-// TODO: 废弃
-void AMixHeroController::Skill(const FInputActionValue& Value, EHeroOperateKey SkillKey)
-{
-	TObjectPtr<AMixHeroInfoBase> HeroInfo = Hero->GetHeroInfo();
-	HeroOperateKey = SkillKey;
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, FXCursorAttack, GetMouseClickFloorPosition(),
+	                                               FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true,
+	                                               ENCPoolMethod::None, true);
 
-	if (!HeroInfo->bIntelligentCasting_Q)
-	{
-		SetMouseCursorWidget(EMouseCursor::Default, CursorAttackWidget);
-		return;
-	}
+	// UMixHeroAttackComponent* HostAttackComponent = Cast<UMixHeroAttackComponent>(Hero->CreatureAttackComponent);
+	// HostAttackComponent->LastMouseClickPos = GetMouseClickFloorPosition();
+	// HostAttackComponent->PreAttack();
+	// HostAttackComponent->SetAttackRangeHidden(true);
 
-	HeroInfo->Skill(SkillKey);
+	AttackComponent->PrepareAttack(GetMouseClickFloorPosition());
+	AttackComponent->SetAttackRangeHidden(true);
 }
 
 void AMixHeroController::PerformAbility(const FInputActionValue& Value, FGameplayTag AbilityType)
 {
 	UMixAbilityMgr* AbilityMgr = GetGameInstance()->GetSubsystem<UMixAbilityMgr>();
+	if (!ensure(AbilityMgr)) return;
+	
 	AbilityMgr->PrepareAbility(Hero.Get(), AbilityType, GetMouseClickFloorPosition());
 }

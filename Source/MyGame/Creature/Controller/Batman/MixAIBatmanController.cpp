@@ -7,6 +7,7 @@
 #include "Kismet\GameplayStatics.h"
 #include "BehaviorTree\BehaviorTree.h"
 #include "BehaviorTree\BlackboardComponent.h"
+#include "Creature/Creature/Batman/MixBatman.h"
 #include "Perception\AIPerceptionTypes.h"
 #include "Perception\AIPerceptionComponent.h"
 #include "Creature/Creature/Hero/MixHero.h"
@@ -24,6 +25,8 @@ void AMixAIBatmanController::BeginPlay()
 	// 		BehaviorTree = LoadObject<UBehaviorTree>(nullptr, BehaviorTreePath);
 	// 	}
 	// 	RunBehaviorTree(BehaviorTree);
+
+	Batman = Cast<AMixBatman>(GetPawn());
 }
 
 void AMixAIBatmanController::BeginDestroy()
@@ -115,6 +118,7 @@ void AMixAIBatmanController::PostBpBeginPlay()
 
 void AMixAIBatmanController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
+	// TODO: 需要处理看到玩家、英雄、防御塔
 	AMixHero* Hero = Cast<AMixHero>(Actor);
 	if (Hero)
 	{
@@ -125,6 +129,9 @@ void AMixAIBatmanController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulu
 
 		bIsDetectHero = Stimulus.WasSuccessfullySensed();
 		BatmanBlackboard->SetValueAsBool("IsDetectHost", bIsDetectHero);
+
+		UMixAttackComponent* AttackComponent = Batman->GetAttackComponent();
+		// 设置target
 	}
 }
 

@@ -9,6 +9,7 @@
 #include "Data/Ability/MixAbilityAsset.h"
 #include "Level/MixLevelSubsystem.h"
 #include "MixGameplayTags.h"
+#include "Creature/Creature/Hero/MixHero.h"
 
 void UMixAbilityMgr::Initialize(FSubsystemCollectionBase& Collection)
 {

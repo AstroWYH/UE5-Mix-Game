@@ -8,6 +8,7 @@
 
 #include "MixAbilityMgr.generated.h"
 
+class AMixHero;
 class AMixAbilityBase;
 struct FGameplayTag;
 

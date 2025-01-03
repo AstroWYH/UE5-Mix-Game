@@ -3,10 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Components/ActorComponent.h"
 #include "MixAttackComponent.generated.h"
 
 
+class AMixTrackRangedAmmo;
 class AMixCreature;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
@@ -24,6 +26,37 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
+public:
+	void SetAttackRangeHidden(bool bHidden);
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void PrepareAttack(const FVector& Pos);
+	
+	void PrepareAttack(AMixCreature* Target);
+
+	void StopMovement();
+
+	// 仅对于HeroSelf
+	AMixCreature* SelectTarget(const FVector& Pos);
+	
+	// 仅对于HeroSelf
+	AMixCreature* SelectClosestTarget(const FVector& Pos);
+
+	void TurnToTarget(AMixCreature* Target);
+
+	void TickTurnToTarget();
+
+	void PerformRangedAttack();
+
+	void PerformMeleeAttack();
+
+	UFUNCTION(BlueprintCallable)
+	void OnMontageNofify();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void BP_PerformAttack();
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	AMixCreature* Creature;
@@ -34,7 +67,29 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool bIsRanged = false;
 
-	TSubclassOf<>
+	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AMixTrackRangedAmmo> AmmoClass;
+
+private:
+	// 朝向目标参数
+	FVector SelfLocation;
+	FRotator SelfRotation;
+	FVector TargetLocation;
+	FRotator SelfLookAtRotation;
+	float TotalYawDifference = 0.0f;
+	bool bIsRotating = false;
+	float YawPerFrame = 0.0f;
+	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = "true"))
+	float KRotationTime = 0.3f;
+
+	TArray<AMixCreature*> CreaturesInRange;
+	AMixCreature* TargetCreature;
+
+public:
+	void SetIsRotating(bool bInIsRotating)
+	{
+		this->bIsRotating = bInIsRotating;
+	}
 
 public:
 	AMixCreature* GetCreature() const

@@ -10,7 +10,6 @@
 #include "Creature/Creature/MixHeroAttribute.h"
 #include "Creature/Creature/Batman/MixBatman.h"
 #include "Creature/Creature/Hero/MixHero.h"
-#include "Creature/Creature/Hero/MixHeroInfo_Ashe.h"
 #include "Data/Attribute/MixAttributeData.h"
 #include "Data/Attribute/MixHeroAttributeData.h"
 #include "Game/MixGameMode.h"
@@ -54,16 +53,11 @@ void UMixLevelSubsystem::GenerateHero()
 	if (!ensure(Hero)) return;
 	SpawnedHeros.AddUnique(Hero);
 
-	TObjectPtr<AMixHeroInfo_Ashe> Ashe = GetWorld()->SpawnActor<AMixHeroInfo_Ashe>(AMixHeroInfo_Ashe::StaticClass());
-	Ashe->Init();
-	Ashe->SetHero(Hero);
-	
-	Hero->SetHeroInfo(Ashe);
 	Hero->SetHeroName(MixGameplayTags::Hero_Name_Ashe);
 	Hero->SetCreatureType(MixGameplayTags::Creature_Type_Hero_Self);
+	Hero->SetAttackType(MixGameplayTags::Attack_Ranged);
 
-	// 读属性表
-	// TODO: 整理成一种更友好的方式
+	// 读属性表 TODO: 整理成一种更友好的方式
 	TSoftObjectPtr<UDataTable> AttributeDataSoftPtr = UMixAssetManager::Get().HeroAttributeData;
 	const UDataTable* AttributeDT = UMixAssetManager::Get().GetDataTable(AttributeDataSoftPtr);
 	if (!ensure(AttributeDT)) return;
@@ -74,6 +68,7 @@ void UMixLevelSubsystem::GenerateHero()
 	HeroAttribute->MaxHealth = AttributeData->MaxHealth;
 	HeroAttribute->Speed = AttributeData->Speed;
 	HeroAttribute->AttackVal = AttributeData->AttackVal;
+	HeroAttribute->AttackRange = AttributeData->AttackRange;
 	HeroAttribute->Magic = AttributeData->MaxMagic;
 	Hero->SetAttribute(HeroAttribute);
 	Hero->GetHeadUI()->BP_OnAttributeAvaiable();
@@ -92,11 +87,6 @@ void UMixLevelSubsystem::GenerateHero()
 
 void UMixLevelSubsystem::GenerateBatman()
 {
-	// UClass* BpBatmanClass = LoadObject<UClass>(nullptr, BpBatmanClassPath);
-	// if (!ensure(BpBatmanClass)) return;
-	// UClass* BpSpawnPointClass = LoadObject<UClass>(nullptr, BpSpawnPointPath);
-	// if (!ensure(BpSpawnPointClass)) return;
-
 	TArray<AActor*> OutActors;
 	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), UMixAssetManager::Get().BatmanSpawnPointClass, "BatmanSpawnPoint", OutActors);
 	if (!ensure(OutActors.IsValidIndex(0))) return;
@@ -106,6 +96,7 @@ void UMixLevelSubsystem::GenerateBatman()
 	FTransform SpawnTransform = OutActors[0]->GetActorTransform();
 	AMixBatman* Batman = GetWorld()->SpawnActor<AMixBatman>(UMixAssetManager::Get().BatmanClass, SpawnTransform, SpawnParams);
 	Batman->SetCreatureType(MixGameplayTags::Creature_Type_Batman_Enemy);
+	Batman->SetAttackType(MixGameplayTags::Attack_Ranged);
 
 	// 读属性表
 	TSoftObjectPtr<UDataTable> AttributeDataSoftPtr = UMixAssetManager::Get().AttributeData;
@@ -118,6 +109,7 @@ void UMixLevelSubsystem::GenerateBatman()
 	Attribute->MaxHealth = AttributeData->MaxHealth;
 	Attribute->Speed = AttributeData->Speed;
 	Attribute->AttackVal = AttributeData->AttackVal;
+	Attribute->AttackRange = AttributeData->AttackRange;
 	Batman->SetAttribute(Attribute);
 	Batman->GetHeadUI()->BP_OnAttributeAvaiable();
 }

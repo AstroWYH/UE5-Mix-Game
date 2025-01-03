@@ -40,15 +40,6 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 private:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<AMixHeroInfoBase> HeroInfo;
-
-public:
-	void SetHeroInfo(const TObjectPtr<AMixHeroInfoBase>& InHeroInfo);
-
-	TObjectPtr<AMixHeroInfoBase> GetHeroInfo() const;
-
-private:
 	FGameplayTag HeroName;
 
 public:

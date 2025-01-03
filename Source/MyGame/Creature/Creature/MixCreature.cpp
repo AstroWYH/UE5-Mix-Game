@@ -12,8 +12,8 @@
 
 AMixCreature::AMixCreature() : Super()
 {
-	WidgetComponent = CreateDefaultSubobject<UMixWidgetComponent>(TEXT("WidgetComponent"));
-	WidgetComponent->SetupAttachment(RootComponent);
+	WidgetComponentFix = CreateDefaultSubobject<UMixWidgetComponent>(TEXT("WidgetComponentFix"));
+	WidgetComponentFix->SetupAttachment(RootComponent);
 }
 
 void AMixCreature::BeginPlay()
@@ -36,7 +36,8 @@ void AMixCreature::PostRegisterAllComponents()
 	TSubclassOf<UUserWidget> HeadUIClass = HeadUIAsset.Classes[GetClass()->GetFName()];
 	HeadUI = CreateWidget<UMixHeadUIWidget>(GetWorld(), HeadUIClass);
 	if (!ensure(HeadUI)) return;
-
-	WidgetComponent->SetWidget(HeadUI);
+	if (!ensure(WidgetComponentFix)) return;
+	
+	WidgetComponentFix->SetWidget(HeadUI);
 	HeadUI->SetOwner(this);
 }

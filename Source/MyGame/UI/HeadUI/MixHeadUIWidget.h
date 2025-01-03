@@ -30,4 +30,7 @@ public:
 		Creature = InCreature;
 	}
 
+public:
+	UFUNCTION(BlueprintImplementableEvent)
+	void BP_OnAttributeAvaiable();
 };

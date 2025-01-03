@@ -15,6 +15,7 @@
 #include "Data/Attribute/MixHeroAttributeData.h"
 #include "Game/MixGameMode.h"
 #include "Kismet/GameplayStatics.h"
+#include "UI/HeadUI/MixHeadUIWidget.h"
 
 void UMixLevelSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
@@ -69,11 +70,13 @@ void UMixLevelSubsystem::GenerateHero()
 	FMixHeroAttributeData* AttributeData = AttributeDT->FindRow<FMixHeroAttributeData>(TEXT("Ashe"), "AttributeData");
 	
 	UMixHeroAttribute* HeroAttribute = NewObject<UMixHeroAttribute>();
-	HeroAttribute->Health = AttributeData->Health;
+	HeroAttribute->Health = AttributeData->MaxHealth;
+	HeroAttribute->MaxHealth = AttributeData->MaxHealth;
 	HeroAttribute->Speed = AttributeData->Speed;
 	HeroAttribute->AttackVal = AttributeData->AttackVal;
-	HeroAttribute->Magic = AttributeData->Magic;
+	HeroAttribute->Magic = AttributeData->MaxMagic;
 	Hero->SetAttribute(HeroAttribute);
+	Hero->GetHeadUI()->BP_OnAttributeAvaiable();
 
 	AMixHeroController* HeroController = GetWorld()->SpawnActor<AMixHeroController>(UMixAssetManager::Get().HeroController, SpawnTransform);
 	if (!ensure(HeroController)) return;
@@ -111,8 +114,10 @@ void UMixLevelSubsystem::GenerateBatman()
 	FMixAttributeData* AttributeData = AttributeDT->FindRow<FMixAttributeData>(TEXT("Batman"), "AttributeData");
 	
 	UMixAttribute* Attribute = NewObject<UMixAttribute>();
-	Attribute->Health = AttributeData->Health;
+	Attribute->Health = AttributeData->MaxHealth;
+	Attribute->MaxHealth = AttributeData->MaxHealth;
 	Attribute->Speed = AttributeData->Speed;
 	Attribute->AttackVal = AttributeData->AttackVal;
 	Batman->SetAttribute(Attribute);
+	Batman->GetHeadUI()->BP_OnAttributeAvaiable();
 }

@@ -13,7 +13,7 @@ struct FMixAttributeData : public FTableRowBase
 public:
 	// TODO: 后续会扩展生命值表，每级的生命值
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	int32 Health;
+	int32 MaxHealth;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	int32 Speed;

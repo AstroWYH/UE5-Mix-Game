@@ -12,7 +12,7 @@ struct FMixHeroAttributeData : public FMixAttributeData
 
 public:
 	UPROPERTY(EditDefaultsOnly)
-	int32 Magic;
+	int32 MaxMagic;
 
 	UPROPERTY(EditDefaultsOnly)
 	int32 Experience;

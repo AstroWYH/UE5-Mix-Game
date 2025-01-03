@@ -9,6 +9,7 @@
 
 #include "MixCreature.generated.h"
 
+class UMixHeadUIWidget;
 class UMixAttribute;
 class UDataTable;
 
@@ -33,12 +34,23 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AMixCreature)
 	TObjectPtr<class UMixCreatureHealthComponent> CreatureHeathComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AMixCreature)
-	TObjectPtr<class UMixWidgetComponent> WidgetComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AMixCreature)
+	TObjectPtr<class UMixWidgetComponent> WidgetComponentFix;
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	TObjectPtr<UMixHeadUIWidget> HeadUI;
 
 public:
-	UPROPERTY()
-	TObjectPtr<UMixHeadUIWidget> HeadUI;
+	TObjectPtr<UMixHeadUIWidget> GetHeadUI() const
+	{
+		return HeadUI;
+	}
+
+	void SetHeadUI(const TObjectPtr<UMixHeadUIWidget>& InHeadUI)
+	{
+		HeadUI = InHeadUI;
+	}
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = true))

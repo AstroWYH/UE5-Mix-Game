@@ -29,7 +29,7 @@ public:
 
 public:
 	UFUNCTION(BlueprintImplementableEvent)
-	void BP_PerformAttack();
+	void BP_PerformAttack(UAnimMontage* Montage);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))

@@ -26,6 +26,29 @@ UMixAssetManager* UMixAssetManager::GetPtr()
 	return &UMixAssetManager::Get();
 }
 
+void UMixAssetManager::GetAssetASync(const FSoftObjectPath& SoftObjectPath, const FOnAssetLoaded& OnLoadedDelegate)
+{
+	UObject* LoadedAsset = SoftObjectPath.ResolveObject();
+	if (LoadedAsset)
+	{
+		OnLoadedDelegate.ExecuteIfBound(LoadedAsset);
+		return;
+	}
+
+	StreamableManager.RequestAsyncLoad(SoftObjectPath, FStreamableDelegate::CreateLambda([OnLoadedDelegate, SoftObjectPath]()
+	{
+		UObject* LoadedAsset = SoftObjectPath.ResolveObject();
+		if (LoadedAsset)
+		{
+			OnLoadedDelegate.ExecuteIfBound(LoadedAsset);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Failed to load asset: %s"), *SoftObjectPath.ToString());
+		}
+	}));
+}
+
 UPrimaryDataAsset* UMixAssetManager::LoadAssetDataOfClass(TSubclassOf<UPrimaryDataAsset> DataClass,
                                                           const TSoftObjectPtr<UPrimaryDataAsset>& DataClassPath, FPrimaryAssetType PrimaryAssetType)
 {
@@ -76,10 +99,10 @@ UPrimaryDataAsset* UMixAssetManager::LoadAssetDataOfClass(TSubclassOf<UPrimaryDa
 	return Asset;
 }
 
-const UDataTable* UMixAssetManager::GetDataTable(const TSoftObjectPtr<UDataTable>& DataPath)
-{
-	const UDataTable* DataTable = DataPath.LoadSynchronous();
-	return DataTable;
-}
+// const UDataTable* UMixAssetManager::GetAssetSync(const TSoftObjectPtr<UDataTable>& DataPath)
+// {
+// 	const UDataTable* DataTable = DataPath.LoadSynchronous();
+// 	return DataTable;
+// }
 
 

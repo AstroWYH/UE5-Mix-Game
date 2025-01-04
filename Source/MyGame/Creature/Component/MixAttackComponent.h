@@ -30,12 +30,10 @@ public:
 	void SetAttackRangeHidden(bool bHidden);
 
 public:
-	UFUNCTION(BlueprintCallable)
 	void PrepareAttack(const FVector& Pos);
-	
-	void PrepareAttack(AMixCreature* Target);
 
-	void StopMovement();
+	UFUNCTION(BlueprintCallable)
+	void PrepareAttack(AMixCreature* Target);
 
 	// ½ö¶ÔÓÚHeroSelf
 	AMixCreature* SelectTarget(const FVector& Pos);
@@ -57,9 +55,6 @@ public:
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	AMixCreature* Creature;
-
-	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = "true"))
-	FSoftObjectPath Montage;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool bIsRanged = false;

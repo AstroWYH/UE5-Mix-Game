@@ -52,7 +52,7 @@ void UMixAttackComponent::SetAttackRangeHidden(bool bHidden)
 // 对于HeroSelf
 void UMixAttackComponent::PrepareAttack(const FVector& Pos)
 {
-	StopMovement();
+	Creature->GetController()->StopMovement();
 
 	AMixCreature* Target = SelectTarget(Pos);
 	if (Target)
@@ -64,18 +64,9 @@ void UMixAttackComponent::PrepareAttack(const FVector& Pos)
 // 对于其他
 void UMixAttackComponent::PrepareAttack(AMixCreature* Target)
 {
-	StopMovement();
+	Creature->GetController()->StopMovement();
 
 	TurnToTarget(Target);
-}
-
-// 要考虑全部所有Creature
-void UMixAttackComponent::StopMovement()
-{
-	AController* CreatureController = (Creature->GetController());
-	if (!ensure(CreatureController)) return;
-	
-	CreatureController->StopMovement();
 }
 
 // 仅针对HeroSelf
@@ -185,7 +176,8 @@ void UMixAttackComponent::TickTurnToTarget()
 
 void UMixAttackComponent::PerformRangedAttack()
 {
-	Creature->BP_PerformAttack();
+	// TODO: 要根据Hero取Montage
+	// Creature->BP_PerformAttack();
 }
 
 void UMixAttackComponent::PerformMeleeAttack()

@@ -222,11 +222,6 @@ void AMixHostHeroController::LeftClick(const FInputActionValue& Value)
 	                                               FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true,
 	                                               ENCPoolMethod::None, true);
 
-	// UMixHeroAttackComponent* HostAttackComponent = Cast<UMixHeroAttackComponent>(Hero->CreatureAttackComponent);
-	// HostAttackComponent->LastMouseClickPos = GetMouseClickFloorPosition();
-	// HostAttackComponent->PreAttack();
-	// HostAttackComponent->SetAttackRangeHidden(true);
-
 	AttackComponent->PrepareAttack(GetMouseClickFloorPosition());
 	AttackComponent->SetAttackRangeHidden(true);
 }

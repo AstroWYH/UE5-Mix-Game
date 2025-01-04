@@ -43,6 +43,7 @@ void UMixLevelSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 
 void UMixLevelSubsystem::GenerateHero()
 {
+	// 生成Ashe
 	TArray<AActor*> OutActors;
 	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), UMixAssetManager::Get().HeroSpawnPointClass, "HeroSpawnPoint", OutActors);
 	if (!ensure(OutActors.IsValidIndex(0))) return;
@@ -51,17 +52,19 @@ void UMixLevelSubsystem::GenerateHero()
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	FTransform SpawnTransform = OutActors[0]->GetActorTransform();
 
-	AMixHero* Hero = GetWorld()->SpawnActor<AMixHero>(UMixAssetManager::Get().HeroClass, SpawnTransform, SpawnParams);
+	AMixHero* Hero = GetWorld()->SpawnActor<AMixHero>(UMixAssetManager::Get().BP_HeroClass_Ashe, SpawnTransform, SpawnParams);
 	if (!ensure(Hero)) return;
 	SpawnedHeros.AddUnique(Hero);
 
 	Hero->SetHeroName(MixGameplayTags::Hero_Name_Ashe);
 	Hero->SetCreatureType(MixGameplayTags::Creature_Type_Hero_Self);
 	Hero->SetAttackType(MixGameplayTags::Attack_Ranged);
+	Hero->GetMesh()->SetSkeletalMesh(UMixAssetManager::Get().GetAssetSync(UMixAssetManager::Get().Mesh_Ashe));
+	Hero->GetMesh()->SetAnimClass(UMixAssetManager::Get().Anim_Ashe);
 	
 	// 读属性表 TODO: 整理成一种更友好的方式
 	TSoftObjectPtr<UDataTable> AttributeDataSoftPtr = UMixAssetManager::Get().HeroAttributeData;
-	const UDataTable* AttributeDT = UMixAssetManager::Get().GetDataTable(AttributeDataSoftPtr);
+	const UDataTable* AttributeDT = UMixAssetManager::Get().GetAssetSync(AttributeDataSoftPtr);
 	if (!ensure(AttributeDT)) return;
 	FMixHeroAttributeData* AttributeData = AttributeDT->FindRow<FMixHeroAttributeData>(TEXT("Ashe"), "AttributeData");
 	
@@ -75,14 +78,14 @@ void UMixLevelSubsystem::GenerateHero()
 	Hero->SetAttribute(HeroAttribute);
 	Hero->GetHeadUI()->BP_OnAttributeAvaiable();
 
-	AMixHostHeroController* HeroController = GetWorld()->SpawnActor<AMixHostHeroController>(UMixAssetManager::Get().HeroController, SpawnTransform);
+	AMixHostHeroController* HeroController = GetWorld()->SpawnActor<AMixHostHeroController>(UMixAssetManager::Get().HostHeroController, SpawnTransform);
 	if (!ensure(HeroController)) return;
 
 	AMixGameMode* GameMode = Cast<AMixGameMode>(GetWorld()->GetAuthGameMode());
 	if (!ensure(GameMode)) return;
 
 	GameMode->SwapPlayerControllers(GetWorld()->GetFirstPlayerController(), HeroController);
-	// GameMode->GenericPlayerInitialization(HeroController);
+	// GameMode->GenericPlayerInitialization(HostHeroController);
 
 	HeroController->Possess(Hero);
 }
@@ -102,7 +105,7 @@ void UMixLevelSubsystem::GenerateBatman()
 
 	// 读属性表
 	TSoftObjectPtr<UDataTable> AttributeDataSoftPtr = UMixAssetManager::Get().AttributeData;
-	const UDataTable* AttributeDT = UMixAssetManager::Get().GetDataTable(AttributeDataSoftPtr);
+	const UDataTable* AttributeDT = UMixAssetManager::Get().GetAssetSync(AttributeDataSoftPtr);
 	if (!ensure(AttributeDT)) return;
 	FMixAttributeData* AttributeData = AttributeDT->FindRow<FMixAttributeData>(TEXT("Batman"), "AttributeData");
 	

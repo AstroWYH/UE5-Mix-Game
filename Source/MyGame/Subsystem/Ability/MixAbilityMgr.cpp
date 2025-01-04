@@ -48,7 +48,8 @@ void UMixAbilityMgr::OnHeroSpawned()
 		// 准备英雄技能数据
 		if (!ensure(EachHero)) continue;
 		FMixAbilityData& HeroAbility = HeroAbilityData.FindOrAdd(EachHero);
-		const UMixAbilityAsset& AbilityAsset = UMixAssetManager::Get().GetAsset_Ability();
+		const UMixAbilityAsset& AbilityAsset = UMixAssetManager::Get().GetOrLoadAssetData<UMixAbilityAsset>(
+			UMixAssetManager::Get().AbilityAsset);
 		
 		if (!ensure(AbilityAsset.HeroAbilitys.Contains(EachHero->GetHeroName()))) return;
 		if (!ensure(AbilityAsset.HeroAbilitys[EachHero->GetHeroName()].Ability.Contains(MixGameplayTags::Ability_Type_Q))) return;
@@ -74,19 +75,7 @@ void UMixAbilityMgr::PrepareAbility(AMixHero* Hero, const FGameplayTag& AbilityK
 
 void UMixAbilityMgr::TurnToMousePos(AMixHero* Hero, const FGameplayTag& AbilityKey, const FVector& AbilityPos)
 {
-	// // 面向目标旋转
-	// SelfLocation = Hero->GetActorLocation();
-	// SelfRotation = FRotator(0.0f, Hero->GetActorRotation().Yaw, 0.0f);
-	// // TODO: 这个位置看起来不是很准目前
-	// TargetLocation = AbilityPos;
-	// SelfLookAtRotation = FRotator(0.0f, (TargetLocation - SelfLocation).Rotation().Yaw, 0.0f);
-	//
-	// // 用于确保朝角度较小的方向旋转
-	// TotalYawDifference = FMath::Fmod(SelfLookAtRotation.Yaw - SelfRotation.Yaw + 180.0f, 360.0f) - 180.0f;
-	// YawPerFrame = TotalYawDifference / (KRotationTime / GetWorld()->GetDeltaSeconds());
-	//
-	// // 置开始转向状态
-	// bNeedRotate = true;
+	if (!ensure(TurnData.Contains(Hero))) return;
 
 	TurnData[Hero].CurAbilityKey = AbilityKey;
 	
@@ -107,29 +96,6 @@ void UMixAbilityMgr::TurnToMousePos(AMixHero* Hero, const FGameplayTag& AbilityK
 
 void UMixAbilityMgr::TickTurnToMousePos()
 {
-	// if (bNeedRotate)
-	// {
-	// 	FRotator SelfNewRotation = FRotator(0.0f, Hero->GetActorRotation().Yaw + YawPerFrame, 0.0f);
-	// 	Hero->SetActorRotation(SelfNewRotation);
-	//
-	// 	float RotationDiff = FMath::Abs(
-	// 		FMath::Fmod(SelfLookAtRotation.Yaw - SelfNewRotation.Yaw + 180.0f, 360.0f) - 180.0f);
-	// 	// TODO: 参数配置
-	// 	if (RotationDiff <= 6.0f)
-	// 	{
-	// 		// 最后获取Hero最新应该的朝向，用于矫正
-	// 		FRotator FinalFixRotation = FRotator(
-	// 			0.0f, (TargetLocation - Hero->GetActorLocation()).Rotation().Yaw,
-	// 			0.0f);
-	// 		Hero->SetActorRotation(FinalFixRotation);
-	// 		bNeedRotate = false;
-	//
-	// 		// Bp_Ability蓝图具体执行自己的逻辑
-	// 		AMixAbilityBase* Ability = HeroAbilityData[Hero].Data[CurAbilityKey];
-	// 		Ability->BP_PerformAbility();
-	// 	}
-	// }
-
 	for (auto& [Hero, Data] : TurnData)
 	{
 		if (Data.bNeedRotate)

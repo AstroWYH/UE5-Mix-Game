@@ -5,10 +5,11 @@
 #include "GameplayTagContainer.h"
 #include "MixAbilityBase.h"
 #include "MixAssetManager.h"
-#include "Creature/Controller/Hero/MixHeroController.h"
+#include "Creature/Controller/Hero/MixHostHeroController.h"
 #include "Data/Ability/MixAbilityAsset.h"
 #include "Level/MixLevelSubsystem.h"
 #include "MixGameplayTags.h"
+#include "Creature/Controller/MixHeroController.h"
 #include "Creature/Creature/Hero/MixHero.h"
 
 void UMixAbilityMgr::Initialize(FSubsystemCollectionBase& Collection)
@@ -37,14 +38,16 @@ bool UMixAbilityMgr::Tick(float DeltaTime)
 void UMixAbilityMgr::OnHeroSpawned()
 {
 	Super::OnHeroSpawned();
+	
 	UMixLevelSubsystem* LevelSubsystem = GetWorld()->GetSubsystem<UMixLevelSubsystem>();
 	if (!ensure(LevelSubsystem)) return;
 	
 	const TArray<AMixHero*> Heros = LevelSubsystem->GetSpawnedHeros();
 	for (AMixHero* EachHero : Heros)
 	{
+		// 准备英雄技能数据
 		if (!ensure(EachHero)) continue;
-		FMixAbilityData& HeroAbility = HeroAbilityData.FindOrAdd(EachHero->GetHeroName());
+		FMixAbilityData& HeroAbility = HeroAbilityData.FindOrAdd(EachHero);
 		const UMixAbilityAsset& AbilityAsset = UMixAssetManager::Get().GetAsset_Ability();
 		
 		if (!ensure(AbilityAsset.HeroAbilitys.Contains(EachHero->GetHeroName()))) return;
@@ -54,82 +57,109 @@ void UMixAbilityMgr::OnHeroSpawned()
 		AMixAbilityBase* Ability_Q = GetWorld()->SpawnActor<AMixAbilityBase>(BPAbilityClass_Q);
 		Ability_Q->SetHero(EachHero);
 		HeroAbility.Data.Add(MixGameplayTags::Ability_Type_Q, Ability_Q);
-		// TODO: WER也需要添加
+		// TODO: 其他WER也需要添加，整理成函数
+
+		// 准备英雄朝向数据
+		TurnData.Add(EachHero, FMixHeroTurnData());
 	}
 }
 
-// TODO: 后续要考虑其他英雄，InAbilityMouseLocation最好改为InAbilityPos
-void UMixAbilityMgr::PrepareAbility(AMixHero* InHero, FGameplayTag AbilityKey, FVector InAbilityPos)
+// TODO: 要考虑其他英雄
+void UMixAbilityMgr::PrepareAbility(AMixHero* Hero, const FGameplayTag& AbilityKey, const FVector& AbilityPos)
 {
-	CurAbilityKey = AbilityKey;
-	Hero = InHero;
-	AbilityMouseLocation = InAbilityPos;
-	StopMovement();
-	TurnToMousePos();
+	TurnData[Hero].Reset();
+	Hero->GetController()->StopMovement();
+	TurnToMousePos(Hero, AbilityKey, AbilityPos);
 }
 
-// TODO: 其他Hero肯定不是AMixHeroController，后续这方面要改一堆
-void UMixAbilityMgr::StopMovement()
+void UMixAbilityMgr::TurnToMousePos(AMixHero* Hero, const FGameplayTag& AbilityKey, const FVector& AbilityPos)
 {
-	AMixHeroController* HeroController = Cast<AMixHeroController>(Hero->GetController());
-	if (!ensure(HeroController))
-		return;
+	// // 面向目标旋转
+	// SelfLocation = Hero->GetActorLocation();
+	// SelfRotation = FRotator(0.0f, Hero->GetActorRotation().Yaw, 0.0f);
+	// // TODO: 这个位置看起来不是很准目前
+	// TargetLocation = AbilityPos;
+	// SelfLookAtRotation = FRotator(0.0f, (TargetLocation - SelfLocation).Rotation().Yaw, 0.0f);
+	//
+	// // 用于确保朝角度较小的方向旋转
+	// TotalYawDifference = FMath::Fmod(SelfLookAtRotation.Yaw - SelfRotation.Yaw + 180.0f, 360.0f) - 180.0f;
+	// YawPerFrame = TotalYawDifference / (KRotationTime / GetWorld()->GetDeltaSeconds());
+	//
+	// // 置开始转向状态
+	// bNeedRotate = true;
+
+	TurnData[Hero].CurAbilityKey = AbilityKey;
 	
-	HeroController->StopMovement();
-}
+	TurnData[Hero].SelfLocation = Hero->GetActorLocation();
+	TurnData[Hero].SelfRotation = FRotator(0.0f, Hero->GetActorRotation().Yaw, 0.0f);
+	TurnData[Hero].TargetLocation = AbilityPos;
+	TurnData[Hero].SelfLookAtRotation = FRotator(
+		0.0f, (TurnData[Hero].TargetLocation - TurnData[Hero].SelfLocation).Rotation().
+		                                                                    Yaw, 0.0f);
 
-void UMixAbilityMgr::TurnToMousePos()
-{
-	AMixHeroController* HeroController = Cast<AMixHeroController>(Hero->GetController());
-	if (!ensure(HeroController)) return;
+	TurnData[Hero].TotalYawDifference = FMath::Fmod(
+		TurnData[Hero].SelfLookAtRotation.Yaw - TurnData[Hero].SelfRotation.Yaw + 180.0f, 360.0f) - 180.0f;
+	TurnData[Hero].YawPerFrame = TurnData[Hero].TotalYawDifference / (TurnData[Hero].KRotationTime / GetWorld()->
+		GetDeltaSeconds());
 
-	// 面向目标旋转
-	SelfLocation = Hero->GetActorLocation();
-	SelfRotation = FRotator(0.0f, Hero->GetActorRotation().Yaw, 0.0f);
-	// TODO: 这个位置看起来不是很准目前
-	TargetLocation = HeroController->GetMouseClickFloorPosition();
-	SelfLookAtRotation = FRotator(0.0f, (TargetLocation - SelfLocation).Rotation().Yaw, 0.0f);
-
-	// 用于确保朝角度较小的方向旋转
-	TotalYawDifference = FMath::Fmod(SelfLookAtRotation.Yaw - SelfRotation.Yaw + 180.0f, 360.0f) - 180.0f;
-	YawPerFrame = TotalYawDifference / (KRotationTime / GetWorld()->GetDeltaSeconds());
-
-	// 置开始转向状态
-	bIsRotating = true;
+	TurnData[Hero].bNeedRotate = true;
 }
 
 void UMixAbilityMgr::TickTurnToMousePos()
 {
-	if (bIsRotating)
+	// if (bNeedRotate)
+	// {
+	// 	FRotator SelfNewRotation = FRotator(0.0f, Hero->GetActorRotation().Yaw + YawPerFrame, 0.0f);
+	// 	Hero->SetActorRotation(SelfNewRotation);
+	//
+	// 	float RotationDiff = FMath::Abs(
+	// 		FMath::Fmod(SelfLookAtRotation.Yaw - SelfNewRotation.Yaw + 180.0f, 360.0f) - 180.0f);
+	// 	// TODO: 参数配置
+	// 	if (RotationDiff <= 6.0f)
+	// 	{
+	// 		// 最后获取Hero最新应该的朝向，用于矫正
+	// 		FRotator FinalFixRotation = FRotator(
+	// 			0.0f, (TargetLocation - Hero->GetActorLocation()).Rotation().Yaw,
+	// 			0.0f);
+	// 		Hero->SetActorRotation(FinalFixRotation);
+	// 		bNeedRotate = false;
+	//
+	// 		// Bp_Ability蓝图具体执行自己的逻辑
+	// 		AMixAbilityBase* Ability = HeroAbilityData[Hero].Data[CurAbilityKey];
+	// 		Ability->BP_PerformAbility();
+	// 	}
+	// }
+
+	for (auto& [Hero, Data] : TurnData)
 	{
-		FRotator SelfNewRotation = FRotator(0.0f, Hero->GetActorRotation().Yaw + YawPerFrame, 0.0f);
-		Hero->SetActorRotation(SelfNewRotation);
-
-		float RotationDiff = FMath::Abs(
-			FMath::Fmod(SelfLookAtRotation.Yaw - SelfNewRotation.Yaw + 180.0f, 360.0f) - 180.0f);
-		// TODO: 参数配置
-		if (RotationDiff <= 6.0f)
+		if (Data.bNeedRotate)
 		{
-			// 最后获取Hero最新应该的朝向，用于矫正
-			FRotator FinalFixRotation = FRotator(
-				0.0f, (TargetLocation - Hero->GetActorLocation()).Rotation().Yaw,
-				0.0f);
-			Hero->SetActorRotation(FinalFixRotation);
-			bIsRotating = false;
+			FRotator SelfNewRotation = FRotator(0.0f, Hero->GetActorRotation().Yaw + Data.YawPerFrame, 0.0f);
+			Hero->SetActorRotation(SelfNewRotation);
 
-			// 记录技能施法的鼠标位置
-			AMixHeroController* HeroController = Cast<AMixHeroController>(Hero->GetController());
-			if (!ensure(HeroController)) return;
+			float RotationDiff = FMath::Abs(
+				FMath::Fmod(Data.SelfLookAtRotation.Yaw - SelfNewRotation.Yaw + 180.0f, 360.0f) - 180.0f);
+			// TODO: 参数配置
+			if (RotationDiff <= 6.0f)
+			{
+				// 最后获取Hero最新应该的朝向，用于矫正
+				FRotator FinalFixRotation = FRotator(
+					0.0f, (Data.TargetLocation - Hero->GetActorLocation()).Rotation().Yaw,
+					0.0f);
+				Hero->SetActorRotation(FinalFixRotation);
+				Data.bNeedRotate = false;
 
-			// Bp_Ability蓝图具体执行自己的逻辑
-			AMixAbilityBase* Ability = HeroAbilityData[Hero->GetHeroName()].Data[CurAbilityKey];
-			Ability->BP_PerformAbility();
+				// Bp_Ability蓝图具体执行自己的逻辑
+				AMixAbilityBase* Ability = HeroAbilityData[Hero].Data[Data.CurAbilityKey];
+				Ability->BP_PerformAbility();
+			}
 		}
 	}
 }
 
-void UMixAbilityMgr::OnMontageNoify()
+// TODO: 重构; 注意技能之间需要间隔拦截，否则连续按，CurAbilityKey可能出问题
+void UMixAbilityMgr::OnMontageNoify(AMixHero* Hero)
 {
-	AMixAbilityBase* Ability = HeroAbilityData[Hero->GetHeroName()].Data[CurAbilityKey];
-	Ability->BP_OnMontageNotify(AbilityMouseLocation);
+	AMixAbilityBase* Ability = HeroAbilityData[Hero].Data[TurnData[Hero].CurAbilityKey];
+	Ability->BP_OnMontageNotify(TurnData[Hero].TargetLocation);
 }

@@ -6,11 +6,12 @@
 #include "GameFramework/PlayerController.h"
 #include "InputActionValue.h"
 #include "MixGameplayTags.h"
+#include "Creature/Controller/MixControllerInterface.h"
 
-#include "MixHeroController.generated.h"
+#include "MixHostHeroController.generated.h"
 
 UCLASS()
-class MYGAME_API AMixHeroController : public APlayerController
+class MYGAME_API AMixHostHeroController : public APlayerController, public IMixControllerInterface
 {
 	GENERATED_BODY()
 

@@ -3446,8 +3446,8 @@
 											"visible": false,
 											"font": "Arial;13;0",
 											"parentStyle": true,
-											"left": 1157,
-											"top": 1021,
+											"left": 933,
+											"top": 989,
 											"width": 71.4462890625,
 											"height": 13
 										},
@@ -3459,9 +3459,9 @@
 											},
 											"font": "Arial;13;1",
 											"parentStyle": true,
-											"left": 1189,
-											"top": 1143,
-											"width": 339.05712890625,
+											"left": 1077,
+											"top": 1127,
+											"width": 546.58740234375,
 											"height": 13,
 											"text": "AbilityMgr"
 										},
@@ -3474,8 +3474,8 @@
 											"visible": false,
 											"font": "Arial;13;0",
 											"parentStyle": true,
-											"left": 144,
-											"top": -272,
+											"left": -80,
+											"top": -304,
 											"width": 82.3798828125,
 											"height": 13,
 											"text": "(from Model)"
@@ -3489,17 +3489,17 @@
 											"visible": false,
 											"font": "Arial;13;0",
 											"parentStyle": true,
-											"left": 144,
-											"top": -272,
+											"left": -80,
+											"top": -304,
 											"height": 13,
 											"horizontalAlignment": 1
 										}
 									],
 									"font": "Arial;13;0",
 									"parentStyle": true,
-									"left": 1184,
-									"top": 1136,
-									"width": 349.05712890625,
+									"left": 1072,
+									"top": 1120,
+									"width": 556.58740234375,
 									"height": 25,
 									"stereotypeLabel": {
 										"$ref": "AAAAAAGUG1r3ruaf2jo="
@@ -3535,9 +3535,9 @@
 											},
 											"font": "Arial;13;0",
 											"parentStyle": true,
-											"left": 1189,
-											"top": 1166,
-											"width": 339.05712890625,
+											"left": 1077,
+											"top": 1150,
+											"width": 546.58740234375,
 											"height": 13,
 											"text": "+HeroAbilityData: TMap<Name, TMap<Key, Ability>>",
 											"horizontalAlignment": 0
@@ -3551,10 +3551,11 @@
 											"model": {
 												"$ref": "AAAAAAGUJe6puHpQuY8="
 											},
+											"visible": false,
 											"font": "Arial;13;0",
 											"parentStyle": true,
-											"left": 1189,
-											"top": 1181,
+											"left": 965,
+											"top": 1149,
 											"width": 339.05712890625,
 											"height": 13,
 											"text": "+Hero",
@@ -3569,10 +3570,11 @@
 											"model": {
 												"$ref": "AAAAAAGUJe7KKHuSIHY="
 											},
+											"visible": false,
 											"font": "Arial;13;0",
 											"parentStyle": true,
-											"left": 1189,
-											"top": 1196,
+											"left": 965,
+											"top": 1149,
 											"width": 339.05712890625,
 											"height": 13,
 											"text": "+CurAbilityKey",
@@ -3587,22 +3589,59 @@
 											"model": {
 												"$ref": "AAAAAAGUJe7zDHzU1dk="
 											},
+											"visible": false,
 											"font": "Arial;13;0",
 											"parentStyle": true,
-											"left": 1189,
-											"top": 1211,
+											"left": 965,
+											"top": 1149,
 											"width": 339.05712890625,
 											"height": 13,
 											"text": "+AbilityMouseLocation",
+											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLAttributeView",
+											"_id": "AAAAAAGUMHFGvIDQKTE=",
+											"_parent": {
+												"$ref": "AAAAAAGUG1r3ruajAN0="
+											},
+											"model": {
+												"$ref": "AAAAAAGUMHFGsIDKBkA="
+											},
+											"font": "Arial;13;0",
+											"parentStyle": true,
+											"left": 1077,
+											"top": 1165,
+											"width": 546.58740234375,
+											"height": 13,
+											"text": "+TurnData: TMap<AMixHero*, FMixHeroTurnData>",
+											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLAttributeView",
+											"_id": "AAAAAAGUMHGrEIJlyJ8=",
+											"_parent": {
+												"$ref": "AAAAAAGUG1r3ruajAN0="
+											},
+											"model": {
+												"$ref": "AAAAAAGUMHGrCYJfIRw="
+											},
+											"font": "Arial;13;0",
+											"parentStyle": true,
+											"left": 1077,
+											"top": 1180,
+											"width": 546.58740234375,
+											"height": 13,
+											"text": "+HeroAbilityData: TMap<AMixHero*, FMixAbilityData>",
 											"horizontalAlignment": 0
 										}
 									],
 									"font": "Arial;13;0",
 									"parentStyle": true,
-									"left": 1184,
-									"top": 1161,
-									"width": 349.05712890625,
-									"height": 68
+									"left": 1072,
+									"top": 1145,
+									"width": 556.58740234375,
+									"height": 53
 								},
 								{
 									"_type": "UMLOperationCompartmentView",
@@ -3625,11 +3664,11 @@
 											},
 											"font": "Arial;13;0",
 											"parentStyle": true,
-											"left": 1189,
-											"top": 1234,
-											"width": 339.05712890625,
+											"left": 1077,
+											"top": 1203,
+											"width": 546.58740234375,
 											"height": 13,
-											"text": "+PerformAbility(Name, Key)",
+											"text": "+PerformAbility(Name, Key, Pos)",
 											"horizontalAlignment": 0
 										},
 										{
@@ -3643,9 +3682,9 @@
 											},
 											"font": "Arial;13;0",
 											"parentStyle": true,
-											"left": 1189,
-											"top": 1249,
-											"width": 339.05712890625,
+											"left": 1077,
+											"top": 1218,
+											"width": 546.58740234375,
 											"height": 13,
 											"text": "+StopMovement()",
 											"horizontalAlignment": 0
@@ -3661,9 +3700,9 @@
 											},
 											"font": "Arial;13;0",
 											"parentStyle": true,
-											"left": 1189,
-											"top": 1264,
-											"width": 339.05712890625,
+											"left": 1077,
+											"top": 1233,
+											"width": 546.58740234375,
 											"height": 13,
 											"text": "+TurnToMousePos()",
 											"horizontalAlignment": 0
@@ -3679,9 +3718,9 @@
 											},
 											"font": "Arial;13;0",
 											"parentStyle": true,
-											"left": 1189,
-											"top": 1279,
-											"width": 339.05712890625,
+											"left": 1077,
+											"top": 1248,
+											"width": 546.58740234375,
 											"height": 13,
 											"text": "+TickTurnToMousePos()",
 											"horizontalAlignment": 0
@@ -3698,8 +3737,8 @@
 											"visible": false,
 											"font": "Arial;13;0",
 											"parentStyle": true,
-											"left": 1181,
-											"top": 1186,
+											"left": 957,
+											"top": 1154,
 											"width": 280.73486328125,
 											"height": 13,
 											"text": "+PlaySkillMontage()",
@@ -3716,20 +3755,38 @@
 											},
 											"font": "Arial;13;0",
 											"parentStyle": true,
-											"left": 1189,
-											"top": 1294,
-											"width": 339.05712890625,
+											"left": 1077,
+											"top": 1263,
+											"width": 546.58740234375,
 											"height": 13,
-											"text": "+OnMontageNoify()",
+											"text": "+OnMontageNoify(AMixHero* Hero)",
+											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLOperationView",
+											"_id": "AAAAAAGUMHLbN4b/WRE=",
+											"_parent": {
+												"$ref": "AAAAAAGUG1r3ruakLWc="
+											},
+											"model": {
+												"$ref": "AAAAAAGUMHLbLob5Vho="
+											},
+											"font": "Arial;13;0",
+											"parentStyle": true,
+											"left": 1077,
+											"top": 1278,
+											"width": 546.58740234375,
+											"height": 13,
+											"text": "+SetNeedRotate(AMixHero* Hero, bool bInNeedRotate)",
 											"horizontalAlignment": 0
 										}
 									],
 									"font": "Arial;13;0",
 									"parentStyle": true,
-									"left": 1184,
-									"top": 1229,
-									"width": 349.05712890625,
-									"height": 83
+									"left": 1072,
+									"top": 1198,
+									"width": 556.58740234375,
+									"height": 98
 								},
 								{
 									"_type": "UMLReceptionCompartmentView",
@@ -3743,8 +3800,8 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": true,
-									"left": 72,
-									"top": -136,
+									"left": -40,
+									"top": -152,
 									"width": 10,
 									"height": 10
 								},
@@ -3760,8 +3817,8 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": true,
-									"left": 72,
-									"top": -136,
+									"left": -40,
+									"top": -152,
 									"width": 10,
 									"height": 10
 								}
@@ -3769,9 +3826,9 @@
 							"font": "Arial;13;0",
 							"parentStyle": false,
 							"containerChangeable": true,
-							"left": 1184,
-							"top": 1136,
-							"width": 348.05712890625,
+							"left": 1072,
+							"top": 1120,
+							"width": 555.58740234375,
 							"height": 176,
 							"nameCompartment": {
 								"$ref": "AAAAAAGUG1r3ruaeTYo="
@@ -7543,8 +7600,8 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 1340,
-									"top": 1321,
+									"left": 1336,
+									"top": 1313,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 15,
@@ -7565,8 +7622,8 @@
 									"visible": null,
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 1325,
-									"top": 1320,
+									"left": 1321,
+									"top": 1313,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 30,
@@ -7587,8 +7644,8 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 1369,
-									"top": 1322,
+									"left": 1365,
+									"top": 1314,
 									"height": 13,
 									"alpha": -1.5707963267948966,
 									"distance": 15,
@@ -7609,8 +7666,8 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 1340,
-									"top": 1310,
+									"left": 1336,
+									"top": 1311,
 									"height": 13,
 									"alpha": 0.5235987755982988,
 									"distance": 30,
@@ -7631,8 +7688,8 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 1327,
-									"top": 1307,
+									"left": 1323,
+									"top": 1309,
 									"height": 13,
 									"alpha": 0.7853981633974483,
 									"distance": 40,
@@ -7653,7 +7710,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 1368,
+									"left": 1364,
 									"top": 1315,
 									"height": 13,
 									"alpha": -0.5235987755982988,
@@ -7675,8 +7732,8 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 1340,
-									"top": 1332,
+									"left": 1336,
+									"top": 1317,
 									"height": 13,
 									"alpha": -0.5235987755982988,
 									"distance": 30,
@@ -7696,8 +7753,8 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 1326,
-									"top": 1334,
+									"left": 1323,
+									"top": 1319,
 									"height": 13,
 									"alpha": -0.7853981633974483,
 									"distance": 40,
@@ -7717,8 +7774,8 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 1367,
-									"top": 1329,
+									"left": 1363,
+									"top": 1312,
 									"height": 13,
 									"alpha": 0.5235987755982988,
 									"distance": 25,
@@ -7766,7 +7823,7 @@
 								"$ref": "AAAAAAGUG2UN67y+9eQ="
 							},
 							"lineStyle": 1,
-							"points": "1355:1343;1356:1313",
+							"points": "1352:1343;1351:1297",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAGUG2Ut28OZBdE="
@@ -7812,8 +7869,8 @@
 							"font": "Arial;12;0",
 							"parentStyle": false,
 							"showShadow": false,
-							"left": 1536,
-							"top": 1184,
+							"left": 1472,
+							"top": 1344,
 							"width": 320.86328125,
 							"height": 96,
 							"text": "（暂不考虑指向性技能）\n远程技能：按键Q，旋转朝向鼠标，\n播蒙太奇（BP），生成Ammo（BP），Ammo去发生碰撞\n近战技能：按键Q，旋转朝向鼠标，\n播蒙太奇（BP），直接发生碰撞"
@@ -15565,6 +15622,26 @@
 							},
 							"name": "AbilityMouseLocation",
 							"type": ""
+						},
+						{
+							"_type": "UMLAttribute",
+							"_id": "AAAAAAGUMHFGsIDKBkA=",
+							"_parent": {
+								"$ref": "AAAAAAGUG1r3reaboOA="
+							},
+							"name": "TurnData",
+							"stereotype": "",
+							"type": "TMap<AMixHero*, FMixHeroTurnData>"
+						},
+						{
+							"_type": "UMLAttribute",
+							"_id": "AAAAAAGUMHGrCYJfIRw=",
+							"_parent": {
+								"$ref": "AAAAAAGUG1r3reaboOA="
+							},
+							"name": "HeroAbilityData",
+							"stereotype": "",
+							"type": "TMap<AMixHero*, FMixAbilityData>"
 						}
 					],
 					"operations": [
@@ -15582,8 +15659,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGUG20iQAApvQw="
 									},
-									"name": "Name",
-									"type": ""
+									"name": "Name"
 								},
 								{
 									"_type": "UMLParameter",
@@ -15591,7 +15667,15 @@
 									"_parent": {
 										"$ref": "AAAAAAGUG20iQAApvQw="
 									},
-									"name": "Key",
+									"name": "Key"
+								},
+								{
+									"_type": "UMLParameter",
+									"_id": "AAAAAAGUMHNgR4owEiE=",
+									"_parent": {
+										"$ref": "AAAAAAGUG20iQAApvQw="
+									},
+									"name": "Pos",
 									"type": ""
 								}
 							]
@@ -15634,7 +15718,46 @@
 							"_parent": {
 								"$ref": "AAAAAAGUG1r3reaboOA="
 							},
-							"name": "OnMontageNoify"
+							"name": "OnMontageNoify",
+							"parameters": [
+								{
+									"_type": "UMLParameter",
+									"_id": "AAAAAAGUMHMNjIiFK1s=",
+									"_parent": {
+										"$ref": "AAAAAAGUJfEHIpG81iE="
+									},
+									"name": "AMixHero* Hero",
+									"type": ""
+								}
+							]
+						},
+						{
+							"_type": "UMLOperation",
+							"_id": "AAAAAAGUMHLbLob5Vho=",
+							"_parent": {
+								"$ref": "AAAAAAGUG1r3reaboOA="
+							},
+							"name": "SetNeedRotate",
+							"parameters": [
+								{
+									"_type": "UMLParameter",
+									"_id": "AAAAAAGUMHLjq4eofs0=",
+									"_parent": {
+										"$ref": "AAAAAAGUMHLbLob5Vho="
+									},
+									"name": "AMixHero* Hero",
+									"type": ""
+								},
+								{
+									"_type": "UMLParameter",
+									"_id": "AAAAAAGUMHLjq4epfqg=",
+									"_parent": {
+										"$ref": "AAAAAAGUMHLbLob5Vho="
+									},
+									"name": "bool bInNeedRotate",
+									"type": ""
+								}
+							]
 						}
 					]
 				},

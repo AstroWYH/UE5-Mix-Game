@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MixHeroController.h"
+#include "MixHostHeroController.h"
 #include "GameFramework/Character.h"
 #include "Components/InputComponent.h"
 #include "EnhancedInputComponent.h"
@@ -20,7 +20,7 @@
 #include "MixGameplayTags.h"
 #include "Creature/Component/MixAttackComponent.h"
 
-// void AMixHeroController::Move(const FInputActionValue& Value)
+// void AMixHostHeroController::Move(const FInputActionValue& Value)
 // {
 	// // input is a Vector2D
 	// FVector2D MovementVector = Value.Get<FVector2D>();
@@ -43,7 +43,7 @@
 	// }
 // }
 
-// void AMixHeroController::Look(const FInputActionValue& Value)
+// void AMixHostHeroController::Look(const FInputActionValue& Value)
 // {
 	// // input is a Vector2D
 	// FVector2D LookAxisVector = Value.Get<FVector2D>();
@@ -56,7 +56,7 @@
 	// }
 // }
 
-void AMixHeroController::SetupInputComponent()
+void AMixHostHeroController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
@@ -64,31 +64,31 @@ void AMixHeroController::SetupInputComponent()
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent))
 	{
 		// // Jumping
-		// EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AMixHeroController::Jump);
-		// EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &AMixHeroController::StopJumping);
+		// EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AMixHostHeroController::Jump);
+		// EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &AMixHostHeroController::StopJumping);
 
-		// EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMixHeroController::Move);
-		// EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMixHeroController::Look);
+		// EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMixHostHeroController::Move);
+		// EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMixHostHeroController::Look);
 
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this,
-		                                   &AMixHeroController::PrepareAttack);
+		                                   &AMixHostHeroController::PrepareAttack);
 		EnhancedInputComponent->BindAction(RightClickAction, ETriggerEvent::Started, this,
-		                                   &AMixHeroController::RightClick);
+		                                   &AMixHostHeroController::RightClick);
 		EnhancedInputComponent->BindAction(LeftClickAction, ETriggerEvent::Started, this,
-		                                   &AMixHeroController::LeftClick);
+		                                   &AMixHostHeroController::LeftClick);
 
 		EnhancedInputComponent->BindAction(SkillAction_Q, ETriggerEvent::Started, this,
-		                                   &AMixHeroController::PerformAbility, HeroAbilityType_Q);
+		                                   &AMixHostHeroController::PerformAbility, HeroAbilityType_Q);
 		EnhancedInputComponent->BindAction(SkillAction_W, ETriggerEvent::Started, this,
-		                                   &AMixHeroController::PerformAbility, HeroAbilityType_W);
+		                                   &AMixHostHeroController::PerformAbility, HeroAbilityType_W);
 		EnhancedInputComponent->BindAction(SkillAction_E, ETriggerEvent::Started, this,
-		                                   &AMixHeroController::PerformAbility, HeroAbilityType_E);
+		                                   &AMixHostHeroController::PerformAbility, HeroAbilityType_E);
 		EnhancedInputComponent->BindAction(SkillAction_R, ETriggerEvent::Started, this,
-		                                   &AMixHeroController::PerformAbility, HeroAbilityType_R);
+		                                   &AMixHostHeroController::PerformAbility, HeroAbilityType_R);
 	}
 }
 
-void AMixHeroController::BeginPlay()
+void AMixHostHeroController::BeginPlay()
 {
 	// 蓝图中的Event BeginPlay事件会在C++的BeginPlay被调用时触发
 	// 如果不调用这句，则蓝图的EventBegin()不会被调用
@@ -114,7 +114,7 @@ void AMixHeroController::BeginPlay()
 	WalkPosition = Hero->GetActorLocation();
 }
 
-void AMixHeroController::Tick(float DeltaSeconds)
+void AMixHostHeroController::Tick(float DeltaSeconds)
 {
 	// if (!ensure(Hero.IsValid())) return;
 	//
@@ -135,7 +135,7 @@ void AMixHeroController::Tick(float DeltaSeconds)
 	// }
 }
 
-void AMixHeroController::InitMouseCursor()
+void AMixHostHeroController::InitMouseCursor()
 {
 	// 创建默认鼠标图像
 	CursorDefaultClass = FindObject<UClass>(nullptr, CursorDefaultPath);
@@ -155,7 +155,7 @@ void AMixHeroController::InitMouseCursor()
 	CursorAttackWidget = UUserWidget::CreateWidgetInstance(*this, CursorAttackClass, TEXT("CursorAttack"));
 }
 
-void AMixHeroController::PrepareAttack(const FInputActionValue& Value)
+void AMixHostHeroController::PrepareAttack(const FInputActionValue& Value)
 {
 	SetMouseCursorWidget(EMouseCursor::Default, CursorAttackWidget);
 	
@@ -163,7 +163,7 @@ void AMixHeroController::PrepareAttack(const FInputActionValue& Value)
 	AttackComponent->SetAttackRangeHidden(false);
 }
 
-FVector AMixHeroController::GetMouseClickFloorPosition()
+FVector AMixHostHeroController::GetMouseClickFloorPosition()
 {
 	// 老式手动的方法，但好像有一点误差
 	// 这里只能用GetMousePositionOnViewport()，结果才正确
@@ -195,7 +195,7 @@ FVector AMixHeroController::GetMouseClickFloorPosition()
 	return Hit.Location;
 }
 
-void AMixHeroController::RightClick(const FInputActionValue& Value)
+void AMixHostHeroController::RightClick(const FInputActionValue& Value)
 {
 	SetMouseCursorWidget(EMouseCursor::Default, CursorDefaultWidget);
 	WalkPosition = GetMouseClickFloorPosition();
@@ -211,10 +211,10 @@ void AMixHeroController::RightClick(const FInputActionValue& Value)
 	
 	// 打断技能旋转
 	UMixAbilityMgr* AbilityMgr = GetGameInstance()->GetSubsystem<UMixAbilityMgr>();
-	AbilityMgr->SetIsRotating(false);
+	AbilityMgr->SetNeedRotate(Hero.Get(), false);
 }
 
-void AMixHeroController::LeftClick(const FInputActionValue& Value)
+void AMixHostHeroController::LeftClick(const FInputActionValue& Value)
 {
 	SetMouseCursorWidget(EMouseCursor::Default, CursorDefaultWidget);
 
@@ -231,7 +231,7 @@ void AMixHeroController::LeftClick(const FInputActionValue& Value)
 	AttackComponent->SetAttackRangeHidden(true);
 }
 
-void AMixHeroController::PerformAbility(const FInputActionValue& Value, FGameplayTag AbilityType)
+void AMixHostHeroController::PerformAbility(const FInputActionValue& Value, FGameplayTag AbilityType)
 {
 	UMixAbilityMgr* AbilityMgr = GetGameInstance()->GetSubsystem<UMixAbilityMgr>();
 	if (!ensure(AbilityMgr)) return;

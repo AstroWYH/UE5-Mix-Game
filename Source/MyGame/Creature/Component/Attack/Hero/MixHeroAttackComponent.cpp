@@ -7,7 +7,7 @@
 #include "Creature/Creature/Batman/MixBatman.h"
 #include "Algo/MinElement.h"
 #include "GameFramework\CharacterMovementComponent.h"
-#include "Creature/Controller/Hero/MixHeroController.h"
+#include "Creature/Controller/Hero/MixHostHeroController.h"
 #include "Creature/Ammo/Hero/MixHeroAmmo.h"
 #include "Engine\AssetManager.h"
 
@@ -89,7 +89,7 @@ bool UMixHeroAttackComponent::SelectTarget()
 void UMixHeroAttackComponent::StopMovement()
 {
 	// 停止角色位移
-	AMixHeroController* HostController = Cast<AMixHeroController>(Hero->GetController());
+	AMixHostHeroController* HostController = Cast<AMixHostHeroController>(Hero->GetController());
 	if (!ensure(HostController)) return;
 
 	HostController->WalkPosition = Hero->GetActorLocation();

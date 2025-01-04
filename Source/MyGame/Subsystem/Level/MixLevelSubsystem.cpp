@@ -5,7 +5,8 @@
 
 #include "MixAssetManager.h"
 #include "MixGameSubsystem.h"
-#include "Creature/Controller/Hero/MixHeroController.h"
+#include "Ability/MixAbilityMgr.h"
+#include "Creature/Controller/Hero/MixHostHeroController.h"
 #include "Creature/Creature/MixAttribute.h"
 #include "Creature/Creature/MixHeroAttribute.h"
 #include "Creature/Creature/Batman/MixBatman.h"
@@ -29,6 +30,7 @@ void UMixLevelSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 
 	GenerateHero();
 
+	// 所有GameMgr都加上OnHeroSpawned接口
 	TArray<UMixGameSubsystem*> GameSubsystems = InWorld.GetGameInstance()->GetSubsystemArray<UMixGameSubsystem>();
 	for (UMixGameSubsystem* GameSubsystem : GameSubsystems)
 	{
@@ -56,7 +58,7 @@ void UMixLevelSubsystem::GenerateHero()
 	Hero->SetHeroName(MixGameplayTags::Hero_Name_Ashe);
 	Hero->SetCreatureType(MixGameplayTags::Creature_Type_Hero_Self);
 	Hero->SetAttackType(MixGameplayTags::Attack_Ranged);
-
+	
 	// 读属性表 TODO: 整理成一种更友好的方式
 	TSoftObjectPtr<UDataTable> AttributeDataSoftPtr = UMixAssetManager::Get().HeroAttributeData;
 	const UDataTable* AttributeDT = UMixAssetManager::Get().GetDataTable(AttributeDataSoftPtr);
@@ -73,7 +75,7 @@ void UMixLevelSubsystem::GenerateHero()
 	Hero->SetAttribute(HeroAttribute);
 	Hero->GetHeadUI()->BP_OnAttributeAvaiable();
 
-	AMixHeroController* HeroController = GetWorld()->SpawnActor<AMixHeroController>(UMixAssetManager::Get().HeroController, SpawnTransform);
+	AMixHostHeroController* HeroController = GetWorld()->SpawnActor<AMixHostHeroController>(UMixAssetManager::Get().HeroController, SpawnTransform);
 	if (!ensure(HeroController)) return;
 
 	AMixGameMode* GameMode = Cast<AMixGameMode>(GetWorld()->GetAuthGameMode());

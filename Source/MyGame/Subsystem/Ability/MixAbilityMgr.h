@@ -21,6 +21,38 @@ struct FMixAbilityData
 	TMap<FGameplayTag, AMixAbilityBase*> Data;
 };
 
+struct FMixHeroTurnData
+{
+	FMixHeroTurnData()
+	{
+		Reset();
+	}
+	
+	void Reset()
+	{
+		SelfLocation = FVector::ZeroVector;
+		SelfRotation = FRotator::ZeroRotator;
+		TargetLocation = FVector::ZeroVector;
+		SelfLookAtRotation = FRotator::ZeroRotator;
+		TotalYawDifference = 0.0f;
+		bNeedRotate = false;
+		KRotationTime = 0.3f;
+		YawPerFrame = 0.0f;
+		CurAbilityKey = FGameplayTag();
+	}
+
+	// 旋转朝向数据
+	FVector SelfLocation;
+	FRotator SelfRotation;
+	FVector TargetLocation;
+	FRotator SelfLookAtRotation;
+	float TotalYawDifference = 0.0f;
+	bool bNeedRotate = false;
+	float KRotationTime = 0.3f;
+	float YawPerFrame = 0.0f;
+	FGameplayTag CurAbilityKey;
+};
+
 UCLASS()
 class MYGAME_API UMixAbilityMgr : public UMixGameSubsystem
 {
@@ -39,46 +71,27 @@ private:
 	FTSTicker::FDelegateHandle TickHandle;
 
 public:
-	void StopMovement();
-
-	void PrepareAbility(AMixHero* InHero, FGameplayTag AbilityKey, FVector InAbilityPos);
+	void PrepareAbility(AMixHero* Hero, const FGameplayTag& AbilityKey, const FVector& AbilityPos);
 
 private:
-	void TurnToMousePos();
+	void TurnToMousePos(AMixHero* Hero, const FGameplayTag& AbilityKey, const FVector& AbilityPos);
 
 	void TickTurnToMousePos();
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void OnMontageNoify();
+	void OnMontageNoify(AMixHero* Hero);
 
 private:
 	UPROPERTY()
-	TMap<FGameplayTag, FMixAbilityData> HeroAbilityData;
+	TMap<AMixHero*, FMixAbilityData> HeroAbilityData;
 
-	AMixHero* Hero;
-
-	FGameplayTag CurAbilityKey;
-
-private:
-	// 朝向目标参数
-	FVector SelfLocation;
-	FRotator SelfRotation;
-	FVector TargetLocation;
-	FRotator SelfLookAtRotation;
-	float TotalYawDifference = 0.0f;
-	bool bIsRotating = false;
-	float KRotationTime = 0.3f; // TODO: 参数配置
-	float YawPerFrame = 0.0f;
-
-private:
-	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	FVector AbilityMouseLocation;
+	TMap<AMixHero*, FMixHeroTurnData> TurnData;
 
 public:
-	void SetIsRotating(bool InbIsRotating)
+	void SetNeedRotate(AMixHero* Hero, bool bInNeedRotate)
 	{
-		bIsRotating = InbIsRotating;
+		TurnData[Hero].bNeedRotate = bInNeedRotate;
 	}
 
 };

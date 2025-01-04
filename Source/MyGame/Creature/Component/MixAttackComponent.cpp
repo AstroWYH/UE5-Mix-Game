@@ -69,8 +69,13 @@ void UMixAttackComponent::PrepareAttack(AMixCreature* Target)
 	TurnToTarget(Target);
 }
 
+// 要考虑全部所有Creature
 void UMixAttackComponent::StopMovement()
 {
+	AController* CreatureController = (Creature->GetController());
+	if (!ensure(CreatureController)) return;
+	
+	CreatureController->StopMovement();
 }
 
 // 仅针对HeroSelf
@@ -180,7 +185,7 @@ void UMixAttackComponent::TickTurnToTarget()
 
 void UMixAttackComponent::PerformRangedAttack()
 {
-	BP_PerformAttack();
+	Creature->BP_PerformAttack();
 }
 
 void UMixAttackComponent::PerformMeleeAttack()

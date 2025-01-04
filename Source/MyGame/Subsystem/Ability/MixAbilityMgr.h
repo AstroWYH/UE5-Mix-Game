@@ -41,7 +41,7 @@ private:
 public:
 	void StopMovement();
 
-	void PrepareAbility(AMixHero* InHero, FGameplayTag AbilityKey, FVector InAbilityMouseLocation);
+	void PrepareAbility(AMixHero* InHero, FGameplayTag AbilityKey, FVector InAbilityPos);
 
 private:
 	void TurnToMousePos();

@@ -54,9 +54,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnMontageNofify();
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void BP_PerformAttack();
-
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	AMixCreature* Creature;

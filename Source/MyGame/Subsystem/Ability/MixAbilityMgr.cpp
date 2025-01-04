@@ -58,15 +58,17 @@ void UMixAbilityMgr::OnHeroSpawned()
 	}
 }
 
-void UMixAbilityMgr::PrepareAbility(AMixHero* InHero, FGameplayTag AbilityKey, FVector InAbilityMouseLocation)
+// TODO: 后续要考虑其他英雄，InAbilityMouseLocation最好改为InAbilityPos
+void UMixAbilityMgr::PrepareAbility(AMixHero* InHero, FGameplayTag AbilityKey, FVector InAbilityPos)
 {
 	CurAbilityKey = AbilityKey;
 	Hero = InHero;
-	AbilityMouseLocation = InAbilityMouseLocation;
+	AbilityMouseLocation = InAbilityPos;
 	StopMovement();
 	TurnToMousePos();
 }
 
+// TODO: 其他Hero肯定不是AMixHeroController，后续这方面要改一堆
 void UMixAbilityMgr::StopMovement()
 {
 	AMixHeroController* HeroController = Cast<AMixHeroController>(Hero->GetController());

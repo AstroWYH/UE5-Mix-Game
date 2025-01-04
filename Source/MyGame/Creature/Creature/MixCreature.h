@@ -28,6 +28,10 @@ public:
 	virtual void PostRegisterAllComponents() override;
 
 public:
+	UFUNCTION(BlueprintImplementableEvent)
+	void BP_PerformAttack();
+
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UMixCreatureAttackComponent> CreatureAttackComponent;
 

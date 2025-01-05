@@ -18,12 +18,11 @@ UMixAttackComponent::UMixAttackComponent()
 void UMixAttackComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	Creature = Cast<AMixCreature>(GetOwner());
 }
 
-void UMixAttackComponent::TickComponent(float DeltaTime, ELevelTick TickType,
-                                        FActorComponentTickFunction* ThisTickFunction)
+void UMixAttackComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
@@ -37,8 +36,7 @@ void UMixAttackComponent::SetAttackRangeHidden(bool bHidden)
 	if (!ensure(HeroSelf)) return;
 
 	// 示范GetComponentsByTag的用法，其实一般用FindComponentByClass即可
-	TArray<UActorComponent*> TaggedComponents = HeroSelf->GetComponentsByTag(
-		UActorComponent::StaticClass(), "AttackRangeComponent");
+	TArray<UActorComponent*> TaggedComponents = HeroSelf->GetComponentsByTag(UActorComponent::StaticClass(), "AttackRangeComponent");
 	for (UActorComponent* AttackRangeComponent : TaggedComponents)
 	{
 		if (!ensure(AttackRangeComponent)) continue;
@@ -74,7 +72,7 @@ AMixCreature* UMixAttackComponent::SelectTarget(const FVector& Pos)
 {
 	// 获取范围内敌方Creature
 	CreaturesInRange.Empty();
-	
+
 	AMixHero* HeroSelf = Cast<AMixHero>(Creature);
 	FVector StartPos = HeroSelf->GetActorLocation();
 	FVector EndPos = HeroSelf->GetActorLocation();
@@ -83,13 +81,8 @@ AMixCreature* UMixAttackComponent::SelectTarget(const FVector& Pos)
 	// TODO: 检测范围1000.0f配置，AttackRange默认是500
 	TArray<AActor*> ActorsToIgnore;
 	TArray<FHitResult> OutHits;
-	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes
-	{
-		UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel1)
-	};
-	UKismetSystemLibrary::CapsuleTraceMultiForObjects(GetWorld(), StartPos, EndPos,
-	                                                  HeroSelf->GetAttribute()->AttackRange, 1000.0f, ObjectTypes,
-	                                                  false, ActorsToIgnore, EDrawDebugTrace::None, OutHits, true);
+	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes{UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel1)};
+	UKismetSystemLibrary::CapsuleTraceMultiForObjects(GetWorld(), StartPos, EndPos, HeroSelf->GetAttribute()->AttackRange, 1000.0f, ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::None, OutHits, true);
 
 	for (const FHitResult& Hit : OutHits)
 	{
@@ -112,14 +105,10 @@ AMixCreature* UMixAttackComponent::SelectTarget(const FVector& Pos)
 
 AMixCreature* UMixAttackComponent::SelectClosestTarget(const FVector& Pos)
 {
-	AMixCreature** ClosestCreature = Algo::MinElementBy(CreaturesInRange,
-	                                                    [Pos, this](const AMixCreature* Creature)
-	                                                    {
-		                                                    return FVector::Distance(
-			                                                    Pos,
-			                                                    Creature->GetActorLocation());
-	                                                    }
-		);
+	AMixCreature** ClosestCreature = Algo::MinElementBy(CreaturesInRange, [Pos, this](const AMixCreature* Creature)
+	{
+		return FVector::Distance(Pos, Creature->GetActorLocation());
+	});
 
 	if (!ensure(ClosestCreature)) return nullptr;
 	return *ClosestCreature;
@@ -150,14 +139,11 @@ void UMixAttackComponent::TickTurnToTarget()
 		FRotator SelfNewRotation = FRotator(0.0f, Creature->GetActorRotation().Yaw + YawPerFrame, 0.0f);
 		Creature->SetActorRotation(SelfNewRotation);
 
-		float RotationDiff = FMath::Abs(
-			FMath::Fmod(SelfLookAtRotation.Yaw - SelfNewRotation.Yaw + 180.0f, 360.0f) - 180.0f);
+		float RotationDiff = FMath::Abs(FMath::Fmod(SelfLookAtRotation.Yaw - SelfNewRotation.Yaw + 180.0f, 360.0f) - 180.0f);
 		if (RotationDiff <= 6.0f)
 		{
 			// 最后获取Host最新应该的朝向，用于矫正
-			FRotator FinalFixRotation = FRotator(
-				0.0f, (TargetCreature->GetActorLocation() - Creature->GetActorLocation()).Rotation().Yaw,
-				0.0f);
+			FRotator FinalFixRotation = FRotator(0.0f, (TargetCreature->GetActorLocation() - Creature->GetActorLocation()).Rotation().Yaw, 0.0f);
 			Creature->SetActorRotation(FinalFixRotation);
 			bIsRotating = false;
 
@@ -188,4 +174,3 @@ void UMixAttackComponent::PerformMeleeAttack()
 void UMixAttackComponent::OnMontageNofify()
 {
 }
-

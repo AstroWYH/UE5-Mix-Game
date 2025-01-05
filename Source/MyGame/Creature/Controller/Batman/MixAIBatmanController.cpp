@@ -51,16 +51,14 @@ void AMixAIBatmanController::PostBpBeginPlay()
 	BatmanBlackboard->SetValueAsInt("NextPatrolIdx", 0);
 
 	// Find蓝图BatmanAIPerception
-	TArray<UActorComponent*> TaggedComponents =
-		GetComponentsByTag(UActorComponent::StaticClass(), "BatmanAIPerception");
+	TArray<UActorComponent*> TaggedComponents = GetComponentsByTag(UActorComponent::StaticClass(), "BatmanAIPerception");
 	for (UActorComponent* Component : TaggedComponents)
 	{
 		if (!ensure(Component)) continue;
 		BatmanAIPerceptionComponent = Cast<UAIPerceptionComponent>(Component);
 		if (!ensure(BatmanAIPerceptionComponent)) continue;
 
-		BatmanAIPerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(
-			this, &AMixAIBatmanController::OnTargetPerceptionUpdated);
+		BatmanAIPerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &AMixAIBatmanController::OnTargetPerceptionUpdated);
 	}
 }
 

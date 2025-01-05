@@ -22,38 +22,38 @@
 
 // void AMixHostHeroController::Move(const FInputActionValue& Value)
 // {
-	// // input is a Vector2D
-	// FVector2D MovementVector = Value.Get<FVector2D>();
-	//
-	// if (Controller != nullptr)
-	// {
-	// 	// find out which way is forward
-	// 	const FRotator Rotation = Controller->GetControlRotation();
-	// 	const FRotator YawRotation(0, Rotation.Yaw, 0);
-	//
-	// 	// get forward vector
-	// 	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	//
-	// 	// get right vector
-	// 	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-	//
-	// 	// add movement
-	// 	AddMovementInput(ForwardDirection, MovementVector.Y);
-	// 	AddMovementInput(RightDirection, MovementVector.X);
-	// }
+// // input is a Vector2D
+// FVector2D MovementVector = Value.Get<FVector2D>();
+//
+// if (Controller != nullptr)
+// {
+// 	// find out which way is forward
+// 	const FRotator Rotation = Controller->GetControlRotation();
+// 	const FRotator YawRotation(0, Rotation.Yaw, 0);
+//
+// 	// get forward vector
+// 	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+//
+// 	// get right vector
+// 	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+//
+// 	// add movement
+// 	AddMovementInput(ForwardDirection, MovementVector.Y);
+// 	AddMovementInput(RightDirection, MovementVector.X);
+// }
 // }
 
 // void AMixHostHeroController::Look(const FInputActionValue& Value)
 // {
-	// // input is a Vector2D
-	// FVector2D LookAxisVector = Value.Get<FVector2D>();
-	//
-	// if (Controller != nullptr)
-	// {
-	// 	// add yaw and pitch input to controller
-	// 	AddControllerYawInput(LookAxisVector.X);
-	// 	AddControllerPitchInput(LookAxisVector.Y);
-	// }
+// // input is a Vector2D
+// FVector2D LookAxisVector = Value.Get<FVector2D>();
+//
+// if (Controller != nullptr)
+// {
+// 	// add yaw and pitch input to controller
+// 	AddControllerYawInput(LookAxisVector.X);
+// 	AddControllerPitchInput(LookAxisVector.Y);
+// }
 // }
 
 void AMixHostHeroController::SetupInputComponent()
@@ -70,21 +70,14 @@ void AMixHostHeroController::SetupInputComponent()
 		// EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMixHostHeroController::Move);
 		// EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMixHostHeroController::Look);
 
-		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this,
-		                                   &AMixHostHeroController::PrepareAttack);
-		EnhancedInputComponent->BindAction(RightClickAction, ETriggerEvent::Started, this,
-		                                   &AMixHostHeroController::RightClick);
-		EnhancedInputComponent->BindAction(LeftClickAction, ETriggerEvent::Started, this,
-		                                   &AMixHostHeroController::LeftClick);
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &AMixHostHeroController::PrepareAttack);
+		EnhancedInputComponent->BindAction(RightClickAction, ETriggerEvent::Started, this, &AMixHostHeroController::RightClick);
+		EnhancedInputComponent->BindAction(LeftClickAction, ETriggerEvent::Started, this, &AMixHostHeroController::LeftClick);
 
-		EnhancedInputComponent->BindAction(SkillAction_Q, ETriggerEvent::Started, this,
-		                                   &AMixHostHeroController::PerformAbility, HeroAbilityType_Q);
-		EnhancedInputComponent->BindAction(SkillAction_W, ETriggerEvent::Started, this,
-		                                   &AMixHostHeroController::PerformAbility, HeroAbilityType_W);
-		EnhancedInputComponent->BindAction(SkillAction_E, ETriggerEvent::Started, this,
-		                                   &AMixHostHeroController::PerformAbility, HeroAbilityType_E);
-		EnhancedInputComponent->BindAction(SkillAction_R, ETriggerEvent::Started, this,
-		                                   &AMixHostHeroController::PerformAbility, HeroAbilityType_R);
+		EnhancedInputComponent->BindAction(SkillAction_Q, ETriggerEvent::Started, this, &AMixHostHeroController::PerformAbility, HeroAbilityType_Q);
+		EnhancedInputComponent->BindAction(SkillAction_W, ETriggerEvent::Started, this, &AMixHostHeroController::PerformAbility, HeroAbilityType_W);
+		EnhancedInputComponent->BindAction(SkillAction_E, ETriggerEvent::Started, this, &AMixHostHeroController::PerformAbility, HeroAbilityType_E);
+		EnhancedInputComponent->BindAction(SkillAction_R, ETriggerEvent::Started, this, &AMixHostHeroController::PerformAbility, HeroAbilityType_R);
 	}
 }
 
@@ -95,8 +88,7 @@ void AMixHostHeroController::BeginPlay()
 	Super::BeginPlay();
 
 	// 初始化增强输入DefaultMappingContext
-	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
-		GetLocalPlayer()))
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
 		Subsystem->AddMappingContext(DefaultMappingContext, 0);
 	}
@@ -158,7 +150,7 @@ void AMixHostHeroController::InitMouseCursor()
 void AMixHostHeroController::PrepareAttack(const FInputActionValue& Value)
 {
 	SetMouseCursorWidget(EMouseCursor::Default, CursorAttackWidget);
-	
+
 	// 玩家按A键，显示绿色攻击范围
 	AttackComponent->SetAttackRangeHidden(false);
 }
@@ -202,13 +194,12 @@ void AMixHostHeroController::RightClick(const FInputActionValue& Value)
 
 	// 很好用的函数，能驱动普通的AController位移
 	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, WalkPosition);
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, FXCursor, WalkPosition, FRotator::ZeroRotator,
-	                                               FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None, true);
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, FXCursor, WalkPosition, FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None, true);
 
 	// 打断普攻旋转
 	AttackComponent->SetIsRotating(false);
 	AttackComponent->SetAttackRangeHidden(true);
-	
+
 	// 打断技能旋转
 	UMixAbilityMgr* AbilityMgr = GetGameInstance()->GetSubsystem<UMixAbilityMgr>();
 	AbilityMgr->SetNeedRotate(Hero.Get(), false);
@@ -218,9 +209,7 @@ void AMixHostHeroController::LeftClick(const FInputActionValue& Value)
 {
 	SetMouseCursorWidget(EMouseCursor::Default, CursorDefaultWidget);
 
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, FXCursorAttack, GetMouseClickFloorPosition(),
-	                                               FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true,
-	                                               ENCPoolMethod::None, true);
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, FXCursorAttack, GetMouseClickFloorPosition(), FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None, true);
 
 	AttackComponent->PrepareAttack(GetMouseClickFloorPosition());
 	AttackComponent->SetAttackRangeHidden(true);
@@ -230,6 +219,6 @@ void AMixHostHeroController::PerformAbility(const FInputActionValue& Value, FGam
 {
 	UMixAbilityMgr* AbilityMgr = GetGameInstance()->GetSubsystem<UMixAbilityMgr>();
 	if (!ensure(AbilityMgr)) return;
-	
+
 	AbilityMgr->PrepareAbility(Hero.Get(), AbilityType, GetMouseClickFloorPosition());
 }

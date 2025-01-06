@@ -7,7 +7,9 @@
 #include "Creature/Component/Health/MixCreatureHealthComponent.h"
 #include "Components/NamedSlot.h"
 #include "Components/ProgressBar.h"
+#include "Creature/Creature/MixAttribute.h"
 #include "Kismet/GameplayStatics.h"
+#include "Level/MixLevelSubsystem.h"
 #include "UI/Bars/MixBarsContainerWidget.h"
 
 void UMixUIBarsSubsystem::Initialize(FSubsystemCollectionBase& Collection)
@@ -36,18 +38,18 @@ void UMixUIBarsSubsystem::Tick(float DeltaTime)
 	// 后者则不存在，需要借助static CreatedDelegate，流程更复杂
 
 	// 在Tick里执行，只有初次起作用，后续存在浪费
-	ACharacter* Creature = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	if (Creature)
-	{
-		AMixHero* Hero = Cast<AMixHero>(Creature);
-		if (!ensure(Hero)) return;
-		if (!ensure(Hero->CreatureHeathComponent)) return;
-	
-		if (!Hero->CreatureHeathComponent->OnCharacterTakeDamage.IsBound())
-		{
-			Hero->CreatureHeathComponent->OnCharacterTakeDamage.AddDynamic(this, &ThisClass::UpdateUIBars);
-		}
-	}
+	// ACharacter* Creature = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	// if (Creature)
+	// {
+	// 	AMixHero* Hero = Cast<AMixHero>(Creature);
+	// 	if (!ensure(Hero)) return;
+	// 	if (!ensure(Hero->CreatureHeathComponent)) return;
+	//
+	// 	if (!Hero->CreatureHeathComponent->OnCharacterTakeDamage.IsBound())
+	// 	{
+	// 		Hero->CreatureHeathComponent->OnCharacterTakeDamage.AddDynamic(this, &ThisClass::UpdateUIBars);
+	// 	}
+	// }
 }
 
 void UMixUIBarsSubsystem::CreateUI()
@@ -81,4 +83,27 @@ void UMixUIBarsSubsystem::UpdateUIBars(int32 DamageVal, int32 CurHealthVal, int3
 void UMixUIBarsSubsystem::Deinitialize()
 {
 	Super::Deinitialize();
+
+	UMixLevelSubsystem* LevelSubsystem = GetWorld()->GetSubsystem<UMixLevelSubsystem>();
+	if (!(LevelSubsystem)) return;
+
+	AMixHero* HostHero = LevelSubsystem->GetHostHero();
+	if (HostHero)
+	{
+		HostHero->GetAttribute()->OnApplyHealth.RemoveAll(this);
+	}
+}
+
+void UMixUIBarsSubsystem::OnHeroSpawned()
+{
+	Super::OnHeroSpawned();
+
+	UMixLevelSubsystem* LevelSubsystem = GetWorld()->GetSubsystem<UMixLevelSubsystem>();
+	if (!(LevelSubsystem)) return;
+
+	AMixHero* HostHero = LevelSubsystem->GetHostHero();
+	if (HostHero)
+	{
+		HostHero->GetAttribute()->OnApplyHealth.AddDynamic(this, &ThisClass::UpdateUIBars);
+	}
 }

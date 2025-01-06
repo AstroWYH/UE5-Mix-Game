@@ -6,6 +6,7 @@
 #include "AIController.h"
 #include "MixTrackRangedController.generated.h"
 
+class AMixTrackRangedAmmo;
 /**
  *
  */
@@ -23,9 +24,9 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TWeakObjectPtr<class AMixTrackRangedAmmo> TrackRangedAmmo;
+	AMixTrackRangedAmmo* Ammo;
 
 public:
-	bool bCanLaunch = false;
+	bool bTrack = false;
 
 };

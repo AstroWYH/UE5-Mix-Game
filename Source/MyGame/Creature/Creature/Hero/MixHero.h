@@ -39,17 +39,4 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
-private:
-	FGameplayTag HeroName;
-
-public:
-	FGameplayTag GetHeroName() const
-	{
-		return HeroName;
-	}
-
-	void SetHeroName(const FGameplayTag& InHeroName)
-	{
-		HeroName = InHeroName;
-	}
 };

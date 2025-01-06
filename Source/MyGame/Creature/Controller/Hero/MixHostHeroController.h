@@ -10,6 +10,8 @@
 
 #include "MixHostHeroController.generated.h"
 
+class UMixAttackComponent;
+
 UCLASS()
 class MYGAME_API AMixHostHeroController : public APlayerController, public IMixControllerInterface
 {
@@ -110,4 +112,6 @@ private:
 	FGameplayTag HeroAbilityType_R = MixGameplayTags::Ability_Type_R;
 
 	UMixAttackComponent* AttackComponent;
+
+	bool bHasAttackToConsume = false;
 };

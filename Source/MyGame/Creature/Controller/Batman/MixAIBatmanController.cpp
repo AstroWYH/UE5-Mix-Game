@@ -71,7 +71,7 @@ void AMixAIBatmanController::PostBpBeginPlay()
 // 
 // void AMixAIBatmanController::TraceTargetAbort()
 // {
-// 	if (!bIsDetectHero)
+// 	if (!bIsDetectCreature)
 // 	{
 // 		StopMovement();
 // 
@@ -96,7 +96,7 @@ void AMixAIBatmanController::PostBpBeginPlay()
 // 
 // void AMixAIBatmanController::TracePathPointAbort()
 // {
-// 	if (bIsDetectHero)
+// 	if (bIsDetectCreature)
 // 	{
 // 		StopMovement();
 // 
@@ -116,20 +116,19 @@ void AMixAIBatmanController::PostBpBeginPlay()
 
 void AMixAIBatmanController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
-	// TODO: 需要处理看到玩家、英雄、防御塔
-	AMixHero* Hero = Cast<AMixHero>(Actor);
-	if (Hero)
+	// Ammo也能检测到，在此拦截
+	AMixCreature* Creature = Cast<AMixCreature>(Actor);
+	if (Creature)
 	{
-		// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,
-		//                                  FString::Printf(
-		// 	                                 TEXT("bSensed: %d Actor:%s"), Stimulus.WasSuccessfullySensed(),
-		// 	                                 *Actor->GetName()));
+		bIsDetectCreature = Stimulus.WasSuccessfullySensed();
 
-		bIsDetectHero = Stimulus.WasSuccessfullySensed();
-		BatmanBlackboard->SetValueAsBool("IsDetectHost", bIsDetectHero);
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,
+			FString::Printf(
+				TEXT("bSensed:%d Actor:%s"), bIsDetectCreature,
+				*Actor->GetName()));
 
-		UMixAttackComponent* AttackComponent = Batman->GetAttackComponent();
-		// 设置target
+		BatmanBlackboard->SetValueAsBool("IsDetectCreature", bIsDetectCreature);
+		BatmanBlackboard->SetValueAsObject("Creature", Creature);
 	}
 }
 

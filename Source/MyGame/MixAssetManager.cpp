@@ -26,27 +26,16 @@ UMixAssetManager* UMixAssetManager::GetPtr()
 	return &UMixAssetManager::Get();
 }
 
-void UMixAssetManager::GetAssetASync(const FSoftObjectPath& SoftObjectPath, const FOnAssetLoaded& OnLoadedDelegate)
+void UMixAssetManager::GetAssetASync(const FSoftObjectPath& SoftObjectPath, const FStreamableDelegate& OnLoadedDelegate)
 {
 	UObject* LoadedAsset = SoftObjectPath.ResolveObject();
 	if (LoadedAsset)
 	{
-		OnLoadedDelegate.ExecuteIfBound(LoadedAsset);
+		OnLoadedDelegate.ExecuteIfBound();
 		return;
 	}
 
-	StreamableManager.RequestAsyncLoad(SoftObjectPath, FStreamableDelegate::CreateLambda([OnLoadedDelegate, SoftObjectPath]()
-	{
-		UObject* LoadedAsset = SoftObjectPath.ResolveObject();
-		if (LoadedAsset)
-		{
-			OnLoadedDelegate.ExecuteIfBound(LoadedAsset);
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Failed to load asset: %s"), *SoftObjectPath.ToString());
-		}
-	}));
+	StreamableManager.RequestAsyncLoad(SoftObjectPath, OnLoadedDelegate);
 }
 
 UPrimaryDataAsset* UMixAssetManager::LoadAssetDataOfClass(TSubclassOf<UPrimaryDataAsset> DataClass,

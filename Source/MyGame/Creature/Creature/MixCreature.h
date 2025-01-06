@@ -28,10 +28,6 @@ public:
 	virtual void PostRegisterAllComponents() override;
 
 public:
-	UFUNCTION(BlueprintImplementableEvent)
-	void BP_PerformAttack(UAnimMontage* Montage);
-
-public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UMixCreatureAttackComponent> CreatureAttackComponent;
 
@@ -84,21 +80,6 @@ public:
 	}
 
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	FGameplayTag AttackType;
-
-public:
-	FGameplayTag GetAttackType() const
-	{
-		return AttackType;
-	}
-
-	void SetAttackType(const FGameplayTag& InAttackType)
-	{
-		this->AttackType = InAttackType;
-	}
-
-protected:
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	UMixAttribute* Attribute;
 
@@ -111,5 +92,19 @@ public:
 	void SetAttribute(UMixAttribute* InAttribute)
 	{
 		Attribute = InAttribute;
+	}
+
+protected:
+	FGameplayTag CreatureName;
+
+public:
+	FGameplayTag GetCreatureName() const
+	{
+		return CreatureName;
+	}
+
+	void SetCreatureName(const FGameplayTag& InHeroName)
+	{
+		CreatureName = InHeroName;
 	}
 };

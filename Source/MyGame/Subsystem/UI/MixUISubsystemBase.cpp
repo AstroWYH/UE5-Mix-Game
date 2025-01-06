@@ -30,3 +30,8 @@ void UMixUISubsystemBase::Deinitialize()
 
 	Super::Deinitialize();
 }
+
+void UMixUISubsystemBase::OnHeroSpawned()
+{
+	Super::OnHeroSpawned();
+}

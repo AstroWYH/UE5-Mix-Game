@@ -38,6 +38,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<class UFloatingPawnMovement> FloatingPawnMovement;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	// TODO: 待定，可能放到其他位置
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	int32 AmmoOffset = 0;
 };

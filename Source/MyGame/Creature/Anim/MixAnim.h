@@ -16,7 +16,7 @@ class MYGAME_API UMixAnim : public UAnimInstance
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMixAnim")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UMixAnim")
 	float Speed = 0.0f;
 
 	void NativeInitializeAnimation();

@@ -153,6 +153,7 @@ void AMixHostHeroController::PrepareAttack(const FInputActionValue& Value)
 
 	// 玩家按A键，显示绿色攻击范围
 	AttackComponent->SetAttackRangeHidden(false);
+	bHasAttackToConsume = true;
 }
 
 FVector AMixHostHeroController::GetMouseClickFloorPosition()
@@ -190,6 +191,7 @@ FVector AMixHostHeroController::GetMouseClickFloorPosition()
 void AMixHostHeroController::RightClick(const FInputActionValue& Value)
 {
 	SetMouseCursorWidget(EMouseCursor::Default, CursorDefaultWidget);
+	bHasAttackToConsume = false;
 	WalkPosition = GetMouseClickFloorPosition();
 
 	// 很好用的函数，能驱动普通的AController位移
@@ -209,10 +211,14 @@ void AMixHostHeroController::LeftClick(const FInputActionValue& Value)
 {
 	SetMouseCursorWidget(EMouseCursor::Default, CursorDefaultWidget);
 
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, FXCursorAttack, GetMouseClickFloorPosition(), FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None, true);
+	if (bHasAttackToConsume)
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, FXCursorAttack, GetMouseClickFloorPosition(), FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None, true);
+		AttackComponent->PrepareAttack(GetMouseClickFloorPosition());
+		AttackComponent->SetAttackRangeHidden(true);
+	}
 
-	AttackComponent->PrepareAttack(GetMouseClickFloorPosition());
-	AttackComponent->SetAttackRangeHidden(true);
+	bHasAttackToConsume = false;
 }
 
 void AMixHostHeroController::PerformAbility(const FInputActionValue& Value, FGameplayTag AbilityType)

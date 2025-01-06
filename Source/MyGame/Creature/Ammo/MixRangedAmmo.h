@@ -6,6 +6,8 @@
 #include "GameFramework/Pawn.h"
 #include "MixRangedAmmo.generated.h"
 
+class AMixCreature;
+
 UCLASS()
 class MYGAME_API AMixRangedAmmo : public APawn
 {
@@ -25,14 +27,10 @@ public:
 
 protected:
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	AActor* Target;
+	AMixCreature* Target;
 
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	AActor* Shooter;
-
-protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	int32 AttackVal = 0;
+	AMixCreature* Shooter;
 
 private:
 	struct FTimerHandle DestroyTimerHandle;
@@ -52,33 +50,27 @@ private:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	AActor* GetTarget() const
+	AMixCreature* GetTarget() const
 	{
 		return Target;
 	}
 
 	UFUNCTION(BlueprintCallable)
-	void SetTarget(AActor* InTarget)
+	void SetTarget(AMixCreature* InTarget)
 	{
 		Target = InTarget;
 	}
 
 	UFUNCTION(BlueprintCallable)
-	AActor* GetShooter() const
+	AMixCreature* GetShooter() const
 	{
 		return Shooter;
 	}
 
 	UFUNCTION(BlueprintCallable)
-	void SetShooter(AActor* InShooter)
+	void SetShooter(AMixCreature* InShooter)
 	{
 		Shooter = InShooter;
-	}
-
-	UFUNCTION(BlueprintCallable)
-	int32 GetAttackVal() const
-	{
-		return AttackVal;
 	}
 
 };

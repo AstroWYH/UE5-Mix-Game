@@ -24,8 +24,9 @@ namespace MixGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attack_Ranged, "Attack.Ranged", "");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attack_Melee, "Attack.Melee", "");
 	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Hero_Name_Ashe, "Hero.Name.Ashe", "");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Hero_Name_Zed, "Hero.Name.Zed", "");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Name_Ashe, "Creature.Name.Ashe", "");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Name_Zed, "Creature.Name.Zed", "");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Name_Batman, "Creature.Name.Batman", "");
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Type_Q, "Ability.Type.Q", "");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Type_W, "Ability.Type.W", "");

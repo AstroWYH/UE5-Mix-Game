@@ -57,7 +57,7 @@ public:
 // 	FMixOnMovementAbort OnMovementAbort;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMixAIBatmanController")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<FVector> PathPointsPos;
 
 // 	const TCHAR* BehaviorTreePath{ TEXT("/Script/AIModule.BehaviorTree'/Game/MixGame/Character/EnemyBatman/AI/BatmanBt.BatmanBt'") };
@@ -68,8 +68,8 @@ public:
 
 	class UBlackboardComponent* BatmanBlackboard = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMixAIBatmanController")
-	bool bIsDetectHero = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bIsDetectCreature = false;
 
 private:
 	AMixBatman* Batman;

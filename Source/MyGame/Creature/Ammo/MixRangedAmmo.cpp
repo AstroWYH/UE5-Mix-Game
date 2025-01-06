@@ -31,10 +31,8 @@ void AMixRangedAmmo::Tick(float DeltaTime)
 
 void AMixRangedAmmo::CauseDamage()
 {
-	AMixCreature* TargetCreature = Cast<AMixCreature>(Target);
-	if (!ensure(TargetCreature)) return;
-
-	TargetCreature->GetAttribute()->ApplyHealth(-AttackVal);
+	int32 AttackVal = Target->GetAttribute()->AttackVal;
+	Target->GetAttribute()->ApplyHealth(-AttackVal);
 }
 
 void AMixRangedAmmo::DestroySelf()

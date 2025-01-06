@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "Components/ActorComponent.h"
+#include "Creature/Creature/MixCreature.h"
 #include "MixAttackComponent.generated.h"
 
 
@@ -26,6 +27,9 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
+	UFUNCTION(BlueprintPure)
+	static UMixAttackComponent* FindAttackComponent(const AMixCreature* Creature) { return (Creature ? Creature->FindComponentByClass<UMixAttackComponent>() : nullptr); }
+
 public:
 	void SetAttackRangeHidden(bool bHidden);
 
@@ -35,10 +39,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void PrepareAttack(AMixCreature* Target);
 
-	// 仅对于HeroSelf
+	// HeroSelf
 	AMixCreature* SelectTarget(const FVector& Pos);
 	
-	// 仅对于HeroSelf
+	// HeroSelf
 	AMixCreature* SelectClosestTarget(const FVector& Pos);
 
 	void TurnToTarget(AMixCreature* Target);
@@ -50,20 +54,27 @@ public:
 	void PerformMeleeAttack();
 
 	UFUNCTION(BlueprintCallable)
-	void OnMontageNofify();
+	void OnRangedMontageNofify();
 
 private:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	AMixCreature* Creature;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	bool bIsRanged = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	FGameplayTag AttackType;
 
-	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<AMixTrackRangedAmmo> AmmoClass;
+public:
+	FGameplayTag GetAttackType() const
+	{
+		return AttackType;
+	}
+
+	void SetAttackType(FGameplayTag InAttackType)
+	{
+		this->AttackType = InAttackType;
+	}
 
 private:
-	// 朝向目标参数
 	FVector SelfLocation;
 	FRotator SelfRotation;
 	FVector TargetLocation;

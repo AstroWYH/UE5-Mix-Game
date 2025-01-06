@@ -22,6 +22,9 @@ public:
 	virtual void Deinitialize() override;
 
 public:
+	virtual void OnHeroSpawned() override;
+
+public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual bool IsTickable() const override { return !IsTemplate(); }

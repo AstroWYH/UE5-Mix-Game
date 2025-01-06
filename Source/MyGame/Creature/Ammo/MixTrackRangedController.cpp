@@ -5,6 +5,7 @@
 
 #include "MixTrackRangedAmmo.h"
 #include "Creature/Ammo/Hero/MixHeroAmmo.h"
+#include "Creature/Creature/MixCreature.h"
 
 void AMixTrackRangedController::BeginPlay()
 {
@@ -18,28 +19,36 @@ void AMixTrackRangedController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-	TrackRangedAmmo = Cast<AMixTrackRangedAmmo>(GetPawn());
-	if (!ensure(TrackRangedAmmo.IsValid())) return;
-	if (!ensure(TrackRangedAmmo->GetTarget())) return;
+	Ammo = Cast<AMixTrackRangedAmmo>(GetPawn());
+	if (!ensure(Ammo)) return;
 
-	TrackRangedAmmo->SetTrackController(this);
+	// 暂时没用
+	Ammo->SetTrackController(this);
 
-	// 1. TrackRangedAmmo->Target如果不在CustomPreSpawnInitalization设置，则此处获取不到
+	// 1. Ammo->XXX()如果在CustomPreSpawnInitalization设置，则此处可以获取；否则，在这里没法获取；现在没用这个功能
 	// 2. 使用MoveToActor无法和敌方单位产生碰撞，到靠近Target时，就完成Move了，没办法攻击Target
-	// MoveToActor(TrackRangedAmmo->Target.Get(), 0.0f);
+	// MoveToActor(Ammo->Target.Get(), 0.0f);
 
-	// Controller已经控制Ammo，在BP_AMMO里关闭
-	bCanLaunch = true;
+	// Controller已经控制Ammo，在BP_AMMO打中敌人后关闭；不关闭也没问题，因为2s会GC
+	bTrack = true;
 }
 
 void AMixTrackRangedController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (bCanLaunch)
+	if (bTrack)
 	{
-		FVector TargetLocation = TrackRangedAmmo->GetTarget()->GetActorLocation();
-		TargetLocation.Z += TrackRangedAmmo->AmmoOffset;
+		FVector TargetLocation = Ammo->GetTarget()->GetActorLocation();
+		TargetLocation.Z += Ammo->AmmoOffset;
 		MoveToLocation(TargetLocation, 1.0f, true, false, false);
+
+		float Distance = FVector::Distance(TargetLocation, Ammo->GetActorLocation());
+		if (Distance < 20.0f) // TODO: 配置
+		{
+			bTrack = false;
+			Ammo->CauseDamage();
+			Ammo->SetActorHiddenInGame(true);
+		}
 	}
 }

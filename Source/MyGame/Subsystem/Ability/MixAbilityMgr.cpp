@@ -45,27 +45,27 @@ void UMixAbilityMgr::OnHeroSpawned()
 	const TArray<AMixHero*> Heros = LevelSubsystem->GetSpawnedHeros();
 	for (AMixHero* EachHero : Heros)
 	{
-		// ×¼±¸Ó¢ĞÛ¼¼ÄÜÊı¾İ
+		// å‡†å¤‡è‹±é›„æŠ€èƒ½æ•°æ®
 		if (!ensure(EachHero)) continue;
 		FMixAbilityData& HeroAbility = HeroAbilityData.FindOrAdd(EachHero);
 		const UMixAbilityAsset& AbilityAsset = UMixAssetManager::Get().GetOrLoadAssetData<UMixAbilityAsset>(
 			UMixAssetManager::Get().AbilityAsset);
 		
-		if (!ensure(AbilityAsset.HeroAbilitys.Contains(EachHero->GetHeroName()))) return;
-		if (!ensure(AbilityAsset.HeroAbilitys[EachHero->GetHeroName()].Ability.Contains(MixGameplayTags::Ability_Type_Q))) return;
+		if (!ensure(AbilityAsset.HeroAbilitys.Contains(EachHero->GetCreatureName()))) return;
+		if (!ensure(AbilityAsset.HeroAbilitys[EachHero->GetCreatureName()].Ability.Contains(MixGameplayTags::Ability_Type_Q))) return;
 		
-		TSubclassOf<AActor> BPAbilityClass_Q = AbilityAsset.HeroAbilitys[EachHero->GetHeroName()].Ability[MixGameplayTags::Ability_Type_Q];
+		TSubclassOf<AActor> BPAbilityClass_Q = AbilityAsset.HeroAbilitys[EachHero->GetCreatureName()].Ability[MixGameplayTags::Ability_Type_Q];
 		AMixAbilityBase* Ability_Q = GetWorld()->SpawnActor<AMixAbilityBase>(BPAbilityClass_Q);
 		Ability_Q->SetHero(EachHero);
 		HeroAbility.Data.Add(MixGameplayTags::Ability_Type_Q, Ability_Q);
-		// TODO: ÆäËûWERÒ²ĞèÒªÌí¼Ó£¬ÕûÀí³Éº¯Êı
+		// TODO: å…¶ä»–WERä¹Ÿéœ€è¦æ·»åŠ ï¼Œæ•´ç†æˆå‡½æ•°
 
-		// ×¼±¸Ó¢ĞÛ³¯ÏòÊı¾İ
+		// å‡†å¤‡è‹±é›„æœå‘æ•°æ®
 		TurnData.Add(EachHero, FMixHeroTurnData());
 	}
 }
 
-// TODO: Òª¿¼ÂÇÆäËûÓ¢ĞÛ
+// TODO: è¦è€ƒè™‘å…¶ä»–è‹±é›„
 void UMixAbilityMgr::PrepareAbility(AMixHero* Hero, const FGameplayTag& AbilityKey, const FVector& AbilityPos)
 {
 	TurnData[Hero].Reset();
@@ -105,17 +105,17 @@ void UMixAbilityMgr::TickTurnToMousePos()
 
 			float RotationDiff = FMath::Abs(
 				FMath::Fmod(Data.SelfLookAtRotation.Yaw - SelfNewRotation.Yaw + 180.0f, 360.0f) - 180.0f);
-			// TODO: ²ÎÊıÅäÖÃ
+			// TODO: å‚æ•°é…ç½®
 			if (RotationDiff <= 6.0f)
 			{
-				// ×îºó»ñÈ¡Hero×îĞÂÓ¦¸ÃµÄ³¯Ïò£¬ÓÃÓÚ½ÃÕı
+				// æœ€åè·å–Heroæœ€æ–°åº”è¯¥çš„æœå‘ï¼Œç”¨äºçŸ«æ­£
 				FRotator FinalFixRotation = FRotator(
 					0.0f, (Data.TargetLocation - Hero->GetActorLocation()).Rotation().Yaw,
 					0.0f);
 				Hero->SetActorRotation(FinalFixRotation);
 				Data.bNeedRotate = false;
 
-				// Bp_AbilityÀ¶Í¼¾ßÌåÖ´ĞĞ×Ô¼ºµÄÂß¼­
+				// Bp_Abilityè“å›¾å…·ä½“æ‰§è¡Œè‡ªå·±çš„é€»è¾‘
 				AMixAbilityBase* Ability = HeroAbilityData[Hero].Data[Data.CurAbilityKey];
 				Ability->BP_PerformAbility();
 			}
@@ -123,7 +123,7 @@ void UMixAbilityMgr::TickTurnToMousePos()
 	}
 }
 
-// TODO: ÖØ¹¹; ×¢Òâ¼¼ÄÜÖ®¼äĞèÒª¼ä¸ôÀ¹½Ø£¬·ñÔòÁ¬Ğø°´£¬CurAbilityKey¿ÉÄÜ³öÎÊÌâ
+// TODO: æ³¨æ„æŠ€èƒ½ä¹‹é—´éœ€è¦é—´éš”æ‹¦æˆªï¼Œå¦åˆ™è¿ç»­æŒ‰ï¼ŒCurAbilityKeyå¯èƒ½å‡ºé—®é¢˜
 void UMixAbilityMgr::OnMontageNoify(AMixHero* Hero)
 {
 	AMixAbilityBase* Ability = HeroAbilityData[Hero].Data[TurnData[Hero].CurAbilityKey];

@@ -6,6 +6,7 @@
 #include "MixAssetManager.h"
 #include "MixGameSubsystem.h"
 #include "Ability/MixAbilityMgr.h"
+#include "Creature/Component/MixAttackComponent.h"
 #include "Creature/Controller/Hero/MixHostHeroController.h"
 #include "Creature/Creature/MixAttribute.h"
 #include "Creature/Creature/MixHeroAttribute.h"
@@ -30,7 +31,7 @@ void UMixLevelSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 
 	GenerateHero();
 
-	// ËùÓĞGameMgr¶¼¼ÓÉÏOnHeroSpawned½Ó¿Ú
+	// æ‰€æœ‰GameMgréƒ½åŠ ä¸ŠOnHeroSpawnedæ¥å£
 	TArray<UMixGameSubsystem*> GameSubsystems = InWorld.GetGameInstance()->GetSubsystemArray<UMixGameSubsystem>();
 	for (UMixGameSubsystem* GameSubsystem : GameSubsystems)
 	{
@@ -43,7 +44,7 @@ void UMixLevelSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 
 void UMixLevelSubsystem::GenerateHero()
 {
-	// Éú³ÉAshe
+	// ç”ŸæˆAshe
 	TArray<AActor*> OutActors;
 	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), UMixAssetManager::Get().HeroSpawnPointClass, "HeroSpawnPoint", OutActors);
 	if (!ensure(OutActors.IsValidIndex(0))) return;
@@ -56,13 +57,16 @@ void UMixLevelSubsystem::GenerateHero()
 	if (!ensure(Hero)) return;
 	SpawnedHeros.AddUnique(Hero);
 
-	Hero->SetHeroName(MixGameplayTags::Hero_Name_Ashe);
+	Hero->SetCreatureName(MixGameplayTags::Creature_Name_Ashe);
 	Hero->SetCreatureType(MixGameplayTags::Creature_Type_Hero_Self);
-	Hero->SetAttackType(MixGameplayTags::Attack_Ranged);
-	Hero->GetMesh()->SetSkeletalMesh(UMixAssetManager::Get().GetAssetSync(UMixAssetManager::Get().Mesh_Ashe));
-	Hero->GetMesh()->SetAnimClass(UMixAssetManager::Get().Anim_Ashe);
+	UMixAttackComponent::FindAttackComponent(Hero)->SetAttackType(MixGameplayTags::Attack_Ranged);
+
+	// è®¾ç½®Hero_Asheéª¨éª¼ è®¾ç½®Hero_AsheåŠ¨ç”»è“å›¾ç±»
+	FHeroModelInfo& ModelInfo_Ashe = UMixAssetManager::Get().HeroModelInfo[MixGameplayTags::Creature_Name_Ashe];
+	Hero->GetMesh()->SetSkeletalMesh(UMixAssetManager::Get().GetAssetSync(ModelInfo_Ashe.Mesh));
+	Hero->GetMesh()->SetAnimClass(ModelInfo_Ashe.Anim);
 	
-	// ¶ÁÊôĞÔ±í TODO: ÕûÀí³ÉÒ»ÖÖ¸üÓÑºÃµÄ·½Ê½
+	// è¯»å±æ€§è¡¨ TODO: æ•´ç†æˆä¸€ç§æ›´å‹å¥½çš„æ–¹å¼
 	TSoftObjectPtr<UDataTable> AttributeDataSoftPtr = UMixAssetManager::Get().HeroAttributeData;
 	const UDataTable* AttributeDT = UMixAssetManager::Get().GetAssetSync(AttributeDataSoftPtr);
 	if (!ensure(AttributeDT)) return;
@@ -88,6 +92,7 @@ void UMixLevelSubsystem::GenerateHero()
 	// GameMode->GenericPlayerInitialization(HostHeroController);
 
 	HeroController->Possess(Hero);
+	HostHero = Hero;
 }
 
 void UMixLevelSubsystem::GenerateBatman()
@@ -100,10 +105,12 @@ void UMixLevelSubsystem::GenerateBatman()
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	FTransform SpawnTransform = OutActors[0]->GetActorTransform();
 	AMixBatman* Batman = GetWorld()->SpawnActor<AMixBatman>(UMixAssetManager::Get().BatmanClass, SpawnTransform, SpawnParams);
+	SpawnedBatmans.Add(Batman);
+	Batman->SetCreatureName(MixGameplayTags::Creature_Name_Batman);
 	Batman->SetCreatureType(MixGameplayTags::Creature_Type_Batman_Enemy);
-	Batman->SetAttackType(MixGameplayTags::Attack_Ranged);
+	UMixAttackComponent::FindAttackComponent(Batman)->SetAttackType(MixGameplayTags::Attack_Ranged);
 
-	// ¶ÁÊôĞÔ±í
+	// è¯»å±æ€§è¡¨
 	TSoftObjectPtr<UDataTable> AttributeDataSoftPtr = UMixAssetManager::Get().AttributeData;
 	const UDataTable* AttributeDT = UMixAssetManager::Get().GetAssetSync(AttributeDataSoftPtr);
 	if (!ensure(AttributeDT)) return;

@@ -6,6 +6,8 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "MixLevelSubsystem.generated.h"
 
+class AMixBatman;
+class AMixHero;
 /**
  * 
  */
@@ -25,13 +27,23 @@ private:
 	// TODO: 在Tick里周期生成
 	void GenerateBatman();
 
-private:
+	// 通过SpawnedHeros保证不被GC
 	UPROPERTY()
 	TArray<AMixHero*> SpawnedHeros;
+
+	UPROPERTY()
+	TArray<AMixBatman*> SpawnedBatmans;
+
+	AMixHero* HostHero;
 
 public:
 	TArray<AMixHero*> GetSpawnedHeros() const
 	{
 		return SpawnedHeros;
+	}
+
+	AMixHero* GetHostHero() const
+	{
+		return HostHero;
 	}
 };

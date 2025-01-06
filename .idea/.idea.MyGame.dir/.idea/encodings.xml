@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="Encoding">
+  <component name="Encoding" native2AsciiForPropertiesFiles="true">
     <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Ammo/Batman/MixBatmanAmmo.cpp" charset="GB2312" />
     <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Ammo/Batman/MixBatmanAmmo.h" charset="GB2312" />
     <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Ammo/Hero/MixHeroAmmo.cpp" charset="GB2312" />
@@ -9,10 +9,10 @@
     <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Ammo/MixAIAmmoController.h" charset="GB2312" />
     <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Ammo/MixAmmo.cpp" charset="GB2312" />
     <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Ammo/MixAmmo.h" charset="GB2312" />
+    <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Component/MixAttackComponent.cpp" charset="GB2312" />
     <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Controller/Hero/MixHostHeroController.h" charset="GB2312" />
     <file url="file://$PROJECT_DIR$/Source/MyGame/Data/Item/MixItemData.h" charset="GB2312" />
     <file url="file://$PROJECT_DIR$/Source/MyGame/Data/UI/MixUIAsset.h" charset="GB2312" />
-    <file url="file://$PROJECT_DIR$/Source/MyGame/DataTable/UI/MixUIAsset.cpp" charset="GB2312" />
     <file url="file://$PROJECT_DIR$/Source/MyGame/Game/MixGameInstance.cpp" charset="GB2312" />
     <file url="file://$PROJECT_DIR$/Source/MyGame/Game/MixGameInstance.h" charset="GB2312" />
     <file url="file://$PROJECT_DIR$/Source/MyGame/Game/MixGameMode.cpp" charset="GB2312" />
@@ -24,6 +24,5 @@
     <file url="file://$PROJECT_DIR$/Source/MyGame/Subsystem/Inventory/MixInventoryItem.h" charset="GB2312" />
     <file url="file://$PROJECT_DIR$/Source/MyGame/Subsystem/Inventory/MixInventorySubsystem.cpp" charset="GB2312" />
     <file url="file://$PROJECT_DIR$/Source/MyGame/Subsystem/Inventory/MixInventorySubsystem.h" charset="GB2312" />
-    <file url="file://$PROJECT_DIR$/Source/MyGame/Subsystem/UI/MixUIMgrSubsystem.cpp" charset="GB2312" />
   </component>
 </project>

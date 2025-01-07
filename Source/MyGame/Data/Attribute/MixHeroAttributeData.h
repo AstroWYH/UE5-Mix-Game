@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MixAttributeData.h"
 #include "Engine/DataTable.h"
 
 #include "MixHeroAttributeData.generated.h"

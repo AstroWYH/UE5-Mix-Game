@@ -65,7 +65,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Creature|Hero|Ability")
 	TSoftObjectPtr<UMixAbilityAsset> AbilityAsset;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Creature|Hero|Attribute")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Creature|Attribute")
 	TSoftObjectPtr<UDataTable> AttributeData;
 	UPROPERTY(EditDefaultsOnly, Category = "Creature|Hero|Attribute")
 	TSoftObjectPtr<UDataTable> HeroAttributeData;

@@ -16,6 +16,12 @@ class MYGAME_API UMixHeroAttribute : public UMixAttribute
 	GENERATED_BODY()
 
 public:
+	virtual void InitChildAttributes(AMixCreature* Creature, const UDataTable* AttributeDT, const FMixHeroAttributeData* AttributeData) override
+	{
+		Magic = AttributeData->MaxMagic;
+	}
+	
+public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	int32 Magic;
 	

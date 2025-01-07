@@ -44,19 +44,18 @@ void UMixLevelSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 
 void UMixLevelSubsystem::GenerateHero()
 {
-	// 生成Ashe
+	// 获取HeroSelf Spawn Point
 	TArray<AActor*> OutActors;
 	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), UMixAssetManager::Get().HeroSpawnPointClass, "HeroSpawnPoint", OutActors);
 	if (!ensure(OutActors.IsValidIndex(0))) return;
 
+	// 生成HeroSelf Ashe
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	FTransform SpawnTransform = OutActors[0]->GetActorTransform();
-
 	AMixHero* Hero = GetWorld()->SpawnActor<AMixHero>(UMixAssetManager::Get().BP_HeroClass_Ashe, SpawnTransform, SpawnParams);
 	if (!ensure(Hero)) return;
 	SpawnedHeros.AddUnique(Hero);
-
 	Hero->SetCreatureName(MixGameplayTags::Creature_Name_Ashe);
 	Hero->SetCreatureType(MixGameplayTags::Creature_Type_Hero_Self);
 	UMixAttackComponent::FindAttackComponent(Hero)->SetAttackType(MixGameplayTags::Attack_Ranged);
@@ -65,42 +64,30 @@ void UMixLevelSubsystem::GenerateHero()
 	FHeroModelInfo& ModelInfo_Ashe = UMixAssetManager::Get().HeroModelInfo[MixGameplayTags::Creature_Name_Ashe];
 	Hero->GetMesh()->SetSkeletalMesh(UMixAssetManager::Get().GetAssetSync(ModelInfo_Ashe.Mesh));
 	Hero->GetMesh()->SetAnimClass(ModelInfo_Ashe.Anim);
-	
-	// 读属性表 TODO: 整理成一种更友好的方式
-	TSoftObjectPtr<UDataTable> AttributeDataSoftPtr = UMixAssetManager::Get().HeroAttributeData;
-	const UDataTable* AttributeDT = UMixAssetManager::Get().GetAssetSync(AttributeDataSoftPtr);
-	if (!ensure(AttributeDT)) return;
-	FMixHeroAttributeData* AttributeData = AttributeDT->FindRow<FMixHeroAttributeData>(TEXT("Ashe"), "AttributeData");
-	
-	UMixHeroAttribute* HeroAttribute = NewObject<UMixHeroAttribute>();
-	HeroAttribute->Health = AttributeData->MaxHealth;
-	HeroAttribute->MaxHealth = AttributeData->MaxHealth;
-	HeroAttribute->Speed = AttributeData->Speed;
-	HeroAttribute->AttackVal = AttributeData->AttackVal;
-	HeroAttribute->AttackRange = AttributeData->AttackRange;
-	HeroAttribute->Magic = AttributeData->MaxMagic;
-	Hero->SetAttribute(HeroAttribute);
-	Hero->GetHeadUI()->BP_OnAttributeAvaiable();
 
+	// 设置HeroSelf属性
+	UMixHeroAttribute* HeroAttribute = NewObject<UMixHeroAttribute>();
+	HeroAttribute->Init<FMixHeroAttributeData>(Hero, UMixAssetManager::Get().HeroAttributeData);
+
+	// 生成HeroSelf Controller
 	AMixHostHeroController* HeroController = GetWorld()->SpawnActor<AMixHostHeroController>(UMixAssetManager::Get().HostHeroController, SpawnTransform);
 	if (!ensure(HeroController)) return;
-
 	AMixGameMode* GameMode = Cast<AMixGameMode>(GetWorld()->GetAuthGameMode());
 	if (!ensure(GameMode)) return;
-
 	GameMode->SwapPlayerControllers(GetWorld()->GetFirstPlayerController(), HeroController);
 	// GameMode->GenericPlayerInitialization(HostHeroController);
-
 	HeroController->Possess(Hero);
 	HostHero = Hero;
 }
 
 void UMixLevelSubsystem::GenerateBatman()
 {
+	// 获取Batman Spawn Point
 	TArray<AActor*> OutActors;
 	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), UMixAssetManager::Get().BatmanSpawnPointClass, "BatmanSpawnPoint", OutActors);
 	if (!ensure(OutActors.IsValidIndex(0))) return;
 
+	// 生成Batman
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	FTransform SpawnTransform = OutActors[0]->GetActorTransform();
@@ -110,18 +97,8 @@ void UMixLevelSubsystem::GenerateBatman()
 	Batman->SetCreatureType(MixGameplayTags::Creature_Type_Batman_Enemy);
 	UMixAttackComponent::FindAttackComponent(Batman)->SetAttackType(MixGameplayTags::Attack_Ranged);
 
-	// 读属性表
-	TSoftObjectPtr<UDataTable> AttributeDataSoftPtr = UMixAssetManager::Get().AttributeData;
-	const UDataTable* AttributeDT = UMixAssetManager::Get().GetAssetSync(AttributeDataSoftPtr);
-	if (!ensure(AttributeDT)) return;
-	FMixAttributeData* AttributeData = AttributeDT->FindRow<FMixAttributeData>(TEXT("Batman"), "AttributeData");
-	
+	// 设置Batman属性
 	UMixAttribute* Attribute = NewObject<UMixAttribute>();
-	Attribute->Health = AttributeData->MaxHealth;
-	Attribute->MaxHealth = AttributeData->MaxHealth;
-	Attribute->Speed = AttributeData->Speed;
-	Attribute->AttackVal = AttributeData->AttackVal;
-	Attribute->AttackRange = AttributeData->AttackRange;
-	Batman->SetAttribute(Attribute);
-	Batman->GetHeadUI()->BP_OnAttributeAvaiable();
+	Attribute->Init<FMixAttributeData>(Batman, UMixAssetManager::Get().AttributeData);
+
 }

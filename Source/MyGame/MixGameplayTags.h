@@ -30,5 +30,21 @@ namespace MixGameplayTags
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Type_W);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Type_E);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Type_R);
+	
+	FString GetLastNameFromGameplayTag(const FGameplayTag& GameplayTag)
+	{
+		FString FullTagName = GameplayTag.ToString();
+
+		TArray<FString> TagParts;
+		FullTagName.ParseIntoArray(TagParts, TEXT("."), true);
+
+		if (TagParts.Num() > 0)
+		{
+			return TagParts.Last();
+		}
+
+		return FString();
+	}
+	
 }
 

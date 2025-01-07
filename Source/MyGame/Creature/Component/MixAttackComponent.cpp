@@ -124,7 +124,7 @@ void UMixAttackComponent::TurnToTarget(AMixCreature* Target)
 }
 
 void UMixAttackComponent::TickTurnToTarget()
-{c
+{
 	if (bIsRotating)
 	{
 		FRotator SelfNewRotation = FRotator(0.0f, Creature->GetActorRotation().Yaw + YawPerFrame, 0.0f);

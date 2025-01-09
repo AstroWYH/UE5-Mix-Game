@@ -7,6 +7,7 @@
 #include "MixGameSubsystem.h"
 #include "Ability/MixAbilityMgr.h"
 #include "Creature/Component/MixAttackComponent.h"
+#include "Creature/Controller/MixHeroController.h"
 #include "Creature/Controller/Hero/MixHostHeroController.h"
 #include "Creature/Creature/MixAttribute.h"
 #include "Creature/Creature/MixHeroAttribute.h"
@@ -45,38 +46,72 @@ void UMixLevelSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 void UMixLevelSubsystem::GenerateHero()
 {
 	// 生成HeroSelf Ashe
-	TArray<AActor*> OutActors;
-	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), UMixAssetManager::Get().HeroModelInfo[MixGameplayTags::Creature_Name_Ashe].SpawnPoint, "HeroSpawnPoint", OutActors);
-	if (!ensure(OutActors.IsValidIndex(0))) return;
-	
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	FTransform SpawnTransform = OutActors[0]->GetActorTransform();
-	AMixHero* Hero = GetWorld()->SpawnActor<AMixHero>(UMixAssetManager::Get().HeroModelInfo[MixGameplayTags::Creature_Name_Ashe].Class, SpawnTransform, SpawnParams);
-	if (!ensure(Hero)) return;
-	SpawnedHeros.AddUnique(Hero);
-	Hero->SetCreatureName(MixGameplayTags::Creature_Name_Ashe);
-	Hero->SetCreatureType(MixGameplayTags::Creature_Type_Hero_Self);
-	UMixAttackComponent::FindAttackComponent(Hero)->SetAttackType(MixGameplayTags::Attack_Ranged);
+	{
+		TArray<AActor*> OutActors;
+		UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), UMixAssetManager::Get().HeroModelInfo[MixGameplayTags::Creature_Name_Ashe].SpawnPoint, "HeroSpawnPoint_Ashe", OutActors);
+		if (!ensure(OutActors.IsValidIndex(0))) return;
 
-	// 设置Hero_Ashe骨骼 设置Hero_Ashe动画蓝图类
-	FHeroModelInfo& ModelInfo_Ashe = UMixAssetManager::Get().HeroModelInfo[MixGameplayTags::Creature_Name_Ashe];
-	Hero->GetMesh()->SetSkeletalMesh(UMixAssetManager::Get().GetAssetSync(ModelInfo_Ashe.Mesh));
-	Hero->GetMesh()->SetAnimClass(ModelInfo_Ashe.Anim);
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		FTransform SpawnTransform = OutActors[0]->GetActorTransform();
+		AMixHero* Hero = GetWorld()->SpawnActor<AMixHero>(UMixAssetManager::Get().HeroModelInfo[MixGameplayTags::Creature_Name_Ashe].Class, SpawnTransform, SpawnParams);
+		if (!ensure(Hero)) return;
+		SpawnedHeros.AddUnique(Hero);
+		Hero->SetCreatureName(MixGameplayTags::Creature_Name_Ashe);
+		Hero->SetCreatureType(MixGameplayTags::Creature_Type_Hero_Self);
+		UMixAttackComponent::FindAttackComponent(Hero)->SetAttackType(MixGameplayTags::Attack_Ranged);
 
-	// 设置HeroSelf属性
-	UMixHeroAttribute* HeroAttribute = NewObject<UMixHeroAttribute>();
-	HeroAttribute->Init<FMixHeroAttributeData>(Hero, UMixAssetManager::Get().HeroAttributeData);
+		// 设置Hero骨骼 设置Hero动画蓝图类
+		FHeroModelInfo& ModelInfo = UMixAssetManager::Get().HeroModelInfo[MixGameplayTags::Creature_Name_Ashe];
+		Hero->GetMesh()->SetSkeletalMesh(UMixAssetManager::Get().GetAssetSync(ModelInfo.Mesh));
+		Hero->GetMesh()->SetAnimClass(ModelInfo.Anim);
 
-	// 生成HeroSelf Controller
-	AMixHostHeroController* HeroController = GetWorld()->SpawnActor<AMixHostHeroController>(UMixAssetManager::Get().HostHeroController, SpawnTransform);
-	if (!ensure(HeroController)) return;
-	AMixGameMode* GameMode = Cast<AMixGameMode>(GetWorld()->GetAuthGameMode());
-	if (!ensure(GameMode)) return;
-	GameMode->SwapPlayerControllers(GetWorld()->GetFirstPlayerController(), HeroController);
-	// GameMode->GenericPlayerInitialization(HostHeroController);
-	HeroController->Possess(Hero);
-	HostHero = Hero;
+		// 设置HeroSelf属性
+		UMixHeroAttribute* HeroAttribute = NewObject<UMixHeroAttribute>();
+		HeroAttribute->Init<FMixHeroAttributeData>(Hero, UMixAssetManager::Get().HeroAttributeData);
+
+		// 生成HeroSelf Controller
+		AMixHostHeroController* HeroController = GetWorld()->SpawnActor<AMixHostHeroController>(UMixAssetManager::Get().HostHeroController, SpawnTransform);
+		if (!ensure(HeroController)) return;
+		AMixGameMode* GameMode = Cast<AMixGameMode>(GetWorld()->GetAuthGameMode());
+		if (!ensure(GameMode)) return;
+		GameMode->SwapPlayerControllers(GetWorld()->GetFirstPlayerController(), HeroController);
+		// GameMode->GenericPlayerInitialization(HostHeroController);
+		HeroController->Possess(Hero);
+		HostHero = Hero;
+	}
+
+	// 生成Hero Lucian
+	{
+		TArray<AActor*> OutActors;
+		UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), UMixAssetManager::Get().HeroModelInfo[MixGameplayTags::Creature_Name_Lucian].SpawnPoint, "HeroSpawnPoint_Lucian", OutActors);
+		if (!ensure(OutActors.IsValidIndex(0))) return;
+
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		FTransform SpawnTransform = OutActors[0]->GetActorTransform();
+		AMixHero* Hero = GetWorld()->SpawnActor<AMixHero>(UMixAssetManager::Get().HeroModelInfo[MixGameplayTags::Creature_Name_Lucian].Class, SpawnTransform, SpawnParams);
+		if (!ensure(Hero)) return;
+		SpawnedHeros.AddUnique(Hero);
+		Hero->SetCreatureName(MixGameplayTags::Creature_Name_Lucian);
+		Hero->SetCreatureType(MixGameplayTags::Creature_Type_Hero_Friend);
+		UMixAttackComponent::FindAttackComponent(Hero)->SetAttackType(MixGameplayTags::Attack_Ranged);
+
+		// 设置Hero骨骼 设置Hero动画蓝图类
+		FHeroModelInfo& ModelInfo = UMixAssetManager::Get().HeroModelInfo[MixGameplayTags::Creature_Name_Lucian];
+		Hero->GetMesh()->SetSkeletalMesh(UMixAssetManager::Get().GetAssetSync(ModelInfo.Mesh));
+		Hero->GetMesh()->SetAnimClass(ModelInfo.Anim);
+
+		// 设置Hero属性
+		UMixHeroAttribute* HeroAttribute = NewObject<UMixHeroAttribute>();
+		HeroAttribute->Init<FMixHeroAttributeData>(Hero, UMixAssetManager::Get().HeroAttributeData);
+
+		// 生成Hero Controller
+		AMixHeroController* HeroController = GetWorld()->SpawnActor<AMixHeroController>(UMixAssetManager::Get().HeroModelInfo[MixGameplayTags::Creature_Name_Lucian].HeroController, SpawnTransform);
+		if (!ensure(HeroController)) return;
+		HeroController->Possess(Hero);
+		HostHero = Hero;
+	}
 }
 
 void UMixLevelSubsystem::GenerateBatman()

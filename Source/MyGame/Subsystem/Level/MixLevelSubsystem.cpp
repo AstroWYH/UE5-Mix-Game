@@ -7,8 +7,8 @@
 #include "MixGameSubsystem.h"
 #include "Ability/MixAbilityMgr.h"
 #include "Creature/Component/MixAttackComponent.h"
-#include "Creature/Controller/MixHeroController.h"
-#include "Creature/Controller/Hero/MixHostHeroController.h"
+#include "Creature/Controller/MixHeroControllerFix.h"
+#include "Creature/Controller/Hero/MixHostHeroControllerFix.h"
 #include "Creature/Creature/MixAttribute.h"
 #include "Creature/Creature/MixHeroAttribute.h"
 #include "Creature/Creature/Batman/MixBatman.h"
@@ -71,7 +71,7 @@ void UMixLevelSubsystem::GenerateHero()
 		HeroAttribute->Init<FMixHeroAttributeData>(Hero, UMixAssetManager::Get().HeroAttributeData);
 
 		// 生成HeroSelf Controller
-		AMixHostHeroController* HeroController = GetWorld()->SpawnActor<AMixHostHeroController>(UMixAssetManager::Get().HostHeroController, SpawnTransform);
+		AMixHostHeroControllerFix* HeroController = GetWorld()->SpawnActor<AMixHostHeroControllerFix>(UMixAssetManager::Get().HostHeroController, SpawnTransform);
 		if (!ensure(HeroController)) return;
 		AMixGameMode* GameMode = Cast<AMixGameMode>(GetWorld()->GetAuthGameMode());
 		if (!ensure(GameMode)) return;
@@ -107,7 +107,7 @@ void UMixLevelSubsystem::GenerateHero()
 		HeroAttribute->Init<FMixHeroAttributeData>(Hero, UMixAssetManager::Get().HeroAttributeData);
 
 		// 生成Hero Controller
-		AMixHeroController* HeroController = GetWorld()->SpawnActor<AMixHeroController>(UMixAssetManager::Get().HeroModelInfo[MixGameplayTags::Creature_Name_Lucian].HeroController, SpawnTransform);
+		AMixHeroControllerFix* HeroController = GetWorld()->SpawnActor<AMixHeroControllerFix>(UMixAssetManager::Get().HeroModelInfo[MixGameplayTags::Creature_Name_Lucian].HeroController, SpawnTransform);
 		if (!ensure(HeroController)) return;
 		HeroController->Possess(Hero);
 		HostHero = Hero;

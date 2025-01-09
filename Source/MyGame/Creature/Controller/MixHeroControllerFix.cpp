@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MixHeroController.h"
+#include "MixHeroControllerFix.h"
 
 
 // Sets default values
-AMixHeroController::AMixHeroController()
+AMixHeroControllerFix::AMixHeroControllerFix()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -13,14 +13,14 @@ AMixHeroController::AMixHeroController()
 }
 
 // Called when the game starts or when spawned
-void AMixHeroController::BeginPlay()
+void AMixHeroControllerFix::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void AMixHeroController::Tick(float DeltaTime)
+void AMixHeroControllerFix::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 

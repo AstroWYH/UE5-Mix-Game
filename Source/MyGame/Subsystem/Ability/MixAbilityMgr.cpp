@@ -5,11 +5,11 @@
 #include "GameplayTagContainer.h"
 #include "MixAbilityBase.h"
 #include "MixAssetManager.h"
-#include "Creature/Controller/Hero/MixHostHeroController.h"
+#include "Creature/Controller/Hero/MixHostHeroControllerFix.h"
 #include "Data/Ability/MixAbilityAsset.h"
 #include "Level/MixLevelSubsystem.h"
 #include "MixGameplayTags.h"
-#include "Creature/Controller/MixHeroController.h"
+#include "Creature/Controller/MixHeroControllerFix.h"
 #include "Creature/Creature/Hero/MixHero.h"
 
 void UMixAbilityMgr::Initialize(FSubsystemCollectionBase& Collection)

@@ -8,12 +8,12 @@
 #include "MixGameplayTags.h"
 #include "Creature/Controller/MixControllerInterface.h"
 
-#include "MixHostHeroController.generated.h"
+#include "MixHostHeroControllerFix.generated.h"
 
 class UMixAttackComponent;
 
 UCLASS()
-class MYGAME_API AMixHostHeroController : public APlayerController, public IMixControllerInterface
+class MYGAME_API AMixHostHeroControllerFix : public APlayerController, public IMixControllerInterface
 {
 	GENERATED_BODY()
 

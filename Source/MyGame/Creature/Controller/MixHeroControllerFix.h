@@ -5,16 +5,16 @@
 #include "CoreMinimal.h"
 #include "AIController.h"
 #include "MixControllerInterface.h"
-#include "MixHeroController.generated.h"
+#include "MixHeroControllerFix.generated.h"
 
 UCLASS()
-class MYGAME_API AMixHeroController : public AAIController, public IMixControllerInterface
+class MYGAME_API AMixHeroControllerFix : public AAIController, public IMixControllerInterface
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
-	AMixHeroController();
+	AMixHeroControllerFix();
 
 protected:
 	// Called when the game starts or when spawned

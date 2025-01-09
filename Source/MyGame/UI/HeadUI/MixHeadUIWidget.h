@@ -32,5 +32,5 @@ public:
 
 public:
 	UFUNCTION(BlueprintImplementableEvent)
-	void BP_OnAttributeAvaiable();
+	void BP_AttributeAvaiable();
 };

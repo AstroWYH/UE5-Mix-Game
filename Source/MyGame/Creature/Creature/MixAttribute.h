@@ -52,7 +52,7 @@ public:
 		InitAttributes(Creature, AttributeDT, AttributeData);
 
 		Creature->SetAttribute(this);
-		Creature->GetHeadUI()->BP_OnAttributeAvaiable();
+		Creature->GetHeadUI()->BP_AttributeAvaiable();
 	}
 
 	template <typename DataClass>

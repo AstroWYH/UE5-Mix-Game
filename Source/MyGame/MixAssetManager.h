@@ -22,10 +22,16 @@ struct FCreatureModelInfo
 	GENERATED_BODY()
 
 	// 蒙太奇可以用FSoftObjectPath
-	UPROPERTY(EditDefaultsOnly, Category = "Creature|Model")
+	UPROPERTY(EditDefaultsOnly, Category = "Creature")
 	FSoftObjectPath AttackMontage;
-	UPROPERTY(EditDefaultsOnly, Category = "Creature|Model")
-	TSubclassOf<AActor> Ammo;
+	UPROPERTY(EditDefaultsOnly, Category = "Creature")
+	TSubclassOf<AActor> Ammo; // 只有远程用
+	UPROPERTY(EditDefaultsOnly, Category = "Creature")
+	TSubclassOf<AActor> Class;
+	UPROPERTY(EditDefaultsOnly, Category = "Creature")
+	TSubclassOf<AActor> SpawnPoint;
+	UPROPERTY(EditDefaultsOnly, Category = "Creature")
+	TSubclassOf<AActor> PathPoint; // 只有小兵在用
 };
 
 USTRUCT(BlueprintType)
@@ -34,10 +40,12 @@ struct FHeroModelInfo : public FCreatureModelInfo
 	GENERATED_BODY()
 
 	// USkeletalMesh用FSoftObjectPath会报错，在ResolveObjectHandleNoRead，不知道为什么；就用TSoftObjectPtr同步加载，官方也这样
-	UPROPERTY(EditDefaultsOnly, Category = "Creature|Hero|Model")
+	UPROPERTY(EditDefaultsOnly, Category = "Creature|Hero")
 	TSoftObjectPtr<USkeletalMesh> Mesh;
-	UPROPERTY(EditDefaultsOnly, Category = "Creature|Hero|Model")
+	UPROPERTY(EditDefaultsOnly, Category = "Creature|Hero")
 	TSubclassOf<UAnimInstance> Anim;
+	UPROPERTY(EditDefaultsOnly, Category = "Creature|Hero")
+	TSubclassOf<AActor> HeroController;
 };
 
 UCLASS(BlueprintType, Blueprintable)
@@ -58,43 +66,30 @@ public:
 	// UPROPERTY(EditDefaultsOnly, Category = UMixAssetManager)
 	// TObjectPtr<UMixWidgetComponentAsset> HeadUIAsset;
 
-	// 方法2：用TSoftObjectPtr懒加载，需要的时候加载，并存到AssetDataMap
-	// 以资产DA的形式存在，创建比较麻烦，但是使用更规范，也可以懒加载
-	UPROPERTY(EditDefaultsOnly, Category = "Creature|HeadUI")
-	TSoftObjectPtr<UMixWidgetComponentAsset> HeadUIAsset;
+	// 这两个作为DA，就不往结构体里移动了，作为示例展示
 	UPROPERTY(EditDefaultsOnly, Category = "Creature|Hero|Ability")
 	TSoftObjectPtr<UMixAbilityAsset> AbilityAsset;
+	// 方法2：用TSoftObjectPtr懒加载，需要的时候加载，并存到AssetDataMap
+	// 以资产DA的形式存在，创建比较麻烦，但是使用更规范，也可以懒加载
+	// UPROPERTY(EditDefaultsOnly, Category = "Creature|HeadUI")
+	// TSoftObjectPtr<UMixWidgetComponentAsset> HeadUIAsset;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Creature|HeadUI")
+	TSubclassOf<UUserWidget> HeadUIWidget;
+
+	// 方式6: 可以用DA的形式，但需要写一个DA子类，也可以直接在这写Map
+	UPROPERTY(EditDefaultsOnly, Category = "Creature")
+	TMap<FGameplayTag, FHeroModelInfo> HeroModelInfo;
+	UPROPERTY(EditDefaultsOnly, Category = "Creature")
+	TMap<FGameplayTag, FCreatureModelInfo> CreatureModelInfo;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Creature|Attribute")
-	TSoftObjectPtr<UDataTable> AttributeData;
+	TSoftObjectPtr<UDataTable> AttributeData; // 并非一个Creature对应一张表，因此不移动到ModelInfo
 	UPROPERTY(EditDefaultsOnly, Category = "Creature|Hero|Attribute")
 	TSoftObjectPtr<UDataTable> HeroAttributeData;
 
-	// 方式6: 可以用DA的形式，但需要写一个DA子类，也可以直接在这写Map
-	UPROPERTY(EditDefaultsOnly, Category = "Creature|Hero|Model")
-	TMap<FGameplayTag, FHeroModelInfo> HeroModelInfo;
-	UPROPERTY(EditDefaultsOnly, Category = "Creature|Batman|Model")
-	TMap<FGameplayTag, FCreatureModelInfo> CreatureModelInfo;
-
-	// 方式3 以UClass的形式存在，方便，用来写这个PathClass；缺点是在BP_AssetManager里越放越多
-	UPROPERTY(EditDefaultsOnly, Category = "Creature|SpawnPoint")
-	TSubclassOf<AActor> HeroSpawnPointClass;
-	UPROPERTY(EditDefaultsOnly, Category = "Creature|SpawnPoint")
-	TSubclassOf<AActor> BatmanSpawnPointClass;
-	UPROPERTY(EditDefaultsOnly, Category = "Creature|PathPoint")
-	TSubclassOf<AActor> BatmanPathPointClass;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Creature|BP")
-	TSubclassOf<AActor> BP_HeroClass_Ashe;
-	UPROPERTY(EditDefaultsOnly, Category = "Creature|BP")
-	TSubclassOf<AActor> BP_HeroClass_Zed;
-	UPROPERTY(EditDefaultsOnly, Category = "Creature|BP")
-	TSubclassOf<AActor> BatmanClass;
-	
 	UPROPERTY(EditDefaultsOnly, Category = "Creature|Controller")
 	TSubclassOf<AActor> HostHeroController;
-	UPROPERTY(EditDefaultsOnly, Category = "Creature|Controller")
-	TSubclassOf<AActor> HeroController;
 
 public:
 	// 方式4：同步加载TSoftObjectPtr，凡是LoadObject的，都能这样加载，因为里面也会LoadObject

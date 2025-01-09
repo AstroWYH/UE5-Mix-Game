@@ -44,16 +44,15 @@ void UMixLevelSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 
 void UMixLevelSubsystem::GenerateHero()
 {
-	// 获取HeroSelf Spawn Point
-	TArray<AActor*> OutActors;
-	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), UMixAssetManager::Get().HeroSpawnPointClass, "HeroSpawnPoint", OutActors);
-	if (!ensure(OutActors.IsValidIndex(0))) return;
-
 	// 生成HeroSelf Ashe
+	TArray<AActor*> OutActors;
+	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), UMixAssetManager::Get().HeroModelInfo[MixGameplayTags::Creature_Name_Ashe].SpawnPoint, "HeroSpawnPoint", OutActors);
+	if (!ensure(OutActors.IsValidIndex(0))) return;
+	
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	FTransform SpawnTransform = OutActors[0]->GetActorTransform();
-	AMixHero* Hero = GetWorld()->SpawnActor<AMixHero>(UMixAssetManager::Get().BP_HeroClass_Ashe, SpawnTransform, SpawnParams);
+	AMixHero* Hero = GetWorld()->SpawnActor<AMixHero>(UMixAssetManager::Get().HeroModelInfo[MixGameplayTags::Creature_Name_Ashe].Class, SpawnTransform, SpawnParams);
 	if (!ensure(Hero)) return;
 	SpawnedHeros.AddUnique(Hero);
 	Hero->SetCreatureName(MixGameplayTags::Creature_Name_Ashe);
@@ -84,14 +83,14 @@ void UMixLevelSubsystem::GenerateBatman()
 {
 	// 获取Batman Spawn Point
 	TArray<AActor*> OutActors;
-	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), UMixAssetManager::Get().BatmanSpawnPointClass, "BatmanSpawnPoint", OutActors);
+	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), UMixAssetManager::Get().CreatureModelInfo[MixGameplayTags::Creature_Name_Batman].SpawnPoint, "BatmanSpawnPoint", OutActors);
 	if (!ensure(OutActors.IsValidIndex(0))) return;
 
 	// 生成Batman
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	FTransform SpawnTransform = OutActors[0]->GetActorTransform();
-	AMixBatman* Batman = GetWorld()->SpawnActor<AMixBatman>(UMixAssetManager::Get().BatmanClass, SpawnTransform, SpawnParams);
+	AMixBatman* Batman = GetWorld()->SpawnActor<AMixBatman>(UMixAssetManager::Get().CreatureModelInfo[MixGameplayTags::Creature_Name_Batman].Class, SpawnTransform, SpawnParams);
 	SpawnedBatmans.Add(Batman);
 	Batman->SetCreatureName(MixGameplayTags::Creature_Name_Batman);
 	Batman->SetCreatureType(MixGameplayTags::Creature_Type_Batman_Enemy);

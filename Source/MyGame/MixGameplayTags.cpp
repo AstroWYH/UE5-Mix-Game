@@ -23,13 +23,14 @@ namespace MixGameplayTags
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attack_Ranged, "Attack.Ranged", "");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attack_Melee, "Attack.Melee", "");
-	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Name_Ashe, "Creature.Name.Ashe", "");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Name_Zed, "Creature.Name.Zed", "");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Name_Batman, "Creature.Name.Batman", "");
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Type_Q, "Ability.Type.Q", "");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Type_W, "Ability.Type.W", "");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Type_E, "Ability.Type.E", "");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Type_R, "Ability.Type.R", "");
+
+	// Hero
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Name_Ashe, "Creature.Name.Ashe", "");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Name_Lucian, "Creature.Name.Lucian", "");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Name_Batman, "Creature.Name.Batman", "");
 }

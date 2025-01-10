@@ -32,7 +32,7 @@ void AMixRangedAmmo::Tick(float DeltaTime)
 void AMixRangedAmmo::CauseDamage()
 {
 	int32 AttackVal = Target->GetAttribute()->AttackVal;
-	Target->GetAttribute()->ApplyHealth(-AttackVal);
+	Target->GetAttribute()->ApplyHealth(Attacker, -AttackVal);
 }
 
 void AMixRangedAmmo::DestroySelf()

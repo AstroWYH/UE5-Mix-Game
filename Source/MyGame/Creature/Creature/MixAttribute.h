@@ -11,6 +11,7 @@
 #include "UObject/Object.h"
 #include "MixAttribute.generated.h"
 
+class AMixCreature;
 class UDataTable;
 struct FMixAttributeData;
 /**
@@ -51,6 +52,7 @@ public:
 		DataClass* AttributeData = AttributeDT->FindRow<DataClass>(FName(*CreatureName), "AttributeData");
 		InitAttributes(Creature, AttributeDT, AttributeData);
 
+		OwnerCreature = Creature;
 		Creature->SetAttribute(this);
 		Creature->GetHeadUI()->BP_AttributeAvaiable();
 	}
@@ -73,7 +75,7 @@ public:
 	virtual void InitChildAttributes(AMixCreature* Creature, const UDataTable* AttributeDT, const FMixHeroAttributeData* AttributeData) {}
 
 public:
-	void ApplyHealth(int32 Val);
+	virtual void ApplyHealth(AMixCreature* Attacker, int32 Val);
 
 	void Death() const;
 
@@ -85,4 +87,8 @@ public:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FMixOnApplyHealth, int32, ApplyVal, int32, Health, int32, MaxHealth);
 	UPROPERTY(BlueprintAssignable)
 	FMixOnApplyHealth OnApplyHealth;
+	
+protected:
+	AMixCreature* OwnerCreature;
+	
 };

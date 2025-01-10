@@ -35,8 +35,10 @@ void AMixAIBatmanController::BeginDestroy()
 	Super::BeginDestroy();
 }
 
-void AMixAIBatmanController::PostBpBeginPlay()
+void AMixAIBatmanController::Bp_PostBeginPlay()
 {
+	Super::Bp_PostBeginPlay();
+
 	// 存Batman路径点
 	TArray<AActor*> PathPonits;
 	// TODO: 后续近战小兵，可能要改这个Tag
@@ -48,20 +50,18 @@ void AMixAIBatmanController::PostBpBeginPlay()
 	}
 
 	// Init黑板
-	BatmanBlackboard = GetBlackboardComponent();
-	if (!ensure(BatmanBlackboard)) return;
-	BatmanBlackboard->SetValueAsInt("NextPatrolIdx", 0);
+	Blackboard->SetValueAsInt("NextPatrolIdx", 0);
 
-	// Find蓝图BatmanAIPerception
-	TArray<UActorComponent*> TaggedComponents = GetComponentsByTag(UActorComponent::StaticClass(), "BatmanAIPerception");
-	for (UActorComponent* Component : TaggedComponents)
-	{
-		if (!ensure(Component)) continue;
-		BatmanAIPerceptionComponent = Cast<UAIPerceptionComponent>(Component);
-		if (!ensure(BatmanAIPerceptionComponent)) continue;
-
-		BatmanAIPerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &AMixAIBatmanController::OnTargetPerceptionUpdated);
-	}
+	// // Find蓝图BatmanAIPerception TODO: 直接获取，AIController提供了获取的接口，但需要自己Set
+	// TArray<UActorComponent*> TaggedComponents = GetComponentsByTag(UActorComponent::StaticClass(), "BatmanAIPerception");
+	// for (UActorComponent* Component : TaggedComponents)
+	// {
+	// 	if (!ensure(Component)) continue;
+	// 	BatmanAIPerceptionComponent = Cast<UAIPerceptionComponent>(Component);
+	// 	if (!ensure(BatmanAIPerceptionComponent)) continue;
+	//
+	// 	BatmanAIPerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &AMixAIBatmanController::OnTargetPerceptionUpdated);
+	// }
 }
 
 // void AMixAIBatmanController::TraceTarget()
@@ -118,19 +118,21 @@ void AMixAIBatmanController::PostBpBeginPlay()
 
 void AMixAIBatmanController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
+	Super::OnTargetPerceptionUpdated(Actor, Stimulus);
+	
 	// Ammo也能检测到，在此拦截
 	AMixCreature* Creature = Cast<AMixCreature>(Actor);
 	if (Creature)
 	{
-		bIsDetectCreature = Stimulus.WasSuccessfullySensed();
+		bool bIsDetectCreature = Stimulus.WasSuccessfullySensed();
 
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,
 			FString::Printf(
 				TEXT("bSensed:%d Actor:%s"), bIsDetectCreature,
 				*Actor->GetName()));
 
-		BatmanBlackboard->SetValueAsBool("IsDetectCreature", bIsDetectCreature);
-		BatmanBlackboard->SetValueAsObject("Creature", Creature);
+		Blackboard->SetValueAsBool("IsDetectCreature", bIsDetectCreature);
+		Blackboard->SetValueAsObject("Creature", Creature);
 	}
 }
 

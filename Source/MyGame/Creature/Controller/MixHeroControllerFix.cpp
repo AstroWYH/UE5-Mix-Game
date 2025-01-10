@@ -3,6 +3,10 @@
 
 #include "MixHeroControllerFix.h"
 
+#include "BehaviorTree/BlackboardComponent.h"
+#include "Creature/Creature/MixCreature.h"
+#include "Perception/AIPerceptionTypes.h"
+
 
 // Sets default values
 AMixHeroControllerFix::AMixHeroControllerFix()
@@ -24,5 +28,38 @@ void AMixHeroControllerFix::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AMixHeroControllerFix::MoveToAttackTarget()
+{
+	MoveToActor(Attacker, 20.f);
+}
+
+void AMixHeroControllerFix::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
+{
+	Super::OnTargetPerceptionUpdated(Actor, Stimulus);
+
+	AMixCreature* Creature = Cast<AMixCreature>(Actor);
+	if (Creature)
+	{
+		bool bIsDetectCreature = Stimulus.WasSuccessfullySensed();
+
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,
+			FString::Printf(
+				TEXT("bSensed:%d Actor:%s"), bIsDetectCreature,
+				*Actor->GetName()));
+
+		// TODO
+	}
+}
+
+void AMixHeroControllerFix::SetAttacker(AMixCreature* InAttacker)
+{
+	Super::SetAttacker(InAttacker);
+
+	Blackboard->SetValueAsObject("TargetHero", InAttacker);
+	Blackboard->SetValueAsBool("bUnderHeroAttack", true);
+
+	// TODO: 什么时候脱战，把bUnderHeroAttack置为false
 }
 

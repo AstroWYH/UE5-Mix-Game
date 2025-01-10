@@ -30,7 +30,7 @@ protected:
 	AMixCreature* Target;
 
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	AMixCreature* Shooter;
+	AMixCreature* Attacker;
 
 private:
 	struct FTimerHandle DestroyTimerHandle;
@@ -64,13 +64,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	AMixCreature* GetShooter() const
 	{
-		return Shooter;
+		return Attacker;
 	}
 
 	UFUNCTION(BlueprintCallable)
 	void SetShooter(AMixCreature* InShooter)
 	{
-		Shooter = InShooter;
+		Attacker = InShooter;
 	}
 
 };

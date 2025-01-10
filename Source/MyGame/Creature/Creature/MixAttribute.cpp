@@ -3,7 +3,7 @@
 
 #include "MixAttribute.h"
 
-void UMixAttribute::ApplyHealth(int32 ApplyVal)
+void UMixAttribute::ApplyHealth(AMixCreature* Attacker, int32 ApplyVal)
 {
 	Health += ApplyVal;
 

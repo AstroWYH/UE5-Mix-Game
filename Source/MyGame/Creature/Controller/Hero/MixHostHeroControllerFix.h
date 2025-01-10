@@ -41,7 +41,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* StopAction;
-	
+
 	// 技能Action
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* SkillAction_Q;
@@ -84,7 +84,7 @@ private:
 	// TODO:配置表
 	const TCHAR* CursorDefaultPath = TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/MixGame/UI/MouseCursor/CursorDefault.CursorDefault_C'");
 	const TCHAR* CursorAttackPath = TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/MixGame/UI/MouseCursor/CursorAttack.CursorAttack_C'");
-	
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MouseCursor", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UUserWidget> CursorDefaultClass;
 
@@ -92,10 +92,10 @@ private:
 	TSubclassOf<UUserWidget> CursorAttackClass;
 
 	UPROPERTY()
-    UUserWidget* CursorDefaultWidget;
+	UUserWidget* CursorDefaultWidget;
 
 	UPROPERTY()
-    UUserWidget* CursorAttackWidget;
+	UUserWidget* CursorAttackWidget;
 
 public:
 	FVector WalkPosition;

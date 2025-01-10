@@ -6,6 +6,7 @@
 #include "MixAssetManager.h"
 #include "MixGameSubsystem.h"
 #include "Ability/MixAbilityMgr.h"
+#include "Components/CapsuleComponent.h"
 #include "Creature/Component/MixAttackComponent.h"
 #include "Creature/Controller/MixHeroControllerFix.h"
 #include "Creature/Controller/Hero/MixHostHeroControllerFix.h"
@@ -94,13 +95,14 @@ void UMixLevelSubsystem::GenerateHero()
 		if (!ensure(Hero)) return;
 		SpawnedHeros.AddUnique(Hero);
 		Hero->SetCreatureName(MixGameplayTags::Creature_Name_Lucian);
-		Hero->SetCreatureType(MixGameplayTags::Creature_Type_Hero_Friend);
+		Hero->SetCreatureType(MixGameplayTags::Creature_Type_Hero_Enemy);
 		UMixAttackComponent::FindAttackComponent(Hero)->SetAttackType(MixGameplayTags::Attack_Ranged);
 
 		// 设置Hero骨骼 设置Hero动画蓝图类
 		FHeroModelInfo& ModelInfo = UMixAssetManager::Get().HeroModelInfo[MixGameplayTags::Creature_Name_Lucian];
 		Hero->GetMesh()->SetSkeletalMesh(UMixAssetManager::Get().GetAssetSync(ModelInfo.Mesh));
 		Hero->GetMesh()->SetAnimClass(ModelInfo.Anim);
+		Hero->GetCapsuleComponent()->SetWorldScale3D(FVector(0.7f, 0.7f, 0.7f)); // TODO: 配表
 
 		// 设置Hero属性
 		UMixHeroAttribute* HeroAttribute = NewObject<UMixHeroAttribute>();

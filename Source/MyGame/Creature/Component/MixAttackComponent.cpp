@@ -78,7 +78,8 @@ AMixCreature* UMixAttackComponent::SelectTarget(const FVector& Pos)
 	// TODO: 1000.0f 该值不变
 	TArray<AActor*> ActorsToIgnore;
 	TArray<FHitResult> OutHits;
-	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes{UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel1)};
+	// TODO: 表示Hero和Enemy通过，Enemy需要改
+	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes{UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel1), UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel3)};
 	UKismetSystemLibrary::CapsuleTraceMultiForObjects(GetWorld(), StartPos, EndPos, HeroSelf->GetAttribute()->AttackRange, 1000.0f, ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::None, OutHits, true);
 
 	for (const FHitResult& Hit : OutHits)
@@ -88,6 +89,9 @@ AMixCreature* UMixAttackComponent::SelectTarget(const FVector& Pos)
 
 		AMixCreature* HitCreature = Cast<AMixCreature>(HitActor);
 		if (!ensure(HitCreature)) continue;
+
+		// 排除自己
+		if (HitCreature->GetCreatureName() == Creature->GetCreatureName()) continue;
 
 		CreaturesInRange.Add(HitCreature);
 	}
@@ -189,8 +193,8 @@ void UMixAttackComponent::OnRangedMontageNofify()
 	TSubclassOf<AActor> AmmoClass;
 	if (Creature->GetCreatureType().MatchesTag(MixGameplayTags::Creature_Type_Hero))
 	{
-		 AmmoClass = UMixAssetManager::Get().HeroModelInfo[Creature->GetCreatureName()].Ammo;
-		 AmmoTransform = Creature->GetMesh()->GetSocketTransform(LaunchPoint);
+		AmmoClass = UMixAssetManager::Get().HeroModelInfo[Creature->GetCreatureName()].Ammo;
+		AmmoTransform = Creature->GetMesh()->GetSocketTransform(LaunchPoint);
 	}
 	else if (Creature->GetCreatureType().MatchesTag(MixGameplayTags::Creature_Type_Batman))
 	{
@@ -203,12 +207,12 @@ void UMixAttackComponent::OnRangedMontageNofify()
 	FActorSpawnParameters AmmoParams;
 	AmmoParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	AmmoParams.CustomPreSpawnInitalization = [this](AActor* SpawnedActor)
-		{
-			AMixTrackRangedAmmo* Ammo = Cast<AMixTrackRangedAmmo>(SpawnedActor);
-			if (!ensure(Ammo)) return;
-			Ammo->SetShooter(Creature);
-			Ammo->SetTarget(TargetCreature); // 跟踪导弹，所以需要设Target
-		};
+	{
+		AMixTrackRangedAmmo* Ammo = Cast<AMixTrackRangedAmmo>(SpawnedActor);
+		if (!ensure(Ammo)) return;
+		Ammo->SetShooter(Creature);
+		Ammo->SetTarget(TargetCreature); // 跟踪导弹，所以需要设Target
+	};
 	AMixTrackRangedAmmo* SpawnedActor = GetWorld()->SpawnActor<AMixTrackRangedAmmo>(AmmoClass, AmmoTransform, AmmoParams);
 
 }

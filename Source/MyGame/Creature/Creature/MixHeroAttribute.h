@@ -20,6 +20,8 @@ public:
 	{
 		Magic = AttributeData->MaxMagic;
 	}
+
+	virtual void ApplyHealth(AMixCreature* Attacker, int32 Val) override;
 	
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)

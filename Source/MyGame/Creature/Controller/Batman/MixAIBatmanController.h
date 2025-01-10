@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "Creature/Controller/MixAIController.h"
 #include "MixAIBatmanController.generated.h"
 
 class AMixBatman;
@@ -11,7 +12,7 @@ class AMixBatman;
  * 
  */
 UCLASS()
-class MYGAME_API AMixAIBatmanController : public AAIController
+class MYGAME_API AMixAIBatmanController : public AMixAIController
 {
 	GENERATED_BODY()
 
@@ -24,8 +25,7 @@ public:
 
 	void OnPossess(APawn* InPawn) override;
 
-	UFUNCTION(BlueprintCallable, Category = "AMixAIBatmanController")
-	void PostBpBeginPlay();
+	virtual void Bp_PostBeginPlay() override;
 
 public:
 	// UFUNCTION(BlueprintCallable, Category = "AMixAIBatmanController")
@@ -45,9 +45,12 @@ public:
 
 public:
 	// AIPerceptionComponent
-	UFUNCTION()
-	void OnTargetPerceptionUpdated(AActor* Actor, struct FAIStimulus Stimulus);
+	// UFUNCTION()
+	// void OnTargetPerceptionUpdated(AActor* Actor, struct FAIStimulus Stimulus);
 
+	// 不需要重复添加UFUNCTION()
+	virtual void OnTargetPerceptionUpdated(AActor* Actor, struct FAIStimulus Stimulus) override;
+	
 public:
 	// // AI Controller
 	// void OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) override;
@@ -64,12 +67,7 @@ public:
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMixAIBatmanController")
 	// TObjectPtr<UBehaviorTree> BehaviorTree;
 
-	class UAIPerceptionComponent* BatmanAIPerceptionComponent = nullptr;
-
-	class UBlackboardComponent* BatmanBlackboard = nullptr;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	bool bIsDetectCreature = false;
+	// class UAIPerceptionComponent* BatmanAIPerceptionComponent = nullptr;
 
 private:
 	AMixBatman* Batman;

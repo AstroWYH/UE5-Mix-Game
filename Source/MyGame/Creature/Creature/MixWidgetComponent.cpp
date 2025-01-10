@@ -43,6 +43,5 @@ void UMixWidgetComponent::OnHealthChange(int32 ApplyVal, int32 Health, int32 Max
 {
 	UUserWidget* HeadUI = GetWidget();
 
-	// TODO: 可以直接在UserWidget中监听
 }
 

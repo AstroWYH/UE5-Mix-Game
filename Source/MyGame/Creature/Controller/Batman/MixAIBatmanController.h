@@ -28,20 +28,20 @@ public:
 	void PostBpBeginPlay();
 
 public:
-// 	UFUNCTION(BlueprintCallable, Category = "AMixAIBatmanController")
-// 	void TraceTarget();
-// 
-// 	UFUNCTION(BlueprintCallable, Category = "AMixAIBatmanController")
-// 	void TraceTargetAbort();
-// 
-// 	UFUNCTION(BlueprintCallable, Category = "AMixAIBatmanController")
-// 	void TracePathPoint();
-// 
-// 	UFUNCTION(BlueprintCallable, Category = "AMixAIBatmanController")
-// 	void TracePathPointComplete();
-// 
-// 	UFUNCTION(BlueprintCallable, Category = "AMixAIBatmanController")
-// 	void TracePathPointAbort();
+	// UFUNCTION(BlueprintCallable, Category = "AMixAIBatmanController")
+	// void TraceTarget();
+	//
+	// UFUNCTION(BlueprintCallable, Category = "AMixAIBatmanController")
+	// void TraceTargetAbort();
+	//
+	// UFUNCTION(BlueprintCallable, Category = "AMixAIBatmanController")
+	// void TracePathPoint();
+	//
+	// UFUNCTION(BlueprintCallable, Category = "AMixAIBatmanController")
+	// void TracePathPointComplete();
+	//
+	// UFUNCTION(BlueprintCallable, Category = "AMixAIBatmanController")
+	// void TracePathPointAbort();
 
 public:
 	// AIPerceptionComponent
@@ -49,20 +49,20 @@ public:
 	void OnTargetPerceptionUpdated(AActor* Actor, struct FAIStimulus Stimulus);
 
 public:
-// 	// AI Controller
-// 	void OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) override;
-
-// 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMixOnMovementAbort);
-// 	UPROPERTY(BlueprintAssignable)
-// 	FMixOnMovementAbort OnMovementAbort;
+	// // AI Controller
+	// void OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) override;
+	//
+	// DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMixOnMovementAbort);
+	// UPROPERTY(BlueprintAssignable)
+	// FMixOnMovementAbort OnMovementAbort;
 
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<FVector> PathPointsPos;
 
-// 	const TCHAR* BehaviorTreePath{ TEXT("/Script/AIModule.BehaviorTree'/Game/MixGame/Character/EnemyBatman/AI/BatmanBt.BatmanBt'") };
-// 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMixAIBatmanController")
-// 	TObjectPtr<UBehaviorTree> BehaviorTree;
+	// const TCHAR* BehaviorTreePath{ TEXT("/Script/AIModule.BehaviorTree'/Game/MixGame/Character/EnemyBatman/AI/BatmanBt.BatmanBt'") };
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMixAIBatmanController")
+	// TObjectPtr<UBehaviorTree> BehaviorTree;
 
 	class UAIPerceptionComponent* BatmanAIPerceptionComponent = nullptr;
 

@@ -12,7 +12,7 @@
 class UMixItem;
 class UMixInventoryItem;
 
-// TODO: Õâ¸öÀàÊÇ¶àÓàµÄ£¬Ö±½ÓÓÃÄÇ¸ö¾ÍĞĞÓ¦¸Ã
+// TODO: è¿™ä¸ªç±»æ˜¯å¤šä½™çš„ï¼Œç›´æ¥ç”¨é‚£ä¸ªå°±è¡Œåº”è¯¥
 UCLASS(BlueprintType)
 class UMixItemCfg : public UObject
 {
@@ -66,23 +66,23 @@ public:
 	void ExchangeItem(int32 OldPosIdx, int32 NewPosIdx);
 
 public:
-	// ¶Á±íItemDataĞÅÏ¢£¬ËùÓĞµÄ×°±¸ĞÅÏ¢±í
+	// è¯»è¡¨ItemDataä¿¡æ¯ï¼Œæ‰€æœ‰çš„è£…å¤‡ä¿¡æ¯è¡¨
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Inventory")
 	TMap<int32, TObjectPtr<UMixItemCfg>> AllItemsCfg;
 
-	// ±³°üInventoryItem¸ñ×ÓÊı¾İ
+	// èƒŒåŒ…InventoryItemæ ¼å­æ•°æ®
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Inventory")
 	TMap<int32, TObjectPtr<UMixInventoryItem>> InventoryItems;
 
-	// Í¨¹ıPos²éÑ¯TID
+	// é€šè¿‡PosæŸ¥è¯¢TID
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Inventory")
 	TMap<int32, int32> PosToTIDMap;
 
-	// µ±Ç°Õ¼¸ñÎ»
+	// å½“å‰å æ ¼ä½
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Inventory")
 	TSet<int32> CurPosIdxes;
 
-	// ¸ñ×ÓÊıÁ¿
+	// æ ¼å­æ•°é‡
 	const int32 KSlotNum = 6;
 
 	// Test

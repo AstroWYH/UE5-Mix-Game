@@ -44,7 +44,7 @@ void UMixInventorySubsystem::InventoryTestAddBtn()
     if (!ensure(AllItemsCfg.Contains(TestTID))) return;
     Item->ItemCfg = AllItemsCfg[TestTID];
 
-    // Ä£ÄâÌí¼ÓµÚ1¡¢2¼şÎïÆ·
+    // æ¨¡æ‹Ÿæ·»åŠ ç¬¬1ã€2ä»¶ç‰©å“
     AddItem(Item);
     Cnt++;
 }
@@ -69,7 +69,7 @@ void UMixInventorySubsystem::InventoryTestRemoveBtn()
 
 void UMixInventorySubsystem::AddItem(TObjectPtr<UMixItem> Item, int32 PosIdx)
 {
-    // ²»ÄÜ³¬¹ı¸ñ×Ó×ÜÊı
+    // ä¸èƒ½è¶…è¿‡æ ¼å­æ€»æ•°
     if (!ensure(InventoryItems.Num() < KSlotNum)) return;
 
     if (!ensure(Item)) return;
@@ -85,10 +85,10 @@ void UMixInventorySubsystem::AddItem(TObjectPtr<UMixItem> Item, int32 PosIdx)
         TObjectPtr<UMixInventoryItem> NewInventoryItem = NewObject<UMixInventoryItem>();
         int32 SavePosIdx = 0;
 
-        // ×Ô¶¯°²ÅÅÉıĞòµÚ1¸ö¿ÕÎ»´æ·Å
+        // è‡ªåŠ¨å®‰æ’å‡åºç¬¬1ä¸ªç©ºä½å­˜æ”¾
         if (PosIdx == -1)
         {
-            // ÒòÎªRemoveÎ»ÖÃµÄ²»È·¶¨ĞÔ£¬Ã¿´ÎÖØĞÂ¼ÆËãSavePosIdxµÄÎ»ÖÃ
+            // å› ä¸ºRemoveä½ç½®çš„ä¸ç¡®å®šæ€§ï¼Œæ¯æ¬¡é‡æ–°è®¡ç®—SavePosIdxçš„ä½ç½®
             for (int32 Idx = 0; Idx < KSlotNum; Idx++)
             {
                 if (CurPosIdxes.Contains(Idx))
@@ -101,7 +101,7 @@ void UMixInventorySubsystem::AddItem(TObjectPtr<UMixItem> Item, int32 PosIdx)
                 }
             }
         }
-        // Ö¸¶¨Î»ÖÃ´æ·Å
+        // æŒ‡å®šä½ç½®å­˜æ”¾
         else
         {
             SavePosIdx = PosIdx;

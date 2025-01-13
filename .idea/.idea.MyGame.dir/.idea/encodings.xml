@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="Encoding" native2AsciiForPropertiesFiles="true">
-    <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Ammo/Batman/MixBatmanAmmo.cpp" charset="GB2312" />
-    <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Ammo/Batman/MixBatmanAmmo.h" charset="GB2312" />
-    <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Ammo/Hero/MixHeroAmmo.cpp" charset="GB2312" />
-    <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Ammo/Hero/MixHeroAmmo.h" charset="GB2312" />
-    <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Ammo/MixAIAmmoController.cpp" charset="GB2312" />
-    <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Ammo/MixAIAmmoController.h" charset="GB2312" />
-    <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Ammo/MixAmmo.cpp" charset="GB2312" />
-    <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Ammo/MixAmmo.h" charset="GB2312" />
-    <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Component/MixAttackComponent.cpp" charset="GB2312" />
-    <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Controller/Hero/MixHostHeroControllerFix.h" charset="GB2312" />
-    <file url="file://$PROJECT_DIR$/Source/MyGame/Data/Item/MixItemData.h" charset="GB2312" />
-    <file url="file://$PROJECT_DIR$/Source/MyGame/Data/UI/MixUIAsset.h" charset="GB2312" />
-    <file url="file://$PROJECT_DIR$/Source/MyGame/Game/MixGameInstance.cpp" charset="GB2312" />
-    <file url="file://$PROJECT_DIR$/Source/MyGame/Game/MixGameInstance.h" charset="GB2312" />
-    <file url="file://$PROJECT_DIR$/Source/MyGame/Game/MixGameMode.cpp" charset="GB2312" />
-    <file url="file://$PROJECT_DIR$/Source/MyGame/Game/MixGameMode.h" charset="GB2312" />
-    <file url="file://$PROJECT_DIR$/Source/MyGame/Game/MixLocalPlayer.cpp" charset="GB2312" />
-    <file url="file://$PROJECT_DIR$/Source/MyGame/Game/MixLocalPlayer.h" charset="GB2312" />
-    <file url="file://$PROJECT_DIR$/Source/MyGame/Game/MixWorldSettings.cpp" charset="GB2312" />
-    <file url="file://$PROJECT_DIR$/Source/MyGame/Game/MixWorldSettings.h" charset="GB2312" />
-    <file url="file://$PROJECT_DIR$/Source/MyGame/Subsystem/Inventory/MixInventoryItem.h" charset="GB2312" />
-    <file url="file://$PROJECT_DIR$/Source/MyGame/Subsystem/Inventory/MixInventorySubsystem.cpp" charset="GB2312" />
-    <file url="file://$PROJECT_DIR$/Source/MyGame/Subsystem/Inventory/MixInventorySubsystem.h" charset="GB2312" />
+  <component name="Encoding" native2AsciiForPropertiesFiles="true" defaultCharsetForPropertiesFiles="UTF-8">
+    <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Ammo/Batman/MixBatmanAmmo.cpp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Ammo/Batman/MixBatmanAmmo.h" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Ammo/Hero/MixHeroAmmo.cpp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Ammo/Hero/MixHeroAmmo.h" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Ammo/MixAIAmmoController.cpp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Ammo/MixAIAmmoController.h" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Ammo/MixAmmo.cpp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Ammo/MixAmmo.h" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Component/MixAttackComponent.cpp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Source/MyGame/Creature/Controller/Hero/MixHostHeroControllerFix.h" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Source/MyGame/Data/Item/MixItemData.h" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Source/MyGame/Data/UI/MixUIAsset.h" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Source/MyGame/Game/MixGameInstance.cpp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Source/MyGame/Game/MixGameInstance.h" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Source/MyGame/Game/MixGameMode.cpp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Source/MyGame/Game/MixGameMode.h" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Source/MyGame/Game/MixLocalPlayer.cpp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Source/MyGame/Game/MixLocalPlayer.h" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Source/MyGame/Game/MixWorldSettings.cpp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Source/MyGame/Game/MixWorldSettings.h" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Source/MyGame/Subsystem/Inventory/MixInventoryItem.h" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Source/MyGame/Subsystem/Inventory/MixInventorySubsystem.cpp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Source/MyGame/Subsystem/Inventory/MixInventorySubsystem.h" charset="UTF-8" />
   </component>
 </project>

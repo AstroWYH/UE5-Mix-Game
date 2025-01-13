@@ -9,7 +9,7 @@ class MYGAME_API UMixInventoryItem : public UObject
 	GENERATED_BODY()
 
 public:
-	// ²»ÒªÔÚUObject×ÓÀàÅª¹¹Ôì
+	// ä¸è¦åœ¨UObjectå­ç±»å¼„æ„é€ 
 	// UMixInventoryItem();
 	// UMixInventoryItem(int32 InTID, int32 InAmount, int32 InPosIdx) :TID(InTID), Amount(InAmount), PosIdx(InPosIdx) {}
 

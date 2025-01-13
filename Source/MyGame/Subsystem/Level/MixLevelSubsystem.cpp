@@ -59,7 +59,7 @@ void UMixLevelSubsystem::GenerateHero()
 		if (!ensure(Hero)) return;
 		SpawnedHeros.AddUnique(Hero);
 		Hero->SetCreatureName(MixGameplayTags::Creature_Name_Ashe);
-		Hero->SetCreatureType(MixGameplayTags::Creature_Type_Hero_Self);
+		Hero->SetCreatureType(MixGameplayTags::Creature_Type_Hero_Blue);
 		UMixAttackComponent::FindAttackComponent(Hero)->SetAttackType(MixGameplayTags::Attack_Ranged);
 
 		// 设置Hero骨骼 设置Hero动画蓝图类
@@ -95,7 +95,7 @@ void UMixLevelSubsystem::GenerateHero()
 		if (!ensure(Hero)) return;
 		SpawnedHeros.AddUnique(Hero);
 		Hero->SetCreatureName(MixGameplayTags::Creature_Name_Lucian);
-		Hero->SetCreatureType(MixGameplayTags::Creature_Type_Hero_Enemy);
+		Hero->SetCreatureType(MixGameplayTags::Creature_Type_Hero_Red);
 		UMixAttackComponent::FindAttackComponent(Hero)->SetAttackType(MixGameplayTags::Attack_Ranged);
 
 		// 设置Hero骨骼 设置Hero动画蓝图类
@@ -130,7 +130,7 @@ void UMixLevelSubsystem::GenerateBatman()
 	AMixBatman* Batman = GetWorld()->SpawnActor<AMixBatman>(UMixAssetManager::Get().CreatureModelInfo[MixGameplayTags::Creature_Name_Batman].Class, SpawnTransform, SpawnParams);
 	SpawnedBatmans.Add(Batman);
 	Batman->SetCreatureName(MixGameplayTags::Creature_Name_Batman);
-	Batman->SetCreatureType(MixGameplayTags::Creature_Type_Batman_Enemy);
+	Batman->SetCreatureType(MixGameplayTags::Creature_Type_Batman_Red);
 	UMixAttackComponent::FindAttackComponent(Batman)->SetAttackType(MixGameplayTags::Attack_Ranged);
 
 	// 设置Batman属性

@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "InputActionValue.h"
-#include "MixGameplayTags.h"
+#include "Tag/MixGameplayTags.h"
 #include "Creature/Controller/MixControllerInterface.h"
 
 #include "MixHostHeroControllerFix.generated.h"

@@ -39,8 +39,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void CauseDamage();
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void BP_HitTarget(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	// 目前好像没用
+	// UFUNCTION(BlueprintImplementableEvent)
+	// void BP_HitTarget(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 private:
 	void DestroySelf();
@@ -62,15 +63,15 @@ public:
 	}
 
 	UFUNCTION(BlueprintCallable)
-	AMixCreature* GetShooter() const
+	AMixCreature* GetAttacker() const
 	{
 		return Attacker;
 	}
 
 	UFUNCTION(BlueprintCallable)
-	void SetShooter(AMixCreature* InShooter)
+	void SetAttacker(AMixCreature* InAttacker)
 	{
-		Attacker = InShooter;
+		Attacker = InAttacker;
 	}
 
 };

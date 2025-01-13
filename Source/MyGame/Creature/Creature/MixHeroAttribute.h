@@ -7,6 +7,7 @@
 #include "UObject/Object.h"
 #include "MixHeroAttribute.generated.h"
 
+class AMixHeroControllerFix;
 /**
  * 
  */
@@ -22,6 +23,8 @@ public:
 	}
 
 	virtual void ApplyHealth(AMixCreature* Attacker, int32 Val) override;
+
+	void CheckHealth(AMixHeroControllerFix* HeroController) const;
 	
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)

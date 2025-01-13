@@ -11,12 +11,18 @@ namespace MixGameplayTags
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Type_Hero_Other);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Type_Hero_Friend);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Type_Hero_Enemy);
+	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Type_Hero_Red);
+	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Type_Hero_Blue);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Type_Batman);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Type_Batman_Friend);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Type_Batman_Enemy);
+	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Type_Batman_Red);
+	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Type_Batman_Blue);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Type_Tower);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Type_Tower_Friend);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Type_Tower_Enemy);
+	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Type_Tower_Red);
+	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Type_Tower_Blue);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Type_Monster);
 
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attack_Ranged);
@@ -32,20 +38,19 @@ namespace MixGameplayTags
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Name_Lucian);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Name_Batman);
 	
-	FString GetLastNameFromGameplayTag(const FGameplayTag& GameplayTag)
-	{
-		FString FullTagName = GameplayTag.ToString();
-
-		TArray<FString> TagParts;
-		FullTagName.ParseIntoArray(TagParts, TEXT("."), true);
-
-		if (TagParts.Num() > 0)
-		{
-			return TagParts.Last();
-		}
-
-		return FString();
-	}
-	
 }
 
+namespace MixGlobalData
+{
+	// BB
+	const FName BB_bFindEnemyHero = TEXT("bFindEnemyHero");
+	const FName BB_bFindEnemyBatman = TEXT("bFindEnemyBatman");
+	const FName BB_bHealthGreater = TEXT("bHealthGreater");
+	const FName BB_bUnderAttack = TEXT("bUnderAttack");
+	const FName BB_bHealthSafe = TEXT("bHealthSafe");
+	const FName BB_TargetCreature = TEXT("TargetCreature");
+	
+	constexpr float BattleTime = 3.0f;
+	constexpr float MoveDiff = 120.0f;
+	constexpr float HealthSafePercent = 0.2f;
+}

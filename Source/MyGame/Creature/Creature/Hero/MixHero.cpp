@@ -3,7 +3,7 @@
 #include "MixHero.h"
 
 #include "MixAssetManager.h"
-#include "MixGameplayTags.h"
+#include "Tag/MixGameplayTags.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"

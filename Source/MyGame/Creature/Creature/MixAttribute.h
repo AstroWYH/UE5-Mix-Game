@@ -5,8 +5,9 @@
 #include "CoreMinimal.h"
 #include "MixAssetManager.h"
 #include "MixCreature.h"
-#include "MixGameplayTags.h"
+#include "Tag/MixGameplayTags.h"
 #include "Data/Attribute/MixHeroAttributeData.h"
+#include "Tag/UMixTagHelper.h"
 #include "UI/HeadUI/MixHeadUIWidget.h"
 #include "UObject/Object.h"
 #include "MixAttribute.generated.h"
@@ -48,7 +49,7 @@ public:
 		const UDataTable* AttributeDT = UMixAssetManager::Get().GetAssetSync(DataTablePtr);
 		if (!ensure(AttributeDT)) return;
 
-		FString CreatureName = MixGameplayTags::GetLastNameFromGameplayTag(Creature->GetCreatureName());
+		FString CreatureName = UUMixTagHelper::GetLastNameFromGameplayTag(Creature->GetCreatureName());
 		DataClass* AttributeData = AttributeDT->FindRow<DataClass>(FName(*CreatureName), "AttributeData");
 		InitAttributes(Creature, AttributeDT, AttributeData);
 

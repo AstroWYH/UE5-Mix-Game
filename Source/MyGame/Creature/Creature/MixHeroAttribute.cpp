@@ -2,14 +2,25 @@
 
 #include "MixHeroAttribute.h"
 
+#include "BehaviorTree/BlackboardComponent.h"
 #include "Creature/Controller/MixHeroControllerFix.h"
+#include "Hero/MixHero.h"
 
 void UMixHeroAttribute::ApplyHealth(AMixCreature* Attacker, int32 Val)
 {
 	Super::ApplyHealth(Attacker, Val);
 
-	AMixAIController* AIController = Cast<AMixHeroControllerFix>(OwnerCreature->GetController());
-	if (!AIController) return;
+	AMixHeroControllerFix* HeroController = Cast<AMixHeroControllerFix>(OwnerCreature->GetController());
+	if (!HeroController) return;
+	if (!Cast<AMixHero>(Attacker)) return;
 
-	AIController->SetAttacker(Attacker);
+	// TODO: 暂时只处理AIHero受到Hero伤害
+	HeroController->SetAttacker(Attacker);
+}
+
+void UMixHeroAttribute::CheckHealth(AMixHeroControllerFix* HeroController) const
+{
+	// TODO: 配表
+	bool bHealthSafe = (static_cast<float>(Health) / MaxHealth) > MixGlobalData::HealthSafePercent;
+	HeroController->GetBlackboardComponent()->SetValueAsBool(MixGlobalData::BB_bHealthSafe, bHealthSafe);
 }

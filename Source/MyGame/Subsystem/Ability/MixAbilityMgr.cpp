@@ -8,7 +8,7 @@
 #include "Creature/Controller/Hero/MixHostHeroControllerFix.h"
 #include "Data/Ability/MixAbilityAsset.h"
 #include "Level/MixLevelSubsystem.h"
-#include "MixGameplayTags.h"
+#include "Tag/MixGameplayTags.h"
 #include "Creature/Controller/MixHeroControllerFix.h"
 #include "Creature/Creature/Hero/MixHero.h"
 
@@ -51,8 +51,8 @@ void UMixAbilityMgr::OnHeroSpawned()
 		const UMixAbilityAsset& AbilityAsset = UMixAssetManager::Get().GetOrLoadAssetData<UMixAbilityAsset>(
 			UMixAssetManager::Get().AbilityAsset);
 		
-		if (!ensure(AbilityAsset.HeroAbilitys.Contains(EachHero->GetCreatureName()))) return;
-		if (!ensure(AbilityAsset.HeroAbilitys[EachHero->GetCreatureName()].Ability.Contains(MixGameplayTags::Ability_Type_Q))) return;
+		if (!(AbilityAsset.HeroAbilitys.Contains(EachHero->GetCreatureName()))) return;
+		if (!(AbilityAsset.HeroAbilitys[EachHero->GetCreatureName()].Ability.Contains(MixGameplayTags::Ability_Type_Q))) return;
 		
 		TSubclassOf<AActor> BPAbilityClass_Q = AbilityAsset.HeroAbilitys[EachHero->GetCreatureName()].Ability[MixGameplayTags::Ability_Type_Q];
 		AMixAbilityBase* Ability_Q = GetWorld()->SpawnActor<AMixAbilityBase>(BPAbilityClass_Q);

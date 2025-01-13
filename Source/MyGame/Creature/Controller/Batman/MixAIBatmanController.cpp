@@ -4,7 +4,7 @@
 #include "MixAIBatmanController.h"
 
 #include "MixAssetManager.h"
-#include "MixGameplayTags.h"
+#include "Tag/MixGameplayTags.h"
 #include "Kismet\GameplayStatics.h"
 #include "BehaviorTree\BehaviorTree.h"
 #include "BehaviorTree\BlackboardComponent.h"

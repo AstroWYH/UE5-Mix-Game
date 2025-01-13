@@ -8,7 +8,16 @@
 #include "MixControllerInterface.h"
 #include "MixHeroControllerFix.generated.h"
 
+class AMixHero;
 class AMixCreature;
+
+UENUM(BlueprintType)
+enum class ETargetType : uint8
+{
+	AgainstHero,
+	FindHero,
+	FindBatman,
+};
 
 UCLASS()
 class MYGAME_API AMixHeroControllerFix : public AMixAIController, public IMixControllerInterface
@@ -16,22 +25,31 @@ class MYGAME_API AMixHeroControllerFix : public AMixAIController, public IMixCon
 	GENERATED_BODY()
 	
 public:
-	// Sets default values for this actor's properties
 	AMixHeroControllerFix();
+
+	virtual void OnPossess(APawn* InPawn) override;
 	
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
 public:
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
 public:
 	UFUNCTION(BlueprintCallable)
-	void MoveToAttackTarget();
+	void MoveToAttackTarget(ETargetType Type);
+
+	UFUNCTION(BlueprintCallable)
+	void MoveToClosedBatman();
 
 	virtual void OnTargetPerceptionUpdated(AActor* Actor, struct FAIStimulus Stimulus) override;
 
 	virtual void SetAttacker(AMixCreature* InAttacker) override;
+
+private:
+	struct FTimerHandle BattleTimerHandle;
+
+	AMixHero* Hero;
+
+	AMixHero* FindHero;
 };

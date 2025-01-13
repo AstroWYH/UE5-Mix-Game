@@ -34,9 +34,18 @@ private:
 	UPROPERTY()
 	TArray<AMixBatman*> SpawnedBatmans;
 
+public:
+	UFUNCTION(BlueprintCallable)
+	TArray<AMixBatman*> GetSpawnedBatmans() const
+	{
+		return SpawnedBatmans;
+	}
+
+private:
 	AMixHero* HostHero;
 
 public:
+	UFUNCTION(BlueprintCallable)
 	TArray<AMixHero*> GetSpawnedHeros() const
 	{
 		return SpawnedHeros;

@@ -4,7 +4,7 @@
 #include "MixAttackComponent.h"
 
 #include "MixAssetManager.h"
-#include "MixGameplayTags.h"
+#include "Tag/MixGameplayTags.h"
 #include "Algo/MinElement.h"
 #include "Creature/Ammo/MixTrackRangedAmmo.h"
 #include "Creature/Creature/MixAttribute.h"
@@ -210,7 +210,7 @@ void UMixAttackComponent::OnRangedMontageNofify()
 	{
 		AMixTrackRangedAmmo* Ammo = Cast<AMixTrackRangedAmmo>(SpawnedActor);
 		if (!ensure(Ammo)) return;
-		Ammo->SetShooter(Creature);
+		Ammo->SetAttacker(Creature);
 		Ammo->SetTarget(TargetCreature); // 跟踪导弹，所以需要设Target
 	};
 	AMixTrackRangedAmmo* SpawnedActor = GetWorld()->SpawnActor<AMixTrackRangedAmmo>(AmmoClass, AmmoTransform, AmmoParams);

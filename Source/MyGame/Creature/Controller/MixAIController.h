@@ -29,7 +29,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void Bp_PostBeginPlay();
 
-	UFUNCTION() // 因为是AddDynamic的委托
+	UFUNCTION() // AddDynamic
 	virtual void OnTargetPerceptionUpdated(AActor* Actor, struct FAIStimulus Stimulus);
 
 protected:

@@ -32,7 +32,7 @@ public:
 		return FString();
 	}
 
-	// TODO: FORCEINLINE
+	// TODO: FORCEINLINE 废弃
 	UFUNCTION(BlueprintCallable)
 	static bool IsCommonCamp(const FGameplayTag& TagA, const FGameplayTag& TagB)
 	{

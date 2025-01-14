@@ -89,7 +89,7 @@ void AMixHeroControllerFix::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus
 		FindHero = Cast<AMixHero>(FindCreature);
 		if (FindHero)
 		{
-			if (!UUMixTagHelper::IsCommonCamp(FindHero->GetCreatureType(), Hero->GetCreatureType()))
+			if (!(FindHero->GetCreatureCamp()== Hero->GetCreatureCamp()))
 			{
 				Blackboard->SetValueAsBool(MixGlobalData::BB_bFindEnemyHero, bIsDetectCreature);
 
@@ -99,7 +99,7 @@ void AMixHeroControllerFix::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus
 		}
 		else if (AMixBatman* FindBatman = Cast<AMixBatman>(FindCreature))
 		{
-			if (!UUMixTagHelper::IsCommonCamp(FindBatman->GetCreatureType(), Hero->GetCreatureType()))
+			if (!(FindBatman->GetCreatureCamp()== Hero->GetCreatureCamp()))
 			{
 				Blackboard->SetValueAsBool(MixGlobalData::BB_bFindEnemyBatman, bIsDetectCreature);
 			}

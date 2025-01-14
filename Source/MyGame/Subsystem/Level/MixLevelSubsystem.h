@@ -22,10 +22,12 @@ public:
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 
 private:
-	void GenerateHero();
+	void GenerateHeros();
 
 	// TODO: 在Tick里周期生成
-	void GenerateBatman();
+	void GenerateBatmans();
+	
+	AMixBatman* SpawnBatman(const AActor* SpawnPoint, const FGameplayTag& Type);
 
 	// 通过SpawnedHeros保证不被GC
 	UPROPERTY()

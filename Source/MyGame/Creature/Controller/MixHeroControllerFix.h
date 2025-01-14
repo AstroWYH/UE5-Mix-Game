@@ -11,12 +11,22 @@
 class AMixHero;
 class AMixCreature;
 
-UENUM(BlueprintType)
+UENUM(BlueprintType, Blueprintable)
 enum class ETargetType : uint8
 {
 	AgainstHero,
 	FindHero,
 	FindBatman,
+	Max,
+};
+
+UENUM(BlueprintType, Blueprintable)
+enum class EObserveCreatureType : uint8
+{
+	Hero,
+	Batman,
+	Tower,
+	Max,
 };
 
 UCLASS()

@@ -27,6 +27,9 @@ namespace MixGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Type_Tower_Blue, "Creature.Type.Tower.Blue", "");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Type_Monster, "Creature.Type.Monster", "");
 
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Camp_Blue, "Creature.Camp.Blue", "");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Camp_Red, "Creature.Camp.Red", "");
+	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attack_Ranged, "Attack.Ranged", "");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attack_Melee, "Attack.Melee", "");
 

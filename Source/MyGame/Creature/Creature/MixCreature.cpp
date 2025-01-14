@@ -15,8 +15,10 @@ AMixCreature::AMixCreature() : Super()
 {
 	WidgetComponentFix = CreateDefaultSubobject<UMixWidgetComponent>(TEXT("WidgetComponentFix"));
 	WidgetComponentFix->SetupAttachment(RootComponent);
-
+	
 	AttackComponent = CreateDefaultSubobject<UMixAttackComponent>(TEXT("AttackComponent"));
+
+	GenerateId();
 }
 
 void AMixCreature::BeginPlay()

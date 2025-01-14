@@ -107,4 +107,34 @@ public:
 	{
 		CreatureName = InHeroName;
 	}
+
+protected:
+	FGameplayTag CreatureCamp;
+
+public:
+	FGameplayTag GetCreatureCamp() const
+	{
+		return CreatureCamp;
+	}
+
+	void SetCreatureCamp(const FGameplayTag& InCamp)
+	{
+		CreatureCamp = InCamp;
+	}
+
+protected:
+	uint32 Id;
+
+private:
+	uint32 GenerateId()
+	{
+		static uint32 GlobalId = 0;
+		return ++GlobalId;
+	}
+
+public:
+	uint32 GetId() const
+	{
+		return Id;
+	}
 };

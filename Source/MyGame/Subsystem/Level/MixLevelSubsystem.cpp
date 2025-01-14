@@ -31,9 +31,9 @@ void UMixLevelSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 
 	if (!(InWorld.GetName() == "LOL")) return;
 
-	GenerateHero();
+	GenerateHeros();
 
-	// 所有GameMgr都加上OnHeroSpawned接口
+	// 通知GameMgr->OnHeroSpawned
 	TArray<UMixGameSubsystem*> GameSubsystems = InWorld.GetGameInstance()->GetSubsystemArray<UMixGameSubsystem>();
 	for (UMixGameSubsystem* GameSubsystem : GameSubsystems)
 	{
@@ -41,10 +41,10 @@ void UMixLevelSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 		GameSubsystem->OnHeroSpawned();
 	}
 	
-	GenerateBatman();
+	GenerateBatmans();
 }
 
-void UMixLevelSubsystem::GenerateHero()
+void UMixLevelSubsystem::GenerateHeros()
 {
 	// 生成HeroSelf Ashe
 	{
@@ -59,7 +59,8 @@ void UMixLevelSubsystem::GenerateHero()
 		if (!ensure(Hero)) return;
 		SpawnedHeros.AddUnique(Hero);
 		Hero->SetCreatureName(MixGameplayTags::Creature_Name_Ashe);
-		Hero->SetCreatureType(MixGameplayTags::Creature_Type_Hero_Blue);
+		Hero->SetCreatureType(MixGameplayTags::Creature_Type_Hero);
+		Hero->SetCreatureCamp(MixGameplayTags::Creature_Camp_Blue);
 		UMixAttackComponent::FindAttackComponent(Hero)->SetAttackType(MixGameplayTags::Attack_Ranged);
 
 		// 设置Hero骨骼 设置Hero动画蓝图类
@@ -95,7 +96,8 @@ void UMixLevelSubsystem::GenerateHero()
 		if (!ensure(Hero)) return;
 		SpawnedHeros.AddUnique(Hero);
 		Hero->SetCreatureName(MixGameplayTags::Creature_Name_Lucian);
-		Hero->SetCreatureType(MixGameplayTags::Creature_Type_Hero_Red);
+		Hero->SetCreatureType(MixGameplayTags::Creature_Type_Hero);
+		Hero->SetCreatureCamp(MixGameplayTags::Creature_Camp_Red);
 		UMixAttackComponent::FindAttackComponent(Hero)->SetAttackType(MixGameplayTags::Attack_Ranged);
 
 		// 设置Hero骨骼 设置Hero动画蓝图类
@@ -116,25 +118,40 @@ void UMixLevelSubsystem::GenerateHero()
 	}
 }
 
-void UMixLevelSubsystem::GenerateBatman()
+void UMixLevelSubsystem::GenerateBatmans()
 {
-	// 获取Batman Spawn Point
-	TArray<AActor*> OutActors;
-	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), UMixAssetManager::Get().CreatureModelInfo[MixGameplayTags::Creature_Name_Batman].SpawnPoint, "BatmanSpawnPoint", OutActors);
-	if (!ensure(OutActors.IsValidIndex(0))) return;
+	TArray<AActor*> BlueSpawnPoints;
+	TArray<AActor*> RedSpawnPoints;
 
-	// 生成Batman
+	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), UMixAssetManager::Get().CreatureModelInfo[MixGameplayTags::Creature_Name_Batman].SpawnPoint, MixGlobalData::SpawnPoint_Batman_Blue, BlueSpawnPoints);
+	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), UMixAssetManager::Get().CreatureModelInfo[MixGameplayTags::Creature_Name_Batman].SpawnPoint, MixGlobalData::SpawnPoint_Batman_Red, RedSpawnPoints);
+
+	for (const auto& SpawnPoint : BlueSpawnPoints)
+	{
+		SpawnBatman(SpawnPoint, MixGameplayTags::Creature_Camp_Blue);
+	}
+	
+	for (const auto& SpawnPoint : RedSpawnPoints)
+	{
+		SpawnBatman(SpawnPoint, MixGameplayTags::Creature_Camp_Red);
+	}
+}
+
+AMixBatman* UMixLevelSubsystem::SpawnBatman(const AActor* SpawnPoint, const FGameplayTag& Type)
+{
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	FTransform SpawnTransform = OutActors[0]->GetActorTransform();
+	FTransform SpawnTransform = SpawnPoint->GetActorTransform();
 	AMixBatman* Batman = GetWorld()->SpawnActor<AMixBatman>(UMixAssetManager::Get().CreatureModelInfo[MixGameplayTags::Creature_Name_Batman].Class, SpawnTransform, SpawnParams);
 	SpawnedBatmans.Add(Batman);
 	Batman->SetCreatureName(MixGameplayTags::Creature_Name_Batman);
-	Batman->SetCreatureType(MixGameplayTags::Creature_Type_Batman_Red);
+	Batman->SetCreatureType(MixGameplayTags::Creature_Type_Batman);
+	Batman->SetCreatureCamp(Type);
 	UMixAttackComponent::FindAttackComponent(Batman)->SetAttackType(MixGameplayTags::Attack_Ranged);
 
 	// 设置Batman属性
 	UMixAttribute* Attribute = NewObject<UMixAttribute>();
 	Attribute->Init<FMixAttributeData>(Batman, UMixAssetManager::Get().AttributeData);
 
+	return Batman;
 }

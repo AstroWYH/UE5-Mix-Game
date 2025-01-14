@@ -27,48 +27,12 @@ public:
 
 	virtual void Bp_PostBeginPlay() override;
 
-public:
-	// UFUNCTION(BlueprintCallable, Category = "AMixAIBatmanController")
-	// void TraceTarget();
-	//
-	// UFUNCTION(BlueprintCallable, Category = "AMixAIBatmanController")
-	// void TraceTargetAbort();
-	//
-	// UFUNCTION(BlueprintCallable, Category = "AMixAIBatmanController")
-	// void TracePathPoint();
-	//
-	// UFUNCTION(BlueprintCallable, Category = "AMixAIBatmanController")
-	// void TracePathPointComplete();
-	//
-	// UFUNCTION(BlueprintCallable, Category = "AMixAIBatmanController")
-	// void TracePathPointAbort();
-
-public:
-	// AIPerceptionComponent
-	// UFUNCTION()
-	// void OnTargetPerceptionUpdated(AActor* Actor, struct FAIStimulus Stimulus);
-
-	// 不需要重复添加UFUNCTION()
 	virtual void OnTargetPerceptionUpdated(AActor* Actor, struct FAIStimulus Stimulus) override;
 	
-public:
-	// // AI Controller
-	// void OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) override;
-	//
-	// DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMixOnMovementAbort);
-	// UPROPERTY(BlueprintAssignable)
-	// FMixOnMovementAbort OnMovementAbort;
-
-public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TArray<FVector> PathPointsPos;
-
-	// const TCHAR* BehaviorTreePath{ TEXT("/Script/AIModule.BehaviorTree'/Game/MixGame/Character/EnemyBatman/AI/BatmanBt.BatmanBt'") };
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AMixAIBatmanController")
-	// TObjectPtr<UBehaviorTree> BehaviorTree;
-
-	// class UAIPerceptionComponent* BatmanAIPerceptionComponent = nullptr;
 
 private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TArray<FVector> PathPointsPos;
+
 	AMixBatman* Batman;
 };

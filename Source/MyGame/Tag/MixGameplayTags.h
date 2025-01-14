@@ -25,6 +25,9 @@ namespace MixGameplayTags
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Type_Tower_Blue);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Type_Monster);
 
+	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Camp_Blue);
+	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Camp_Red);
+
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attack_Ranged);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attack_Melee);
 
@@ -37,7 +40,6 @@ namespace MixGameplayTags
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Name_Ashe);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Name_Lucian);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Name_Batman);
-	
 }
 
 namespace MixGlobalData
@@ -48,9 +50,14 @@ namespace MixGlobalData
 	const FName BB_bHealthGreater = TEXT("bHealthGreater");
 	const FName BB_bUnderAttack = TEXT("bUnderAttack");
 	const FName BB_bHealthSafe = TEXT("bHealthSafe");
+	const FName BB_bFindEnemyCreature = TEXT("bFindEnemyCreature");
+	const FName BB_ObserveCreatureType = TEXT("ObserveCreatureType");
 	const FName BB_TargetCreature = TEXT("TargetCreature");
-	
+
 	constexpr float BattleTime = 3.0f;
 	constexpr float MoveDiff = 120.0f;
 	constexpr float HealthSafePercent = 0.2f;
+
+	const FName SpawnPoint_Batman_Blue = TEXT("SpawnPoint_Batman_Blue");
+	const FName SpawnPoint_Batman_Red = TEXT("SpawnPoint_Batman_Red");
 }

@@ -24,8 +24,6 @@ public:
 
 	virtual void ApplyHealth(AMixCreature* Attacker, int32 Val) override;
 
-	void CheckHealth(AMixHeroControllerFix* HeroController) const;
-	
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	int32 Magic;

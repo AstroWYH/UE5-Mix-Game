@@ -10,24 +10,16 @@
 
 class AMixHero;
 class AMixCreature;
+struct FTimerHandle;
 
-UENUM(BlueprintType, Blueprintable)
-enum class ETargetType : uint8
-{
-	AgainstHero,
-	FindHero,
-	FindBatman,
-	Max,
-};
-
-UENUM(BlueprintType, Blueprintable)
-enum class EObserveCreatureType : uint8
-{
-	Hero,
-	Batman,
-	Tower,
-	Max,
-};
+// UENUM(BlueprintType, Blueprintable)
+// enum class ETargetType : uint8
+// {
+// 	AgainstHero,
+// 	FindHero,
+// 	FindBatman,
+// 	Max,
+// };
 
 UCLASS()
 class MYGAME_API AMixHeroControllerFix : public AMixAIController, public IMixControllerInterface
@@ -47,7 +39,7 @@ public:
 	
 public:
 	UFUNCTION(BlueprintCallable)
-	void MoveToAttackTarget(ETargetType Type);
+	void MoveToAttackTarget();
 
 	UFUNCTION(BlueprintCallable)
 	void MoveToClosedBatman();
@@ -57,9 +49,12 @@ public:
 	virtual void SetAttacker(AMixCreature* InAttacker) override;
 
 private:
-	struct FTimerHandle BattleTimerHandle;
-
 	AMixHero* Hero;
 
-	AMixHero* FindHero;
+	TMap<uint32, AMixCreature*> CreaturesInSight;
+	
+	AMixCreature* TargetCreature;
+
+	AMixCreature* GetClosestTarget();
 };
+

@@ -45,7 +45,7 @@ TWeakObjectPtr<AMixBatman> UMixHeroAttackComponent::SelectClosestTarget()
 		}
 	);
 
-	if (!ensure(ClosestBatman)) return nullptr;
+	if (!(ClosestBatman)) return nullptr;
 	return *ClosestBatman;
 }
 

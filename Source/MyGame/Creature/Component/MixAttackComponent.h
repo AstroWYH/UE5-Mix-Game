@@ -8,9 +8,10 @@
 #include "Creature/Creature/MixCreature.h"
 #include "MixAttackComponent.generated.h"
 
-
+class AMixAIController;
 class AMixTrackRangedAmmo;
 class AMixCreature;
+struct FAIStimulus;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class MYGAME_API UMixAttackComponent : public UActorComponent
@@ -104,4 +105,13 @@ public:
 	{
 		this->Creature = InCreature;
 	}
+
+private:
+	AMixAIController* AIController;
+	
+public:
+	void OnAIControllerPostBeginPlay();
+
+	UFUNCTION()
+	void OnTargetInSightUpdate(AActor* Actor, FAIStimulus Stimulus);
 };

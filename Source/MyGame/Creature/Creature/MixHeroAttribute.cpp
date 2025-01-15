@@ -17,10 +17,3 @@ void UMixHeroAttribute::ApplyHealth(AMixCreature* Attacker, int32 Val)
 	// TODO: 暂时只处理AIHero受到Hero伤害
 	HeroController->SetAttacker(Attacker);
 }
-
-void UMixHeroAttribute::CheckHealth(AMixHeroControllerFix* HeroController) const
-{
-	// TODO: 配表
-	bool bHealthSafe = (static_cast<float>(Health) / MaxHealth) > MixGlobalData::HealthSafePercent;
-	HeroController->GetBlackboardComponent()->SetValueAsBool(MixGlobalData::BB_bHealthSafe, bHealthSafe);
-}

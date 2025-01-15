@@ -33,7 +33,7 @@ public:
 	virtual void OnTargetPerceptionUpdated(AActor* Actor, struct FAIStimulus Stimulus);
 
 protected:
-	AMixCreature* Attacker;
+	AMixCreature* Attacker = nullptr;
 	
 public:
 	AMixCreature* GetAttacker() const
@@ -45,5 +45,12 @@ public:
 	{
 		this->Attacker = InAttacker;
 	}
+
+protected:
+	FTimerHandle BattleTimerHandle;
+
+public:
+	DECLARE_MULTICAST_DELEGATE(FMixOnAIControllerPostBeginPlay);
+	FMixOnAIControllerPostBeginPlay OnAIControllerPostBeginPlay;
 
 };

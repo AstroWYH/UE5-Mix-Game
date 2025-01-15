@@ -45,13 +45,8 @@ namespace MixGameplayTags
 namespace MixGlobalData
 {
 	// BB
-	const FName BB_bFindEnemyHero = TEXT("bFindEnemyHero");
-	const FName BB_bFindEnemyBatman = TEXT("bFindEnemyBatman");
-	const FName BB_bHealthGreater = TEXT("bHealthGreater");
 	const FName BB_bUnderAttack = TEXT("bUnderAttack");
 	const FName BB_bHealthSafe = TEXT("bHealthSafe");
-	const FName BB_bFindEnemyCreature = TEXT("bFindEnemyCreature");
-	const FName BB_ObserveCreatureType = TEXT("ObserveCreatureType");
 	const FName BB_TargetCreature = TEXT("TargetCreature");
 
 	constexpr float BattleTime = 3.0f;
@@ -60,4 +55,7 @@ namespace MixGlobalData
 
 	const FName SpawnPoint_Batman_Blue = TEXT("SpawnPoint_Batman_Blue");
 	const FName SpawnPoint_Batman_Red = TEXT("SpawnPoint_Batman_Red");
+
+	constexpr float CapsuleDetectionHalfHeight = 1000.0f;
+	constexpr float BatmanPerceptionRadius = 500.0f;
 }

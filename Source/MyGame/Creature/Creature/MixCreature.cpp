@@ -17,13 +17,13 @@ AMixCreature::AMixCreature() : Super()
 	WidgetComponentFix->SetupAttachment(RootComponent);
 	
 	AttackComponent = CreateDefaultSubobject<UMixAttackComponent>(TEXT("AttackComponent"));
-
-	GenerateId();
 }
 
 void AMixCreature::BeginPlay()
 {
 	Super::BeginPlay();
+
+	Id = GenerateId();
 }
 
 void AMixCreature::Tick(float DeltaSeconds)

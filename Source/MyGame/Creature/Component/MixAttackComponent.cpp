@@ -7,9 +7,11 @@
 #include "Tag/MixGameplayTags.h"
 #include "Algo/MinElement.h"
 #include "Creature/Ammo/MixTrackRangedAmmo.h"
+#include "Creature/Controller/MixAIController.h"
 #include "Creature/Creature/MixAttribute.h"
 #include "Creature/Creature/Hero/MixHero.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Perception/AIPerceptionComponent.h"
 
 UMixAttackComponent::UMixAttackComponent()
 {
@@ -21,6 +23,21 @@ void UMixAttackComponent::BeginPlay()
 	Super::BeginPlay();
 
 	Creature = Cast<AMixCreature>(GetOwner());
+	if (!Creature->IsIsHost())
+	{
+		AIController = Cast<AMixAIController>(Creature->GetController());
+		AIController->OnAIControllerPostBeginPlay.AddUObject(this, &ThisClass::OnAIControllerPostBeginPlay);
+	}
+}
+
+void UMixAttackComponent::OnAIControllerPostBeginPlay()
+{
+	AIController->GetPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &ThisClass::OnTargetInSightUpdate);
+}
+
+void UMixAttackComponent::OnTargetInSightUpdate(AActor* Actor, FAIStimulus Stimulus)
+{
+	// TODO:
 }
 
 void UMixAttackComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -59,6 +76,7 @@ void UMixAttackComponent::PrepareAttack(const FVector& Pos)
 	}
 }
 
+// Batman, Hero
 void UMixAttackComponent::PrepareAttack(AMixCreature* Target)
 {
 	Creature->GetController()->StopMovement();
@@ -75,12 +93,10 @@ AMixCreature* UMixAttackComponent::SelectTarget(const FVector& Pos)
 	FVector StartPos = HeroSelf->GetActorLocation();
 	FVector EndPos = HeroSelf->GetActorLocation();
 
-	// TODO: 1000.0f 该值不变
 	TArray<AActor*> ActorsToIgnore;
 	TArray<FHitResult> OutHits;
-	// TODO: 表示Hero和Enemy通过，Enemy需要改
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes{UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel1), UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel3)};
-	UKismetSystemLibrary::CapsuleTraceMultiForObjects(GetWorld(), StartPos, EndPos, HeroSelf->GetAttribute()->AttackRange, 1000.0f, ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::None, OutHits, true);
+	UKismetSystemLibrary::CapsuleTraceMultiForObjects(GetWorld(), StartPos, EndPos, HeroSelf->GetAttribute()->AttackRange, MixGlobalData::CapsuleDetectionHalfHeight, ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::None, OutHits, true);
 
 	for (const FHitResult& Hit : OutHits)
 	{
@@ -90,7 +106,7 @@ AMixCreature* UMixAttackComponent::SelectTarget(const FVector& Pos)
 		AMixCreature* HitCreature = Cast<AMixCreature>(HitActor);
 		if (!ensure(HitCreature)) continue;
 
-		// 排除自己
+		// 排除自己；应该不需要，上面已经IgnoreSelf
 		if (HitCreature->GetCreatureName() == Creature->GetCreatureName()) continue;
 
 		CreaturesInRange.Add(HitCreature);
@@ -108,7 +124,7 @@ AMixCreature* UMixAttackComponent::SelectClosestTarget(const FVector& Pos)
 		return FVector::Distance(Pos, Creature->GetActorLocation());
 	});
 
-	if (!ensure(ClosestCreature)) return nullptr;
+	if (!(ClosestCreature)) return nullptr;
 	return *ClosestCreature;
 }
 
@@ -216,3 +232,4 @@ void UMixAttackComponent::OnRangedMontageNofify()
 	AMixTrackRangedAmmo* SpawnedActor = GetWorld()->SpawnActor<AMixTrackRangedAmmo>(AmmoClass, AmmoTransform, AmmoParams);
 
 }
+

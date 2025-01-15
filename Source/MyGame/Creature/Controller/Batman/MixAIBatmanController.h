@@ -28,11 +28,23 @@ public:
 	virtual void Bp_PostBeginPlay() override;
 
 	virtual void OnTargetPerceptionUpdated(AActor* Actor, struct FAIStimulus Stimulus) override;
-	
+
+public:
+	UFUNCTION(BlueprintCallable)
+	bool CheckNearbyHeros();
+
+	// TODO: 考虑放到父类
+	UFUNCTION(BlueprintCallable)
+	void MoveToAttackTarget();
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TArray<FVector> PathPointsPos;
 
 	AMixBatman* Batman;
+
+	// TODO: 考虑放到父类
+	AMixCreature* TargetCreature;
+
+	TMap<uint32, AMixCreature*> CreaturesInSight;
 };

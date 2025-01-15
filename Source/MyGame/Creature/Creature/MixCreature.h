@@ -95,6 +95,7 @@ public:
 	}
 
 protected:
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	FGameplayTag CreatureName;
 
 public:
@@ -136,5 +137,19 @@ public:
 	uint32 GetId() const
 	{
 		return Id;
+	}
+
+protected:
+	bool bIsHost = false;
+
+public:
+	bool IsIsHost() const
+	{
+		return bIsHost;
+	}
+
+	void SetIsHost(bool bInIsHost)
+	{
+		this->bIsHost = bInIsHost;
 	}
 };

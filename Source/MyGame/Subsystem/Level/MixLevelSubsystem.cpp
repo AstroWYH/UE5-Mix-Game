@@ -80,6 +80,7 @@ void UMixLevelSubsystem::GenerateHeros()
 		GameMode->SwapPlayerControllers(GetWorld()->GetFirstPlayerController(), HeroController);
 		// GameMode->GenericPlayerInitialization(HostHeroController);
 		HeroController->Possess(Hero);
+		Hero->SetIsHost(true);
 		HostHero = Hero;
 	}
 
@@ -114,7 +115,6 @@ void UMixLevelSubsystem::GenerateHeros()
 		AMixHeroControllerFix* HeroController = GetWorld()->SpawnActor<AMixHeroControllerFix>(UMixAssetManager::Get().HeroModelInfo[MixGameplayTags::Creature_Name_Lucian].HeroController, SpawnTransform);
 		if (!ensure(HeroController)) return;
 		HeroController->Possess(Hero);
-		HostHero = Hero;
 	}
 }
 

@@ -44,12 +44,17 @@ namespace MixGameplayTags
 
 namespace MixGlobalData
 {
-	// BB
-	const FName BB_bUnderAttack = TEXT("bUnderAttack");
-	const FName BB_bHealthSafe = TEXT("bHealthSafe");
+	// BB Hero & Batman
 	const FName BB_TargetCreature = TEXT("TargetCreature");
 
-	constexpr float BattleTime = 3.0f;
+	// BB Hero
+	const FName BB_bUnderAttack = TEXT("bUnderAttack");
+	const FName BB_bHealthSafe = TEXT("bHealthSafe");
+
+	// BB Batman
+	const FName BB_bFriendHeroUnderAttack = TEXT("bFriendHeroUnderAttack");
+
+	constexpr float UnderAttackTime = 3.0f;
 	constexpr float MoveDiff = 120.0f;
 	constexpr float HealthSafePercent = 0.2f;
 

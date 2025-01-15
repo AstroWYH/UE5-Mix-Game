@@ -23,22 +23,22 @@ void UMixAttackComponent::BeginPlay()
 	Super::BeginPlay();
 
 	Creature = Cast<AMixCreature>(GetOwner());
-	if (!Creature->IsIsHost())
-	{
-		AIController = Cast<AMixAIController>(Creature->GetController());
-		AIController->OnAIControllerPostBeginPlay.AddUObject(this, &ThisClass::OnAIControllerPostBeginPlay);
-	}
+	// if (!Creature->IsIsHost())
+	// {
+	// 	AIController = Cast<AMixAIController>(Creature->GetController());
+	// 	AIController->OnAIControllerPostBeginPlay.AddUObject(this, &ThisClass::OnAIControllerPostBeginPlay);
+	// }
 }
 
-void UMixAttackComponent::OnAIControllerPostBeginPlay()
-{
-	AIController->GetPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &ThisClass::OnTargetInSightUpdate);
-}
-
-void UMixAttackComponent::OnTargetInSightUpdate(AActor* Actor, FAIStimulus Stimulus)
-{
-	// TODO:
-}
+// void UMixAttackComponent::OnAIControllerPostBeginPlay()
+// {
+// 	AIController->GetPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &ThisClass::OnTargetInSightUpdate);
+// }
+//
+// void UMixAttackComponent::OnTargetInSightUpdate(AActor* Actor, FAIStimulus Stimulus)
+// {
+// 	// TODO:
+// }
 
 void UMixAttackComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {

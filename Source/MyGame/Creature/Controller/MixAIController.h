@@ -41,16 +41,12 @@ public:
 		return Attacker;
 	}
 
-	virtual void SetAttacker(AMixCreature* InAttacker)
+	virtual void UnderHeroAttack(AMixCreature* InAttacker)
 	{
 		this->Attacker = InAttacker;
 	}
 
 protected:
-	FTimerHandle BattleTimerHandle;
-
-public:
-	DECLARE_MULTICAST_DELEGATE(FMixOnAIControllerPostBeginPlay);
-	FMixOnAIControllerPostBeginPlay OnAIControllerPostBeginPlay;
-
+	FTimerHandle UnderAttackTimerHandle;
+	
 };

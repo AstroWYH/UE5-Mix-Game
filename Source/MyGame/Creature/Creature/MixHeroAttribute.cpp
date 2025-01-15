@@ -15,5 +15,5 @@ void UMixHeroAttribute::ApplyHealth(AMixCreature* Attacker, int32 Val)
 	if (!Cast<AMixHero>(Attacker)) return;
 
 	// TODO: 暂时只处理AIHero受到Hero伤害
-	HeroController->SetAttacker(Attacker);
+	HeroController->UnderHeroAttack(Attacker);
 }

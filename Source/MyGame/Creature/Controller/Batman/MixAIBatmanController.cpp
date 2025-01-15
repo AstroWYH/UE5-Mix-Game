@@ -4,6 +4,7 @@
 #include "MixAIBatmanController.h"
 
 #include "MixAssetManager.h"
+#include "Algo/MinElement.h"
 #include "Tag/MixGameplayTags.h"
 #include "Kismet\GameplayStatics.h"
 #include "BehaviorTree\BehaviorTree.h"
@@ -21,6 +22,13 @@ void AMixAIBatmanController::BeginPlay()
 	Super::BeginPlay();
 
 	Batman = Cast<AMixBatman>(GetPawn());
+
+	// TArray<AActor*> OutActors;
+	// UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMixHeroControllerFix::StaticClass(), OutActors);
+	// for (AActor* Actor : OutActors)
+	// {
+	// 	AMixHeroControllerFix* HeroController = Cast<AMixHeroControllerFix>(Actor);
+	// }
 }
 
 void AMixAIBatmanController::BeginDestroy()
@@ -58,7 +66,7 @@ void AMixAIBatmanController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulu
 			bool bIsDetectCreature = Stimulus.WasSuccessfullySensed();
 			GEngine->AddOnScreenDebugMessage(-1, 100.0f, FColor::Cyan, FString::Printf(TEXT("%d %s"), bIsDetectCreature, *Actor->GetName()));
 
-			// 动态维护TargetCreatures
+			// 动态维护CreaturesInSight
 			if (bIsDetectCreature)
 			{
 				CreaturesInSight.Add(FindCreature->GetId(), FindCreature);
@@ -67,61 +75,72 @@ void AMixAIBatmanController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulu
 			{
 				CreaturesInSight.Remove(FindCreature->GetId());
 			}
-			// Blackboard->SetValueAsObject(MixGlobalData::BB_TargetCreature, FindCreature);
+			
+			// 优先目标为Attacker
+			if (Attacker)
+			{
+				TargetCreature = Attacker;
+			}
+			// TargetCreature为空，则选择视野里最近的人
+			else if (!TargetCreature)
+			{
+				TargetCreature = GetClosestTarget();
+			}
+			// TargetCreature不为空，视野里没有TargetCreature，则更新追踪单位
+			else if (TargetCreature && !CreaturesInSight.Contains(TargetCreature->GetId()))
+			{
+				TargetCreature = GetClosestTarget();
+			}
+			else
+			{
+				// TargetCreature不为空，视野里有TargetCreature，则保持追踪
+			}
+			Blackboard->SetValueAsObject(MixGlobalData::BB_TargetCreature, TargetCreature);
 		}
 	}
 }
 
-// TODO: Decorator里，如果执行该装饰器，则该函数每帧调用
-bool AMixAIBatmanController::CheckNearbyHeros()
-{
-	// TArray<FHitResult> OutHits;
-	// TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes{UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel3)};
-	// UKismetSystemLibrary::CapsuleTraceMultiForObjects(GetWorld(), Batman->GetActorLocation(), Batman->GetActorLocation(), MixGlobalData::BatmanPerceptionRadius, MixGlobalData::CapsuleDetectionHalfHeight, ObjectTypes, false, TArray<AActor*>(), EDrawDebugTrace::None, OutHits, true);
-	//
-	// for (const FHitResult& Hit : OutHits)
-	// {
-	// 	AActor* HitActor = Hit.GetActor();
-	// 	if (!ensure(HitActor)) continue;
-	// 	AMixHero* HitHero = Cast<AMixHero>(HitActor);
-	// 	if (!ensure(HitHero)) continue;
-	// 	// 处理敌方阵营
-	// 	if (HitHero->GetCreatureCamp() != Batman->GetCreatureCamp()) continue;
-	//
-	// 	UBlackboardComponent* HeroBB = Cast<AMixHeroControllerFix>(HitHero->GetController())->GetBlackboardComponent();
-	// 	bool bHeroUnderAttack = HeroBB->GetValueAsBool(MixGlobalData::BB_bUnderAttack);
-	// 	if (bHeroUnderAttack)
-	// 	{
-	// 		TargetCreature = HitHero;
-	// 		Blackboard->SetValueAsObject(MixGlobalData::BB_TargetCreature, TargetCreature);
-	//
-	// 		// 如果未受到攻击，则3s后脱战
-	// 		if (BattleTimerHandle.IsValid())
-	// 		{
-	// 			GetWorld()->GetTimerManager().ClearTimer(BattleTimerHandle);
-	// 		}
-	//
-	// 		GetWorld()->GetTimerManager().SetTimer(BattleTimerHandle, [this]()
-	// 		{
-	// 			Blackboard->SetValueAsBool(MixGlobalData::BB_bUnderAttack, false);
-	// 			Attacker = nullptr;
-	// 			TargetCreature = GetClosestTarget();
-	// 			Blackboard->SetValueAsObject(MixGlobalData::BB_TargetCreature, TargetCreature);
-	//
-	// 			BattleTimerHandle.Invalidate();
-	// 		}, MixGlobalData::BattleTime, false);
-	// 		return true;
-	// 	}
-	// }
-	//
-	return false;
-}
-
 void AMixAIBatmanController::MoveToAttackTarget()
 {
-	// TODO: 暂时用move代替，暂定一个距离
+	// TODO: 暂时用move代替，暂定一个距离; 考虑调用到AttackComponent
 	SetFocus(TargetCreature);
 	MoveToActor(TargetCreature, MixGlobalData::MoveDiff);
+}
+
+AMixCreature* AMixAIBatmanController::GetClosestTarget() const
+{
+	FVector SelfLocation = Batman->GetActorLocation();
+	TArray<AMixCreature*> CreaturesArray;
+	CreaturesInSight.GenerateValueArray(CreaturesArray);
+	AMixCreature** ClosestCreature = Algo::MinElementBy(CreaturesArray, [SelfLocation, this](const AMixCreature* InCreature)
+	{
+		return FVector::Distance(SelfLocation, InCreature->GetActorLocation());
+	});
+	if (!(ClosestCreature)) return nullptr;
+	
+	return *ClosestCreature;
+}
+
+void AMixAIBatmanController::FriendHeroUnderAttack(AMixCreature* EnemyHero, AMixCreature* FriendHero)
+{
+	Blackboard->SetValueAsBool(MixGlobalData::BB_bFriendHeroUnderAttack, true);
+	TargetCreature = EnemyHero;
+	Blackboard->SetValueAsObject(MixGlobalData::BB_TargetCreature, TargetCreature);
+
+	// 如果友方Hero未受到Hero攻击，则3s后脱战
+	if (UnderAttackTimerHandle.IsValid())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(UnderAttackTimerHandle);
+	}
+
+	GetWorld()->GetTimerManager().SetTimer(UnderAttackTimerHandle, [this]()
+	{
+		Blackboard->SetValueAsBool(MixGlobalData::BB_bFriendHeroUnderAttack, false);
+		TargetCreature = GetClosestTarget();
+		Blackboard->SetValueAsObject(MixGlobalData::BB_TargetCreature, TargetCreature);
+
+		UnderAttackTimerHandle.Invalidate();
+	}, MixGlobalData::UnderAttackTime, false);
 }
 
 void AMixAIBatmanController::OnPossess(APawn* InPawn)

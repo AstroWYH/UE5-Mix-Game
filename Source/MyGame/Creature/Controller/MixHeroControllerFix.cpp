@@ -4,12 +4,14 @@
 #include "MixHeroControllerFix.h"
 
 #include "Algo/MinElement.h"
+#include "Batman/MixAIBatmanController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Creature/Creature/MixAttribute.h"
 #include "Creature/Creature/MixCreature.h"
 #include "Creature/Creature/MixHeroAttribute.h"
 #include "Creature/Creature/Batman/MixBatman.h"
 #include "Creature/Creature/Hero/MixHero.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "Level/MixLevelSubsystem.h"
 #include "Perception/AIPerceptionTypes.h"
 
@@ -71,7 +73,7 @@ void AMixHeroControllerFix::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus
 			bool bIsDetectCreature = Stimulus.WasSuccessfullySensed();
 			GEngine->AddOnScreenDebugMessage(-1, 100.0f, FColor::Yellow, FString::Printf(TEXT("%d %s"), bIsDetectCreature, *Actor->GetName()));
 			
-			// 动态维护TargetCreatures
+			// 动态维护CreaturesInSight
 			if (bIsDetectCreature)
 			{
 				CreaturesInSight.Add(FindCreature->GetId(), FindCreature);
@@ -105,7 +107,7 @@ void AMixHeroControllerFix::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus
 	}
 }
 
-AMixCreature* AMixHeroControllerFix::GetClosestTarget()
+AMixCreature* AMixHeroControllerFix::GetClosestTarget() const
 {
 	FVector SelfLocation = Hero->GetActorLocation();
 	TArray<AMixCreature*> CreaturesArray;
@@ -119,28 +121,49 @@ AMixCreature* AMixHeroControllerFix::GetClosestTarget()
 	return *ClosestCreature;
 }
 
-void AMixHeroControllerFix::SetAttacker(AMixCreature* InAttacker)
+void AMixHeroControllerFix::UnderHeroAttack(AMixCreature* InAttacker)
 {
-	Super::SetAttacker(InAttacker);
+	Super::UnderHeroAttack(InAttacker);
 
-	uint32 AttackerId = InAttacker->GetId();
 	Blackboard->SetValueAsBool(MixGlobalData::BB_bUnderAttack, true);
-	TargetCreature = InAttacker;
+	TargetCreature = Attacker;
 	Blackboard->SetValueAsObject(MixGlobalData::BB_TargetCreature, TargetCreature);
 
-	// 如果未受到攻击，则3s后脱战
-	if (BattleTimerHandle.IsValid())
+	// 通知附近友方Batman, Tower
+	NotifyNearbyFriendBatman();
+
+	// 如果未受到Hero攻击，则3s后脱战
+	if (UnderAttackTimerHandle.IsValid())
 	{
-		GetWorld()->GetTimerManager().ClearTimer(BattleTimerHandle);
+		GetWorld()->GetTimerManager().ClearTimer(UnderAttackTimerHandle);
 	}
 
-	GetWorld()->GetTimerManager().SetTimer(BattleTimerHandle, [this]()
+	GetWorld()->GetTimerManager().SetTimer(UnderAttackTimerHandle, [this]()
 	{
 		Blackboard->SetValueAsBool(MixGlobalData::BB_bUnderAttack, false);
 		Attacker = nullptr;
 		TargetCreature = GetClosestTarget();
 		Blackboard->SetValueAsObject(MixGlobalData::BB_TargetCreature, TargetCreature);
 
-		BattleTimerHandle.Invalidate();
-	}, MixGlobalData::BattleTime, false);
+		UnderAttackTimerHandle.Invalidate();
+	}, MixGlobalData::UnderAttackTime, false);
+}
+
+void AMixHeroControllerFix::NotifyNearbyFriendBatman() const
+{
+	// 通知己方阵营Batman & Tower，Hero受到攻击
+	TArray<FHitResult> OutHits;
+	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes{UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel1)};
+	UKismetSystemLibrary::CapsuleTraceMultiForObjects(GetWorld(), Hero->GetActorLocation(), Hero->GetActorLocation(), MixGlobalData::BatmanPerceptionRadius, MixGlobalData::CapsuleDetectionHalfHeight, ObjectTypes, false, TArray<AActor*>(), EDrawDebugTrace::None, OutHits, true);
+	for (const FHitResult& Hit : OutHits)
+	{
+		AActor* HitActor = Hit.GetActor();
+		if (!ensure(HitActor)) continue;
+		AMixBatman* HitBatman = Cast<AMixBatman>(HitActor);
+		if (!ensure(HitBatman)) continue;
+		// 仅通知友方阵营
+		if (HitBatman->GetCreatureCamp() != Hero->GetCreatureCamp()) continue;
+		AMixAIBatmanController* BatmanController = Cast<AMixAIBatmanController>(HitBatman->GetController());
+		BatmanController->FriendHeroUnderAttack(Attacker, Hero);
+	}
 }

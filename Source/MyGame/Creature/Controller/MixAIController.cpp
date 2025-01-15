@@ -27,7 +27,7 @@ void AMixAIController::Tick(float DeltaTime)
 void AMixAIController::Bp_PostBeginPlay()
 {
 	PerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &ThisClass::OnTargetPerceptionUpdated);
-	OnAIControllerPostBeginPlay.Broadcast();
+	// OnAIControllerPostBeginPlay.Broadcast();
 }
 
 void AMixAIController::OnTargetPerceptionUpdated(AActor* Actor, struct FAIStimulus Stimulus)

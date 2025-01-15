@@ -106,12 +106,12 @@ public:
 		this->Creature = InCreature;
 	}
 
-private:
-	AMixAIController* AIController;
+// private:
+// 	AMixAIController* AIController;
 	
-public:
-	void OnAIControllerPostBeginPlay();
-
-	UFUNCTION()
-	void OnTargetInSightUpdate(AActor* Actor, FAIStimulus Stimulus);
+// public:
+// 	void OnAIControllerPostBeginPlay();
+//
+// 	UFUNCTION()
+// 	void OnTargetInSightUpdate(AActor* Actor, FAIStimulus Stimulus);
 };

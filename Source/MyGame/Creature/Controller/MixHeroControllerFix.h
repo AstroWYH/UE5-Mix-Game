@@ -6,6 +6,7 @@
 #include "AIController.h"
 #include "MixAIController.h"
 #include "MixControllerInterface.h"
+#include "Creature/Creature/MixCreature.h"
 #include "MixHeroControllerFix.generated.h"
 
 class AMixHero;
@@ -25,18 +26,18 @@ UCLASS()
 class MYGAME_API AMixHeroControllerFix : public AMixAIController, public IMixControllerInterface
 {
 	GENERATED_BODY()
-	
+
 public:
 	AMixHeroControllerFix();
 
 	virtual void OnPossess(APawn* InPawn) override;
-	
+
 protected:
 	virtual void BeginPlay() override;
-	
+
 public:
 	virtual void Tick(float DeltaTime) override;
-	
+
 public:
 	UFUNCTION(BlueprintCallable)
 	void MoveToAttackTarget();
@@ -46,15 +47,20 @@ public:
 
 	virtual void OnTargetPerceptionUpdated(AActor* Actor, struct FAIStimulus Stimulus) override;
 
-	virtual void SetAttacker(AMixCreature* InAttacker) override;
+	virtual void UnderHeroAttack(AMixCreature* InAttacker) override;
 
 private:
 	AMixHero* Hero;
 
 	TMap<uint32, AMixCreature*> CreaturesInSight;
-	
+
 	AMixCreature* TargetCreature;
 
-	AMixCreature* GetClosestTarget();
-};
+	AMixCreature* GetClosestTarget() const;
 
+	void NotifyNearbyFriendBatman() const;
+
+// public:
+// 	DECLARE_MULTICAST_DELEGATE_TwoParams(FMixOnUnderHeroAttack, AMixCreature* Attacker, AMixCreature* Victim);
+// 	FMixOnUnderHeroAttack OnAIControllerPostBeginPlay;
+};

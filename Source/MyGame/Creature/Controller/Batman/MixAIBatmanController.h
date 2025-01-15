@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "AIController.h"
 #include "Creature/Controller/MixAIController.h"
+#include "Creature/Creature/MixCreature.h"
 #include "MixAIBatmanController.generated.h"
 
 class AMixBatman;
@@ -30,9 +31,6 @@ public:
 	virtual void OnTargetPerceptionUpdated(AActor* Actor, struct FAIStimulus Stimulus) override;
 
 public:
-	UFUNCTION(BlueprintCallable)
-	bool CheckNearbyHeros();
-
 	// TODO: 考虑放到父类
 	UFUNCTION(BlueprintCallable)
 	void MoveToAttackTarget();
@@ -41,10 +39,18 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TArray<FVector> PathPointsPos;
 
+	// TODO: 考虑放到父类, Creature
 	AMixBatman* Batman;
 
 	// TODO: 考虑放到父类
 	AMixCreature* TargetCreature;
 
+	// TODO: 考虑放到父类
 	TMap<uint32, AMixCreature*> CreaturesInSight;
+
+	// TODO: 考虑放到父类
+	AMixCreature* GetClosestTarget() const;
+
+public:
+	void FriendHeroUnderAttack(AMixCreature* EnemyHero, AMixCreature* FriendHero);
 };

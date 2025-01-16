@@ -14,27 +14,39 @@ class MYGAME_API AMixAIController : public AAIController
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
 	AMixAIController();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	virtual void OnPossess(APawn* InPawn) override;
 
 public:
 	UFUNCTION(BlueprintCallable)
-	virtual void Bp_PostBeginPlay();
+	virtual void BP_PostBeginPlay();
 
 	UFUNCTION() // AddDynamic
 	virtual void OnTargetPerceptionUpdated(AActor* Actor, struct FAIStimulus Stimulus);
+	
+	AMixCreature* GetClosestTarget() const;
+
+	UFUNCTION(BlueprintCallable)
+	void MoveToTarget();
+
+	UFUNCTION(BlueprintCallable)
+	bool IsTargetInRange();
+
+	UFUNCTION(BlueprintCallable)
+	void AttackTarget();
+	
+	void OnDelayFinished();
 
 protected:
 	AMixCreature* Attacker = nullptr;
-	
+
 public:
 	AMixCreature* GetAttacker() const
 	{
@@ -48,5 +60,10 @@ public:
 
 protected:
 	FTimerHandle UnderAttackTimerHandle;
-	
+
+	AMixCreature* Creature;
+
+	AMixCreature* TargetCreature;
+
+	TMap<uint32, AMixCreature*> CreaturesInSight;
 };

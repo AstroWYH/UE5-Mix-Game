@@ -40,9 +40,6 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void MoveToAttackTarget();
-
-	UFUNCTION(BlueprintCallable)
 	void MoveToClosedBatman();
 
 	virtual void OnTargetPerceptionUpdated(AActor* Actor, struct FAIStimulus Stimulus) override;
@@ -50,17 +47,6 @@ public:
 	virtual void UnderHeroAttack(AMixCreature* InAttacker) override;
 
 private:
-	AMixHero* Hero;
-
-	TMap<uint32, AMixCreature*> CreaturesInSight;
-
-	AMixCreature* TargetCreature;
-
-	AMixCreature* GetClosestTarget() const;
-
 	void NotifyNearbyFriendBatman() const;
 
-// public:
-// 	DECLARE_MULTICAST_DELEGATE_TwoParams(FMixOnUnderHeroAttack, AMixCreature* Attacker, AMixCreature* Victim);
-// 	FMixOnUnderHeroAttack OnAIControllerPostBeginPlay;
 };

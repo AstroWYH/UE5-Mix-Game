@@ -50,4 +50,27 @@ public:
 
 		return false;
 	}
+
+	// eg: PathPoint_1->1 废弃
+	UFUNCTION(BlueprintCallable)
+	static int32 ExtractNumberFromFName(const FName& Name)
+	{
+		FString NameString = Name.ToString();
+		int32 UnderscoreIndex;
+		
+		if (NameString.FindLastChar(TEXT('_'), UnderscoreIndex))
+		{
+			FString NumberString = NameString.RightChop(UnderscoreIndex + 1);
+			return FCString::Atoi(*NumberString);
+		}
+
+		return 0;
+	}
+
+	UFUNCTION(BlueprintCallable)
+	static int32 ConvertNumberFromFName(const FName& Name)
+	{
+		FString NameString = Name.ToString();
+		return FCString::Atoi(*NameString);
+	}
 };

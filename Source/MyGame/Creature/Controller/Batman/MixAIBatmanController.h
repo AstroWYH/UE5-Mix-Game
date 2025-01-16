@@ -9,6 +9,8 @@
 #include "MixAIBatmanController.generated.h"
 
 class AMixBatman;
+class AMixCreature;
+class AMixHero;
 /**
  * 
  */
@@ -26,31 +28,27 @@ public:
 
 	void OnPossess(APawn* InPawn) override;
 
-	virtual void Bp_PostBeginPlay() override;
+	virtual void BP_PostBeginPlay() override;
 
 	virtual void OnTargetPerceptionUpdated(AActor* Actor, struct FAIStimulus Stimulus) override;
 
 public:
-	// TODO: 考虑放到父类
 	UFUNCTION(BlueprintCallable)
-	void MoveToAttackTarget();
+	void Patrol();
+
+private:
+	int32 CurTargetIdx = 0;
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TArray<FVector> PathPointsPos;
+	TArray<FVector> PathPointsPos_Blue;
 
-	// TODO: 考虑放到父类, Creature
-	AMixBatman* Batman;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TArray<FVector> PathPointsPos_Red;
 
-	// TODO: 考虑放到父类
-	AMixCreature* TargetCreature;
-
-	// TODO: 考虑放到父类
-	TMap<uint32, AMixCreature*> CreaturesInSight;
-
-	// TODO: 考虑放到父类
-	AMixCreature* GetClosestTarget() const;
+	AMixCreature* EnmeyHero;
 
 public:
 	void FriendHeroUnderAttack(AMixCreature* EnemyHero, AMixCreature* FriendHero);
+
 };

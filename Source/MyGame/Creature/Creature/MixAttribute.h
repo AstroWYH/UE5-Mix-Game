@@ -5,9 +5,9 @@
 #include "CoreMinimal.h"
 #include "MixAssetManager.h"
 #include "MixCreature.h"
-#include "Tag/MixGameplayTags.h"
+#include "Utils/MixGameplayTags.h"
 #include "Data/Attribute/MixHeroAttributeData.h"
-#include "Tag/UMixTagHelper.h"
+#include "Utils/UMixTagHelper.h"
 #include "UI/HeadUI/MixHeadUIWidget.h"
 #include "UObject/Object.h"
 #include "MixAttribute.generated.h"
@@ -42,6 +42,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	int32 AttackRange;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	int32 AttackSpeed;
+
 public:
 	template <typename DataClass>
 	void Init(AMixCreature* Creature, const TSoftObjectPtr<UDataTable>& DataTablePtr)
@@ -66,6 +69,7 @@ public:
 		Speed = AttributeData->Speed;
 		AttackVal = AttributeData->AttackVal;
 		AttackRange = AttributeData->AttackRange;
+		AttackSpeed = AttributeData->AttackSpeed;
 
 		if (TIsSame<DataClass, FMixHeroAttributeData>::Value)
 		{

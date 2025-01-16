@@ -27,4 +27,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	int32 AttackRange;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	int32 AttackSpeed;
+
 };

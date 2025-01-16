@@ -5,30 +5,24 @@
 
 #include "MixAssetManager.h"
 #include "Algo/MinElement.h"
-#include "Tag/MixGameplayTags.h"
+#include "Utils/MixGameplayTags.h"
 #include "Kismet\GameplayStatics.h"
 #include "BehaviorTree\BehaviorTree.h"
 #include "BehaviorTree\BlackboardComponent.h"
+#include "Creature/Component/MixAttackComponent.h"
 #include "Creature/Controller/MixHeroControllerFix.h"
+#include "Creature/Creature/MixAttribute.h"
 #include "Creature/Creature/Batman/MixBatman.h"
 #include "Perception\AIPerceptionTypes.h"
 #include "Perception\AIPerceptionComponent.h"
 #include "Creature/Creature/Hero/MixHero.h"
 #include "Kismet\GameplayStatics.h"
+#include "Utils/UMixTagHelper.h"
 
 // 此时无法获取Pawn
 void AMixAIBatmanController::BeginPlay()
 {
 	Super::BeginPlay();
-
-	Batman = Cast<AMixBatman>(GetPawn());
-
-	// TArray<AActor*> OutActors;
-	// UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMixHeroControllerFix::StaticClass(), OutActors);
-	// for (AActor* Actor : OutActors)
-	// {
-	// 	AMixHeroControllerFix* HeroController = Cast<AMixHeroControllerFix>(Actor);
-	// }
 }
 
 void AMixAIBatmanController::BeginDestroy()
@@ -36,22 +30,30 @@ void AMixAIBatmanController::BeginDestroy()
 	Super::BeginDestroy();
 }
 
-void AMixAIBatmanController::Bp_PostBeginPlay()
+void AMixAIBatmanController::BP_PostBeginPlay()
 {
-	Super::Bp_PostBeginPlay();
+	Super::BP_PostBeginPlay();
 
-	// 存Batman路径点
-	TArray<AActor*> PathPonits;
-	// TODO: 后续近战小兵，可能要改这个Tag
-	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), UMixAssetManager::Get().CreatureModelInfo[MixGameplayTags::Creature_Name_Batman].PathPoint, "BatmanPathPoint", PathPonits);
-	for (const auto& PathPoint : PathPonits)
+	// Init Batman蓝/红路径点
+	TArray<AActor*> PathPoints;
+	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), UMixAssetManager::Get().CreatureModelInfo[MixGameplayTags::Creature_Name_Batman].PathPoint, MixGlobalData::PathPoint_Batman, PathPoints);
+
+	PathPoints.Sort([](const AActor& A, const AActor& B) -> bool
+	{
+		const int32 ANum = UUMixTagHelper::ConvertNumberFromFName(A.Tags[0]);
+		const int32 BNum = UUMixTagHelper::ConvertNumberFromFName(B.Tags[0]);
+		return ANum < BNum;
+	});
+
+	for (const auto& PathPoint : PathPoints)
 	{
 		if (!ensure(PathPoint)) continue;
-		PathPointsPos.Add(PathPoint->GetActorLocation());
+		PathPointsPos_Blue.Add(PathPoint->GetActorLocation());
 	}
+	PathPointsPos_Red = PathPointsPos_Blue;
+	Algo::Reverse(PathPointsPos_Red);
 
-	// Init黑板
-	Blackboard->SetValueAsInt("NextPatrolIdx", 0);
+	Blackboard->SetValueAsInt(MixGlobalData::BB_CurTargetIdx, 0);
 }
 
 void AMixAIBatmanController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
@@ -61,10 +63,10 @@ void AMixAIBatmanController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulu
 	if (AMixCreature* FindCreature = Cast<AMixCreature>(Actor))
 	{
 		// 处理敌方阵营
-		if (!(FindCreature->GetCreatureCamp() == Batman->GetCreatureCamp()))
+		if (!(FindCreature->GetCreatureCamp() == Creature->GetCreatureCamp()))
 		{
 			bool bIsDetectCreature = Stimulus.WasSuccessfullySensed();
-			GEngine->AddOnScreenDebugMessage(-1, 100.0f, FColor::Cyan, FString::Printf(TEXT("%d %s"), bIsDetectCreature, *Actor->GetName()));
+			GEngine->AddOnScreenDebugMessage(-1, 100.0f, FColor::Cyan, FString::Printf(TEXT("%s %d %s"), *(UUMixTagHelper::GetLastNameFromGameplayTag(Creature->GetCreatureName()) + FString::FromInt(Creature->GetId())), bIsDetectCreature, *(UUMixTagHelper::GetLastNameFromGameplayTag(FindCreature->GetCreatureName()) + FString::FromInt(FindCreature->GetId()))));
 
 			// 动态维护CreaturesInSight
 			if (bIsDetectCreature)
@@ -75,11 +77,11 @@ void AMixAIBatmanController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulu
 			{
 				CreaturesInSight.Remove(FindCreature->GetId());
 			}
-			
-			// 优先目标为Attacker
-			if (Attacker)
+
+			// 优先目标为EnmeyHero
+			if (EnmeyHero)
 			{
-				TargetCreature = Attacker;
+				TargetCreature = EnmeyHero;
 			}
 			// TargetCreature为空，则选择视野里最近的人
 			else if (!TargetCreature)
@@ -100,31 +102,11 @@ void AMixAIBatmanController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulu
 	}
 }
 
-void AMixAIBatmanController::MoveToAttackTarget()
-{
-	// TODO: 暂时用move代替，暂定一个距离; 考虑调用到AttackComponent
-	SetFocus(TargetCreature);
-	MoveToActor(TargetCreature, MixGlobalData::MoveDiff);
-}
-
-AMixCreature* AMixAIBatmanController::GetClosestTarget() const
-{
-	FVector SelfLocation = Batman->GetActorLocation();
-	TArray<AMixCreature*> CreaturesArray;
-	CreaturesInSight.GenerateValueArray(CreaturesArray);
-	AMixCreature** ClosestCreature = Algo::MinElementBy(CreaturesArray, [SelfLocation, this](const AMixCreature* InCreature)
-	{
-		return FVector::Distance(SelfLocation, InCreature->GetActorLocation());
-	});
-	if (!(ClosestCreature)) return nullptr;
-	
-	return *ClosestCreature;
-}
-
 void AMixAIBatmanController::FriendHeroUnderAttack(AMixCreature* EnemyHero, AMixCreature* FriendHero)
 {
 	Blackboard->SetValueAsBool(MixGlobalData::BB_bFriendHeroUnderAttack, true);
 	TargetCreature = EnemyHero;
+	EnmeyHero = EnemyHero;
 	Blackboard->SetValueAsObject(MixGlobalData::BB_TargetCreature, TargetCreature);
 
 	// 如果友方Hero未受到Hero攻击，则3s后脱战
@@ -136,6 +118,7 @@ void AMixAIBatmanController::FriendHeroUnderAttack(AMixCreature* EnemyHero, AMix
 	GetWorld()->GetTimerManager().SetTimer(UnderAttackTimerHandle, [this]()
 	{
 		Blackboard->SetValueAsBool(MixGlobalData::BB_bFriendHeroUnderAttack, false);
+		EnmeyHero = nullptr;
 		TargetCreature = GetClosestTarget();
 		Blackboard->SetValueAsObject(MixGlobalData::BB_TargetCreature, TargetCreature);
 
@@ -143,12 +126,49 @@ void AMixAIBatmanController::FriendHeroUnderAttack(AMixCreature* EnemyHero, AMix
 	}, MixGlobalData::UnderAttackTime, false);
 }
 
-void AMixAIBatmanController::OnPossess(APawn* InPawn)
+void AMixAIBatmanController::Patrol()
 {
-	Super::OnPossess(InPawn);
+	if (Creature->GetCreatureCamp() == MixGameplayTags::Creature_Camp_Blue)
+	{
+		MoveToLocation(PathPointsPos_Blue[CurTargetIdx], MixGlobalData::PatrolDiff);
+	}
+	else if (Creature->GetCreatureCamp() == MixGameplayTags::Creature_Camp_Red)
+	{
+		MoveToLocation(PathPointsPos_Red[CurTargetIdx], MixGlobalData::PatrolDiff);
+	}
 }
 
 void AMixAIBatmanController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (Creature->GetCreatureCamp() == MixGameplayTags::Creature_Camp_Blue)
+	{
+		float Distance = FVector::Distance(Creature->GetActorLocation(), PathPointsPos_Blue[CurTargetIdx]);
+		if (Distance <= MixGlobalData::CheckPatrolDiff)
+		{
+			if (CurTargetIdx < PathPointsPos_Blue.Num() - 1)
+			{
+				CurTargetIdx++;
+				Blackboard->SetValueAsInt(MixGlobalData::BB_CurTargetIdx, CurTargetIdx);
+			}
+		}
+	}
+	else if (Creature->GetCreatureCamp() == MixGameplayTags::Creature_Camp_Red)
+	{
+		float Distance = FVector::Distance(Creature->GetActorLocation(), PathPointsPos_Red[CurTargetIdx]);
+		if (Distance <= MixGlobalData::CheckPatrolDiff)
+		{
+			if (CurTargetIdx < PathPointsPos_Red.Num() - 1)
+			{
+				CurTargetIdx++;
+				Blackboard->SetValueAsInt(MixGlobalData::BB_CurTargetIdx, CurTargetIdx);
+			}
+		}
+	}
+}
+
+void AMixAIBatmanController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
 }

@@ -6,6 +6,7 @@
 #include "Algo/MinElement.h"
 #include "Batman/MixAIBatmanController.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Creature/Component/MixAttackComponent.h"
 #include "Creature/Creature/MixAttribute.h"
 #include "Creature/Creature/MixCreature.h"
 #include "Creature/Creature/MixHeroAttribute.h"
@@ -23,8 +24,6 @@ AMixHeroControllerFix::AMixHeroControllerFix()
 void AMixHeroControllerFix::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
-
-	Hero = Cast<AMixHero>(GetPawn());
 }
 
 void AMixHeroControllerFix::BeginPlay()
@@ -37,20 +36,13 @@ void AMixHeroControllerFix::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AMixHeroControllerFix::MoveToAttackTarget()
-{
-	// TODO: 暂时用move代替，暂定一个距离
-	SetFocus(TargetCreature);
-	MoveToActor(TargetCreature, MixGlobalData::MoveDiff);
-}
-
 void AMixHeroControllerFix::MoveToClosedBatman()
 {
 	UMixLevelSubsystem* LevelSubsystem = GetWorld()->GetSubsystem<UMixLevelSubsystem>();
 	if (!ensure(LevelSubsystem)) return;
 
 	TArray<AMixBatman*> Batmans = LevelSubsystem->GetSpawnedBatmans();
-	FVector SelfLocation = Hero->GetActorLocation();
+	FVector SelfLocation = Creature->GetActorLocation();
 	AMixBatman** ClosestBatman = Algo::MinElementBy(Batmans, [SelfLocation, this](const AMixBatman* Batman)
 	{
 		return FVector::Distance(SelfLocation, Batman->GetActorLocation());
@@ -68,11 +60,11 @@ void AMixHeroControllerFix::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus
 	if (AMixCreature* FindCreature = Cast<AMixCreature>(Actor))
 	{
 		// 仅处理不同阵营
-		if (!(FindCreature->GetCreatureCamp()== Hero->GetCreatureCamp()))
+		if (!(FindCreature->GetCreatureCamp() == Creature->GetCreatureCamp()))
 		{
 			bool bIsDetectCreature = Stimulus.WasSuccessfullySensed();
-			GEngine->AddOnScreenDebugMessage(-1, 100.0f, FColor::Yellow, FString::Printf(TEXT("%d %s"), bIsDetectCreature, *Actor->GetName()));
-			
+			GEngine->AddOnScreenDebugMessage(-1, 100.0f, FColor::Yellow, FString::Printf(TEXT("%s %d %s"), *(UUMixTagHelper::GetLastNameFromGameplayTag(Creature->GetCreatureName()) + FString::FromInt(Creature->GetId())), bIsDetectCreature, *(UUMixTagHelper::GetLastNameFromGameplayTag(FindCreature->GetCreatureName()) + FString::FromInt(FindCreature->GetId()))));
+
 			// 动态维护CreaturesInSight
 			if (bIsDetectCreature)
 			{
@@ -105,20 +97,6 @@ void AMixHeroControllerFix::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus
 			Blackboard->SetValueAsObject(MixGlobalData::BB_TargetCreature, TargetCreature);
 		}
 	}
-}
-
-AMixCreature* AMixHeroControllerFix::GetClosestTarget() const
-{
-	FVector SelfLocation = Hero->GetActorLocation();
-	TArray<AMixCreature*> CreaturesArray;
-	CreaturesInSight.GenerateValueArray(CreaturesArray);
-	AMixCreature** ClosestCreature = Algo::MinElementBy(CreaturesArray, [SelfLocation, this](const AMixCreature* InCreature)
-	{
-		return FVector::Distance(SelfLocation, InCreature->GetActorLocation());
-	});
-	if (!(ClosestCreature)) return nullptr;
-	
-	return *ClosestCreature;
 }
 
 void AMixHeroControllerFix::UnderHeroAttack(AMixCreature* InAttacker)
@@ -154,7 +132,7 @@ void AMixHeroControllerFix::NotifyNearbyFriendBatman() const
 	// 通知己方阵营Batman & Tower，Hero受到攻击
 	TArray<FHitResult> OutHits;
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes{UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel1)};
-	UKismetSystemLibrary::CapsuleTraceMultiForObjects(GetWorld(), Hero->GetActorLocation(), Hero->GetActorLocation(), MixGlobalData::BatmanPerceptionRadius, MixGlobalData::CapsuleDetectionHalfHeight, ObjectTypes, false, TArray<AActor*>(), EDrawDebugTrace::None, OutHits, true);
+	UKismetSystemLibrary::CapsuleTraceMultiForObjects(GetWorld(), Creature->GetActorLocation(), Creature->GetActorLocation(), MixGlobalData::BatmanPerceptionRadius, MixGlobalData::CapsuleDetectionHalfHeight, ObjectTypes, false, TArray<AActor*>(), EDrawDebugTrace::None, OutHits, true);
 	for (const FHitResult& Hit : OutHits)
 	{
 		AActor* HitActor = Hit.GetActor();
@@ -162,8 +140,8 @@ void AMixHeroControllerFix::NotifyNearbyFriendBatman() const
 		AMixBatman* HitBatman = Cast<AMixBatman>(HitActor);
 		if (!ensure(HitBatman)) continue;
 		// 仅通知友方阵营
-		if (HitBatman->GetCreatureCamp() != Hero->GetCreatureCamp()) continue;
+		if (HitBatman->GetCreatureCamp() != Creature->GetCreatureCamp()) continue;
 		AMixAIBatmanController* BatmanController = Cast<AMixAIBatmanController>(HitBatman->GetController());
-		BatmanController->FriendHeroUnderAttack(Attacker, Hero);
+		BatmanController->FriendHeroUnderAttack(Attacker, Creature);
 	}
 }

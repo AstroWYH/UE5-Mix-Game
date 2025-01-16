@@ -130,7 +130,6 @@ void UMixLevelSubsystem::GenerateBatmans()
 	{
 		SpawnBatman(SpawnPoint, MixGameplayTags::Creature_Camp_Blue);
 	}
-	
 	for (const auto& SpawnPoint : RedSpawnPoints)
 	{
 		SpawnBatman(SpawnPoint, MixGameplayTags::Creature_Camp_Red);

@@ -6,7 +6,7 @@
 #include "Components/InputComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "Tag/MixGameplayTags.h"
+#include "Utils/MixGameplayTags.h"
 #include "Blueprint\UserWidget.h"
 #include "Blueprint\WidgetLayoutLibrary.h"
 #include "Kismet\GameplayStatics.h"
@@ -17,7 +17,7 @@
 #include "NiagaraSystem.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Ability/MixAbilityMgr.h"
-#include "Tag/MixGameplayTags.h"
+#include "Utils/MixGameplayTags.h"
 #include "Creature/Component/MixAttackComponent.h"
 
 // void AMixHostHeroControllerFix::Move(const FInputActionValue& Value)

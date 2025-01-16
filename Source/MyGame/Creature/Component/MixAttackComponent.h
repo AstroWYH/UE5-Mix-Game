@@ -32,7 +32,7 @@ public:
 	static UMixAttackComponent* FindAttackComponent(const AMixCreature* Creature) { return (Creature ? Creature->FindComponentByClass<UMixAttackComponent>() : nullptr); }
 
 public:
-	void SetAttackRangeHidden(bool bHidden);
+	void SetAttackRangeHidden(bool bHidden) const;
 
 public:
 	void PrepareAttack(const FVector& Pos);

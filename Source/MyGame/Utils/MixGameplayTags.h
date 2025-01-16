@@ -52,15 +52,19 @@ namespace MixGlobalData
 	const FName BB_bHealthSafe = TEXT("bHealthSafe");
 
 	// BB Batman
+	const FName BB_CurTargetIdx = TEXT("CurTargetIdx");
 	const FName BB_bFriendHeroUnderAttack = TEXT("bFriendHeroUnderAttack");
 
 	constexpr float UnderAttackTime = 3.0f;
-	constexpr float MoveDiff = 120.0f;
+	constexpr float MoveDiff = 10.0f;
+	constexpr float PatrolDiff = 5.0f;
+	constexpr float CheckPatrolDiff = 150.0f;
 	constexpr float HealthSafePercent = 0.2f;
 
 	const FName SpawnPoint_Batman_Blue = TEXT("SpawnPoint_Batman_Blue");
 	const FName SpawnPoint_Batman_Red = TEXT("SpawnPoint_Batman_Red");
+	const FName PathPoint_Batman = TEXT("PathPoint_Batman");
 
 	constexpr float CapsuleDetectionHalfHeight = 1000.0f;
-	constexpr float BatmanPerceptionRadius = 500.0f;
+	constexpr float BatmanPerceptionRadius = 800.0f;
 }

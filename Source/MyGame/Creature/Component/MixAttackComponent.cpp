@@ -4,7 +4,7 @@
 #include "MixAttackComponent.h"
 
 #include "MixAssetManager.h"
-#include "Tag/MixGameplayTags.h"
+#include "Utils/MixGameplayTags.h"
 #include "Algo/MinElement.h"
 #include "Creature/Ammo/MixTrackRangedAmmo.h"
 #include "Creature/Controller/MixAIController.h"
@@ -23,22 +23,7 @@ void UMixAttackComponent::BeginPlay()
 	Super::BeginPlay();
 
 	Creature = Cast<AMixCreature>(GetOwner());
-	// if (!Creature->IsIsHost())
-	// {
-	// 	AIController = Cast<AMixAIController>(Creature->GetController());
-	// 	AIController->OnAIControllerPostBeginPlay.AddUObject(this, &ThisClass::OnAIControllerPostBeginPlay);
-	// }
 }
-
-// void UMixAttackComponent::OnAIControllerPostBeginPlay()
-// {
-// 	AIController->GetPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &ThisClass::OnTargetInSightUpdate);
-// }
-//
-// void UMixAttackComponent::OnTargetInSightUpdate(AActor* Actor, FAIStimulus Stimulus)
-// {
-// 	// TODO:
-// }
 
 void UMixAttackComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
@@ -48,7 +33,7 @@ void UMixAttackComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 }
 
 // HeroSelf
-void UMixAttackComponent::SetAttackRangeHidden(bool bHidden)
+void UMixAttackComponent::SetAttackRangeHidden(bool bHidden) const
 {
 	AMixHero* HeroSelf = Cast<AMixHero>(Creature);
 	if (!ensure(HeroSelf)) return;
@@ -134,12 +119,12 @@ void UMixAttackComponent::TurnToTarget(AMixCreature* Target)
 	SelfRotation = FRotator(0.0f, Creature->GetActorRotation().Yaw, 0.0f);
 	TargetLocation = Target->GetActorLocation();
 	SelfLookAtRotation = FRotator(0.0f, (TargetLocation - SelfLocation).Rotation().Yaw, 0.0f);
-
+	
 	TotalYawDifference = FMath::Fmod(SelfLookAtRotation.Yaw - SelfRotation.Yaw + 180.0f, 360.0f) - 180.0f;
 	YawPerFrame = TotalYawDifference / (KRotationTime / GetWorld()->GetDeltaSeconds());
-
+	
 	bIsRotating = true;
-
+	
 	TargetCreature = Target;
 }
 
@@ -149,14 +134,14 @@ void UMixAttackComponent::TickTurnToTarget()
 	{
 		FRotator SelfNewRotation = FRotator(0.0f, Creature->GetActorRotation().Yaw + YawPerFrame, 0.0f);
 		Creature->SetActorRotation(SelfNewRotation);
-
+	
 		float RotationDiff = FMath::Abs(FMath::Fmod(SelfLookAtRotation.Yaw - SelfNewRotation.Yaw + 180.0f, 360.0f) - 180.0f);
 		if (RotationDiff <= 6.0f)
 		{
 			FRotator FinalFixRotation = FRotator(0.0f, (TargetCreature->GetActorLocation() - Creature->GetActorLocation()).Rotation().Yaw, 0.0f);
 			Creature->SetActorRotation(FinalFixRotation);
 			bIsRotating = false;
-
+	
 			if (AttackType == MixGameplayTags::Attack_Ranged)
 			{
 				PerformRangedAttack();

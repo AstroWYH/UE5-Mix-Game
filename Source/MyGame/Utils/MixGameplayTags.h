@@ -68,5 +68,7 @@ namespace MixGlobalData
 	constexpr float CapsuleDetectionHalfHeight = 1000.0f;
 	constexpr float BatmanPerceptionRadius = 800.0f;
 
-	constexpr float CreatureRotationDiff = 5.0f;
+	constexpr float RotationBias = 5.0f;
+	constexpr float RotateYawPerFrameBase = 10.0f;
+	constexpr float RotateDeltaTimeBase = 0.016f;
 }

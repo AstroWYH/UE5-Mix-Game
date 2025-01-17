@@ -11,6 +11,7 @@
 #include "Creature/Controller/Hero/MixHostHeroControllerFix.h"
 #include "Creature/Creature/MixAttribute.h"
 #include "Creature/Creature/Hero/MixHero.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Perception/AIPerceptionComponent.h"
 
@@ -66,9 +67,8 @@ void UMixAttackComponent::PrepareAttack(const FVector& Pos)
 void UMixAttackComponent::PrepareAttack(AMixCreature* Target)
 {
 	Creature->GetController()->StopMovement();
-	bCanAttack = true;
+	bCanAIAttack = true;
 
-	// TurnToTarget(Target);
 	TargetCreature = Target;
 	Cast<AMixAIController>(Creature->GetController())->SetFocus(TargetCreature);
 }
@@ -119,32 +119,57 @@ AMixCreature* UMixAttackComponent::SelectClosestTarget(const FVector& Pos)
 
 void UMixAttackComponent::TurnToTarget(AMixCreature* Target)
 {
-	SelfLocation = Creature->GetActorLocation();
-	SelfRotation = FRotator(0.0f, Creature->GetActorRotation().Yaw, 0.0f);
-	TargetLocation = Target->GetActorLocation();
-	SelfLookAtRotation = FRotator(0.0f, (TargetLocation - SelfLocation).Rotation().Yaw, 0.0f);
+	// SelfLocation = Creature->GetActorLocation();
+	// SelfRotation = FRotator(0.0f, Creature->GetActorRotation().Yaw, 0.0f);
+	// TargetLocation = Target->GetActorLocation();
+	// SelfLookAtRotation = FRotator(0.0f, (TargetLocation - SelfLocation).Rotation().Yaw, 0.0f);
+	//
+	// TotalYawDifference = FMath::Fmod(SelfLookAtRotation.Yaw - SelfRotation.Yaw + 180.0f, 360.0f) - 180.0f;
+	// YawPerFrame = TotalYawDifference / (KRotationTime / GetWorld()->GetDeltaSeconds());
 
-	TotalYawDifference = FMath::Fmod(SelfLookAtRotation.Yaw - SelfRotation.Yaw + 180.0f, 360.0f) - 180.0f;
-	YawPerFrame = TotalYawDifference / (KRotationTime / GetWorld()->GetDeltaSeconds());
-
-	bIsRotating = true;
+	bIsHostRotating = true;
 }
 
 void UMixAttackComponent::TickTurnToTarget()
 {
 	if (Creature->IsIsHost())
 	{
-		if (bIsRotating)
+		if (bIsHostRotating)
 		{
-			FRotator SelfNewRotation = FRotator(0.0f, Creature->GetActorRotation().Yaw + YawPerFrame, 0.0f);
-			Creature->SetActorRotation(SelfNewRotation);
+			// FRotator SelfNewRotation = FRotator(0.0f, Creature->GetActorRotation().Yaw + YawPerFrame, 0.0f);
+			// Creature->SetActorRotation(SelfNewRotation);
+			// float RotationBias = FMath::Abs(FMath::Fmod(SelfLookAtRotation.Yaw - SelfNewRotation.Yaw + 180.0f, 360.0f) - 180.0f);
 
-			float RotationDiff = FMath::Abs(FMath::Fmod(SelfLookAtRotation.Yaw - SelfNewRotation.Yaw + 180.0f, 360.0f) - 180.0f);
-			if (RotationDiff <= 6.0f)
+			// float HostRotationYaw = Creature->GetActorRotation().Yaw;
+			// float HostLookAtRotationYaw = (TargetCreature->GetActorLocation() - Creature->GetActorLocation()).Rotation().Yaw;
+			// float TotalYawDiff = HostLookAtRotationYaw - HostRotationYaw;
+			// float YawEachFrame = TotalYawDiff / (MixGlobalData::CreatureRotationTime / GetWorld()->GetDeltaSeconds());
+
+			// Creature->SetActorRotation(FRotator(0.0f, Creature->GetActorRotation().Yaw + YawEachFrame, 0.0f));
+			// float RotationBias = FMath::Abs(HostLookAtRotationYaw - Creature->GetActorRotation().Yaw);
+
+			float YawPerFrame = MixGlobalData::RotateYawPerFrameBase / MixGlobalData::RotateDeltaTimeBase * GetWorld()->GetDeltaSeconds();
+			float TargetYaw1 = TargetCreature->GetActorLocation().Rotation().Yaw;
+			float TargetYaw2 = TargetCreature->GetActorRotation().Yaw;
+			float CreatureYaw1 = Creature->GetActorLocation().Rotation().Yaw;
+			float CreatureYaw2 = Creature->GetActorRotation().Yaw;
+			float CreatureLookAtRotationYaw = (TargetCreature->GetActorLocation() - Creature->GetActorLocation()).Rotation().Yaw;
+			float RotationDiff = CreatureLookAtRotationYaw - Creature->GetActorRotation().Yaw;
+			if (RotationDiff > 180.0f)
 			{
-				FRotator FinalFixRotation = FRotator(0.0f, (TargetCreature->GetActorLocation() - Creature->GetActorLocation()).Rotation().Yaw, 0.0f);
-				Creature->SetActorRotation(FinalFixRotation);
-				bIsRotating = false;
+				RotationDiff -= 360.0f;
+			}
+			else if (RotationDiff < -180.0f)
+			{
+				RotationDiff += 360.0f;
+			}
+			YawPerFrame = RotationDiff > 0 ? YawPerFrame : -YawPerFrame;
+			Creature->SetActorRotation(FRotator(0.0f, Creature->GetActorRotation().Yaw + YawPerFrame, 0.0f));
+
+			if (FMath::Abs(RotationDiff) <= FMath::Abs(YawPerFrame) + MixGlobalData::RotationBias)
+			{
+				Creature->SetActorRotation(FRotator(0.0f, CreatureLookAtRotationYaw, 0.0f));
+				bIsHostRotating = false;
 
 				if (AttackType == MixGameplayTags::Attack_Ranged)
 				{
@@ -159,13 +184,15 @@ void UMixAttackComponent::TickTurnToTarget()
 	}
 	else
 	{
-		if (bCanAttack)
+		if (bCanAIAttack)
 		{
 			float CreatureRotationYaw = Creature->GetActorRotation().Yaw;
 			float CreatureLookAtRotationYaw = (TargetCreature->GetActorLocation() - Creature->GetActorLocation()).Rotation().Yaw;
-			float RotationDiff = FMath::Abs(CreatureRotationYaw - CreatureLookAtRotationYaw);
-			if (RotationDiff <= MixGlobalData::CreatureRotationDiff)
+			float RotationDiff = FMath::Abs(CreatureLookAtRotationYaw - CreatureRotationYaw);
+
+			if (RotationDiff <= MixGlobalData::RotationBias)
 			{
+				Creature->SetActorRotation(FRotator(0.0f, CreatureLookAtRotationYaw, 0.0f));
 				Cast<AMixAIController>(Creature->GetController())->ClearFocus(EAIFocusPriority::Default);
 
 				if (AttackType == MixGameplayTags::Attack_Ranged)
@@ -177,7 +204,7 @@ void UMixAttackComponent::TickTurnToTarget()
 					PerformMeleeAttack();
 				}
 
-				bCanAttack = false;
+				bCanAIAttack = false;
 			}
 		}
 	}

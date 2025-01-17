@@ -199,7 +199,7 @@ void AMixHostHeroControllerFix::RightClick(const FInputActionValue& Value)
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, FXCursor, WalkPosition, FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None, true);
 
 	// 打断普攻旋转
-	AttackComponent->SetIsRotating(false);
+	AttackComponent->SetIsHostRotating(false);
 	AttackComponent->SetAttackRangeHidden(true);
 
 	// 打断技能旋转

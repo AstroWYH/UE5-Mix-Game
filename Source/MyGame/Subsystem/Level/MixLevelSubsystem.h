@@ -19,6 +19,8 @@ class MYGAME_API UMixLevelSubsystem : public UWorldSubsystem
 public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 
+	virtual void Deinitialize() override;
+
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 
 private:
@@ -52,7 +54,8 @@ public:
 	{
 		return SpawnedHeros;
 	}
-
+	
+	UFUNCTION(BlueprintCallable)
 	AMixHero* GetHostHero() const
 	{
 		return HostHero;

@@ -76,26 +76,32 @@ public:
 	}
 
 private:
-	FVector SelfLocation;
-	FRotator SelfRotation;
-	FVector TargetLocation;
-	FRotator SelfLookAtRotation;
-	float TotalYawDifference = 0.0f;
-	bool bIsRotating = false;
-	float YawPerFrame = 0.0f;
-	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = "true"))
-	float KRotationTime = 0.3f;
+	// Old
+	// FVector SelfLocation;
+	// FRotator SelfRotation;
+	// FVector TargetLocation;
+	// FRotator SelfLookAtRotation;
+	// float TotalYawDifference = 0.0f;
+	// float YawPerFrame = 0.0f;
+	// UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = "true"))
+	// float KRotationTime = 0.3f;
+
+	// New
+	// float HostLookAtRotationYaw = 0.0f;
+	// float TotalYawDiff = 0.0f;
+	// float YawEachFrame = 0.0f;
+	
+	bool bIsHostRotating = false;
 
 	TArray<AMixCreature*> CreaturesInRange;
 	AMixCreature* TargetCreature;
 
 public:
-	void SetIsRotating(bool bInIsRotating)
+	void SetIsHostRotating(bool bInIsRotating)
 	{
-		this->bIsRotating = bInIsRotating;
+		this->bIsHostRotating = bInIsRotating;
 	}
 
-public:
 	AMixCreature* GetCreature() const
 	{
 		return Creature;
@@ -107,6 +113,6 @@ public:
 	}
 
 private:
-	bool bCanAttack = false;
+	bool bCanAIAttack = false;
 	
 };

@@ -25,6 +25,14 @@ void UMixLevelSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	Super::Initialize(Collection);
 }
 
+void UMixLevelSubsystem::Deinitialize()
+{
+	Super::Deinitialize();
+
+	SpawnedHeros.Empty();
+	SpawnedBatmans.Empty();
+}
+
 void UMixLevelSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 {
 	Super::OnWorldBeginPlay(InWorld);
@@ -142,7 +150,7 @@ AMixBatman* UMixLevelSubsystem::SpawnBatman(const AActor* SpawnPoint, const FGam
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	FTransform SpawnTransform = SpawnPoint->GetActorTransform();
 	AMixBatman* Batman = GetWorld()->SpawnActor<AMixBatman>(UMixAssetManager::Get().CreatureModelInfo[MixGameplayTags::Creature_Name_Batman].Class, SpawnTransform, SpawnParams);
-	SpawnedBatmans.Add(Batman);
+	SpawnedBatmans.AddUnique(Batman);
 	Batman->SetCreatureName(MixGameplayTags::Creature_Name_Batman);
 	Batman->SetCreatureType(MixGameplayTags::Creature_Type_Batman);
 	Batman->SetCreatureCamp(Type);

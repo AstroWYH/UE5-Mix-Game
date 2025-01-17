@@ -8,6 +8,7 @@
 #include "Algo/MinElement.h"
 #include "Creature/Ammo/MixTrackRangedAmmo.h"
 #include "Creature/Controller/MixAIController.h"
+#include "Creature/Controller/Hero/MixHostHeroControllerFix.h"
 #include "Creature/Creature/MixAttribute.h"
 #include "Creature/Creature/Hero/MixHero.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -54,12 +55,10 @@ void UMixAttackComponent::PrepareAttack(const FVector& Pos)
 {
 	Creature->GetController()->StopMovement();
 
-	AMixCreature* Target = SelectTarget(Pos);
-	if (Target)
+	TargetCreature = SelectTarget(Pos);
+	if (TargetCreature)
 	{
-		// TurnToTarget(Target);
-		Creature->bUseControllerRotationYaw = true;
-		// Target->GetController()->
+		TurnToTarget(TargetCreature);
 	}
 }
 
@@ -67,8 +66,11 @@ void UMixAttackComponent::PrepareAttack(const FVector& Pos)
 void UMixAttackComponent::PrepareAttack(AMixCreature* Target)
 {
 	Creature->GetController()->StopMovement();
+	bCanAttack = true;
 
-	TurnToTarget(Target);
+	// TurnToTarget(Target);
+	TargetCreature = Target;
+	Cast<AMixAIController>(Creature->GetController())->SetFocus(TargetCreature);
 }
 
 // HeroSelf
@@ -121,36 +123,61 @@ void UMixAttackComponent::TurnToTarget(AMixCreature* Target)
 	SelfRotation = FRotator(0.0f, Creature->GetActorRotation().Yaw, 0.0f);
 	TargetLocation = Target->GetActorLocation();
 	SelfLookAtRotation = FRotator(0.0f, (TargetLocation - SelfLocation).Rotation().Yaw, 0.0f);
-	
+
 	TotalYawDifference = FMath::Fmod(SelfLookAtRotation.Yaw - SelfRotation.Yaw + 180.0f, 360.0f) - 180.0f;
 	YawPerFrame = TotalYawDifference / (KRotationTime / GetWorld()->GetDeltaSeconds());
-	
+
 	bIsRotating = true;
-	
-	TargetCreature = Target;
 }
 
 void UMixAttackComponent::TickTurnToTarget()
 {
-	if (bIsRotating)
+	if (Creature->IsIsHost())
 	{
-		FRotator SelfNewRotation = FRotator(0.0f, Creature->GetActorRotation().Yaw + YawPerFrame, 0.0f);
-		Creature->SetActorRotation(SelfNewRotation);
-	
-		float RotationDiff = FMath::Abs(FMath::Fmod(SelfLookAtRotation.Yaw - SelfNewRotation.Yaw + 180.0f, 360.0f) - 180.0f);
-		if (RotationDiff <= 6.0f)
+		if (bIsRotating)
 		{
-			FRotator FinalFixRotation = FRotator(0.0f, (TargetCreature->GetActorLocation() - Creature->GetActorLocation()).Rotation().Yaw, 0.0f);
-			Creature->SetActorRotation(FinalFixRotation);
-			bIsRotating = false;
-	
-			if (AttackType == MixGameplayTags::Attack_Ranged)
+			FRotator SelfNewRotation = FRotator(0.0f, Creature->GetActorRotation().Yaw + YawPerFrame, 0.0f);
+			Creature->SetActorRotation(SelfNewRotation);
+
+			float RotationDiff = FMath::Abs(FMath::Fmod(SelfLookAtRotation.Yaw - SelfNewRotation.Yaw + 180.0f, 360.0f) - 180.0f);
+			if (RotationDiff <= 6.0f)
 			{
-				PerformRangedAttack();
+				FRotator FinalFixRotation = FRotator(0.0f, (TargetCreature->GetActorLocation() - Creature->GetActorLocation()).Rotation().Yaw, 0.0f);
+				Creature->SetActorRotation(FinalFixRotation);
+				bIsRotating = false;
+
+				if (AttackType == MixGameplayTags::Attack_Ranged)
+				{
+					PerformRangedAttack();
+				}
+				else if (AttackType == MixGameplayTags::Attack_Melee)
+				{
+					PerformMeleeAttack();
+				}
 			}
-			else if (AttackType == MixGameplayTags::Attack_Melee)
+		}
+	}
+	else
+	{
+		if (bCanAttack)
+		{
+			float CreatureRotationYaw = Creature->GetActorRotation().Yaw;
+			float CreatureLookAtRotationYaw = (TargetCreature->GetActorLocation() - Creature->GetActorLocation()).Rotation().Yaw;
+			float RotationDiff = FMath::Abs(CreatureRotationYaw - CreatureLookAtRotationYaw);
+			if (RotationDiff <= MixGlobalData::CreatureRotationDiff)
 			{
-				PerformMeleeAttack();
+				Cast<AMixAIController>(Creature->GetController())->ClearFocus(EAIFocusPriority::Default);
+
+				if (AttackType == MixGameplayTags::Attack_Ranged)
+				{
+					PerformRangedAttack();
+				}
+				else if (AttackType == MixGameplayTags::Attack_Melee)
+				{
+					PerformMeleeAttack();
+				}
+
+				bCanAttack = false;
 			}
 		}
 	}
@@ -217,6 +244,4 @@ void UMixAttackComponent::OnRangedMontageNofify()
 		Ammo->SetTarget(TargetCreature); // 跟踪导弹，所以需要设Target
 	};
 	AMixTrackRangedAmmo* SpawnedActor = GetWorld()->SpawnActor<AMixTrackRangedAmmo>(AmmoClass, AmmoTransform, AmmoParams);
-
 }
-

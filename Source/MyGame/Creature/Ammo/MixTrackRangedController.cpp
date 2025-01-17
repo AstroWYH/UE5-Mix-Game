@@ -39,6 +39,8 @@ void AMixTrackRangedController::Tick(float DeltaTime)
 
 	if (bTrack)
 	{
+		bool A = Ammo->IsValidLowLevel();
+		bool B = IsValid(Ammo);
 		FVector TargetLocation = Ammo->GetTarget()->GetActorLocation();
 		TargetLocation.Z += Ammo->AmmoOffset;
 		MoveToLocation(TargetLocation, 1.0f, true, false, false);

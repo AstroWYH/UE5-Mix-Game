@@ -27,6 +27,8 @@ class MYGAME_API AMixHero : public AMixCreature
 public:
 	AMixHero();
 
+	virtual void PossessedBy(AController* NewController) override;
+
 protected:
 	// APawn interface
 	// virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

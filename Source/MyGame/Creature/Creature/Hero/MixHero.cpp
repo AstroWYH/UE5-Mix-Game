@@ -23,7 +23,7 @@ AMixHero::AMixHero() : Super()
 
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = false;
+	bUseControllerRotationYaw = true;
 	bUseControllerRotationRoll = false;
 
 	// Configure character movement
@@ -59,7 +59,20 @@ AMixHero::AMixHero() : Super()
 	CreatureHeathComponent = CreateDefaultSubobject<UMixHeroHealthComponent>(TEXT("HeroHealthComponent"));
 }
 
+void AMixHero::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if (bIsHost)
+	{
+		// HeroSelf拒绝接收Controller控制旋转
+		bUseControllerRotationYaw = false;
+	}
+}
+
 void AMixHero::BeginPlay()
 {
 	Super::BeginPlay();
 }
+
+

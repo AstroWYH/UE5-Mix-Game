@@ -79,8 +79,8 @@ void UMixLevelSubsystem::GenerateHeros()
 		if (!ensure(GameMode)) return;
 		GameMode->SwapPlayerControllers(GetWorld()->GetFirstPlayerController(), HeroController);
 		// GameMode->GenericPlayerInitialization(HostHeroController);
-		HeroController->Possess(Hero);
 		Hero->SetIsHost(true);
+		HeroController->Possess(Hero);
 		HostHero = Hero;
 	}
 

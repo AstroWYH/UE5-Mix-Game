@@ -57,7 +57,9 @@ void UMixAttackComponent::PrepareAttack(const FVector& Pos)
 	AMixCreature* Target = SelectTarget(Pos);
 	if (Target)
 	{
-		TurnToTarget(Target);
+		// TurnToTarget(Target);
+		Creature->bUseControllerRotationYaw = true;
+		// Target->GetController()->
 	}
 }
 

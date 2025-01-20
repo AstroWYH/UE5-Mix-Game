@@ -36,7 +36,7 @@ void AMixAIBatmanController::BP_PostBeginPlay()
 
 	// Init Batman蓝/红路径点
 	TArray<AActor*> PathPoints;
-	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), UMixAssetManager::Get().CreatureModelInfo[MixGameplayTags::Creature_Name_Batman].PathPoint, MixGlobalData::PathPoint_Batman, PathPoints);
+	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), UMixAssetManager::Get().BatmanModelInfo[MixGameplayTags::Creature_Name_Batman].PathPoint, MixGlobalData::PathPoint_Batman, PathPoints);
 
 	PathPoints.Sort([](const AActor& A, const AActor& B) -> bool
 	{

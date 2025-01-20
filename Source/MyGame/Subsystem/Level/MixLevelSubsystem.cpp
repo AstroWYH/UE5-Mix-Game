@@ -57,7 +57,7 @@ void UMixLevelSubsystem::GenerateHeros()
 	// 生成HeroSelf Ashe
 	{
 		TArray<AActor*> OutActors;
-		UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), UMixAssetManager::Get().HeroModelInfo[MixGameplayTags::Creature_Name_Ashe].SpawnPoint, "HeroSpawnPoint_Ashe", OutActors);
+		UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), AActor::StaticClass(), "HeroSpawnPoint_Ashe", OutActors);
 		if (!ensure(OutActors.IsValidIndex(0))) return;
 
 		FActorSpawnParameters SpawnParams;
@@ -95,7 +95,7 @@ void UMixLevelSubsystem::GenerateHeros()
 	// 生成Hero Lucian
 	{
 		TArray<AActor*> OutActors;
-		UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), UMixAssetManager::Get().HeroModelInfo[MixGameplayTags::Creature_Name_Lucian].SpawnPoint, "HeroSpawnPoint_Lucian", OutActors);
+		UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), AActor::StaticClass(), "HeroSpawnPoint_Lucian", OutActors);
 		if (!ensure(OutActors.IsValidIndex(0))) return;
 
 		FActorSpawnParameters SpawnParams;
@@ -131,8 +131,8 @@ void UMixLevelSubsystem::GenerateBatmans()
 	TArray<AActor*> BlueSpawnPoints;
 	TArray<AActor*> RedSpawnPoints;
 
-	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), UMixAssetManager::Get().CreatureModelInfo[MixGameplayTags::Creature_Name_Batman].SpawnPoint, MixGlobalData::SpawnPoint_Batman_Blue, BlueSpawnPoints);
-	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), UMixAssetManager::Get().CreatureModelInfo[MixGameplayTags::Creature_Name_Batman].SpawnPoint, MixGlobalData::SpawnPoint_Batman_Red, RedSpawnPoints);
+	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), AActor::StaticClass(), MixGlobalData::SpawnPoint_Batman_Blue, BlueSpawnPoints);
+	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), AActor::StaticClass(), MixGlobalData::SpawnPoint_Batman_Red, RedSpawnPoints);
 
 	for (const auto& SpawnPoint : BlueSpawnPoints)
 	{
@@ -149,7 +149,7 @@ AMixBatman* UMixLevelSubsystem::SpawnBatman(const AActor* SpawnPoint, const FGam
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	FTransform SpawnTransform = SpawnPoint->GetActorTransform();
-	AMixBatman* Batman = GetWorld()->SpawnActor<AMixBatman>(UMixAssetManager::Get().CreatureModelInfo[MixGameplayTags::Creature_Name_Batman].Class, SpawnTransform, SpawnParams);
+	AMixBatman* Batman = GetWorld()->SpawnActor<AMixBatman>(UMixAssetManager::Get().BatmanModelInfo[MixGameplayTags::Creature_Name_Batman].Class, SpawnTransform, SpawnParams);
 	SpawnedBatmans.AddUnique(Batman);
 	Batman->SetCreatureName(MixGameplayTags::Creature_Name_Batman);
 	Batman->SetCreatureType(MixGameplayTags::Creature_Type_Batman);

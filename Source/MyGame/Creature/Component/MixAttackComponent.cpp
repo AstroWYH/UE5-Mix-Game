@@ -219,7 +219,7 @@ void UMixAttackComponent::PerformRangedAttack()
 	}
 	else if (Creature->GetCreatureType().MatchesTag(MixGameplayTags::Creature_Type_Batman))
 	{
-		MontagePath = UMixAssetManager::Get().CreatureModelInfo[Creature->GetCreatureName()].AttackMontage;
+		MontagePath = UMixAssetManager::Get().BatmanModelInfo[Creature->GetCreatureName()].AttackMontage;
 	}
 
 	FStreamableDelegate OnMontageLoaded = FStreamableDelegate::CreateLambda([MontagePath, this]()
@@ -255,7 +255,7 @@ void UMixAttackComponent::OnRangedMontageNofify()
 	}
 	else if (Creature->GetCreatureType().MatchesTag(MixGameplayTags::Creature_Type_Batman))
 	{
-		AmmoClass = UMixAssetManager::Get().CreatureModelInfo[Creature->GetCreatureName()].Ammo;
+		AmmoClass = UMixAssetManager::Get().BatmanModelInfo[Creature->GetCreatureName()].Ammo;
 		TArray<UActorComponent*> TaggedComponents = Creature->GetComponentsByTag(UActorComponent::StaticClass(), LaunchPoint);
 		USceneComponent* AmmoPointComponent = Cast<USceneComponent>(TaggedComponents[0]);
 		AmmoTransform = AmmoPointComponent->GetComponentToWorld();

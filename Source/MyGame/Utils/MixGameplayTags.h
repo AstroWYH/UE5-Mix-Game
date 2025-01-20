@@ -39,7 +39,9 @@ namespace MixGameplayTags
 	// Hero
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Name_Ashe);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Name_Lucian);
+	
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Name_Batman);
+	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Creature_Name_Tower);
 }
 
 namespace MixGlobalData
@@ -64,6 +66,8 @@ namespace MixGlobalData
 	const FName SpawnPoint_Batman_Blue = TEXT("SpawnPoint_Batman_Blue");
 	const FName SpawnPoint_Batman_Red = TEXT("SpawnPoint_Batman_Red");
 	const FName PathPoint_Batman = TEXT("PathPoint_Batman");
+	const FName SpawnPoint_Tower_Blue = TEXT("SpawnPoint_Tower_Blue");
+	const FName SpawnPoint_Tower_Red = TEXT("SpawnPoint_Tower_Red");
 
 	constexpr float CapsuleDetectionHalfHeight = 1000.0f;
 	constexpr float BatmanPerceptionRadius = 800.0f;

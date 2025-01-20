@@ -88,6 +88,8 @@ public:
 	TMap<FGameplayTag, FHeroModelInfo> HeroModelInfo;
 	UPROPERTY(EditDefaultsOnly, Category = "Creature|Model")
 	TMap<FGameplayTag, FBatmanModelInfo> BatmanModelInfo;
+	UPROPERTY(EditDefaultsOnly, Category = "Creature|Model")
+	TMap<FGameplayTag, FCreatureModelInfo> TowerModelInfo;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Creature|Attribute")
 	TSoftObjectPtr<UDataTable> AttributeData; // 并非一个Creature对应一张表，因此不移动到ModelInfo

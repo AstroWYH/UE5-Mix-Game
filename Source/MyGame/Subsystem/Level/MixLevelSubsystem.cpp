@@ -12,6 +12,7 @@
 #include "Creature/Controller/Hero/MixHostHeroControllerFix.h"
 #include "Creature/Creature/MixAttribute.h"
 #include "Creature/Creature/MixHeroAttribute.h"
+#include "Creature/Creature/MixTower.h"
 #include "Creature/Creature/Batman/MixBatman.h"
 #include "Creature/Creature/Hero/MixHero.h"
 #include "Data/Attribute/MixAttributeData.h"
@@ -48,8 +49,10 @@ void UMixLevelSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 		if (!ensure(GameSubsystem)) continue;
 		GameSubsystem->OnHeroSpawned();
 	}
-	
+
 	GenerateBatmans();
+
+	GenerateTowers();
 }
 
 void UMixLevelSubsystem::GenerateHeros()
@@ -144,6 +147,24 @@ void UMixLevelSubsystem::GenerateBatmans()
 	}
 }
 
+void UMixLevelSubsystem::GenerateTowers()
+{
+	TArray<AActor*> BlueSpawnPoints;
+	TArray<AActor*> RedSpawnPoints;
+
+	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), AActor::StaticClass(), MixGlobalData::SpawnPoint_Tower_Blue, BlueSpawnPoints);
+	UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), AActor::StaticClass(), MixGlobalData::SpawnPoint_Tower_Red, RedSpawnPoints);
+
+	for (const auto& SpawnPoint : BlueSpawnPoints)
+	{
+		SpawnTower(SpawnPoint, MixGameplayTags::Creature_Camp_Blue);
+	}
+	for (const auto& SpawnPoint : RedSpawnPoints)
+	{
+		SpawnTower(SpawnPoint, MixGameplayTags::Creature_Camp_Red);
+	}
+}
+
 AMixBatman* UMixLevelSubsystem::SpawnBatman(const AActor* SpawnPoint, const FGameplayTag& Type)
 {
 	FActorSpawnParameters SpawnParams;
@@ -161,4 +182,22 @@ AMixBatman* UMixLevelSubsystem::SpawnBatman(const AActor* SpawnPoint, const FGam
 	Attribute->Init<FMixAttributeData>(Batman, UMixAssetManager::Get().AttributeData);
 
 	return Batman;
+}
+
+AMixTower* UMixLevelSubsystem::SpawnTower(const AActor* SpawnPoint, const FGameplayTag& Type)
+{
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	FTransform SpawnTransform = SpawnPoint->GetActorTransform();
+	AMixTower* Tower = GetWorld()->SpawnActor<AMixTower>(UMixAssetManager::Get().TowerModelInfo[MixGameplayTags::Creature_Name_Tower].Class, SpawnTransform, SpawnParams);
+	SpawnedTowers.AddUnique(Tower);
+	Tower->SetCreatureName(MixGameplayTags::Creature_Name_Tower);
+	Tower->SetCreatureType(MixGameplayTags::Creature_Type_Tower);
+	Tower->SetCreatureCamp(Type);
+	UMixAttackComponent::FindAttackComponent(Tower)->SetAttackType(MixGameplayTags::Attack_Ranged);
+
+	UMixAttribute* Attribute = NewObject<UMixAttribute>();
+	Attribute->Init<FMixAttributeData>(Tower, UMixAssetManager::Get().AttributeData);
+
+	return Tower;
 }

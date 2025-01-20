@@ -6,8 +6,10 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "MixLevelSubsystem.generated.h"
 
+class AMixTower;
 class AMixBatman;
 class AMixHero;
+struct FGameplayTag;
 /**
  * 
  */
@@ -28,8 +30,12 @@ private:
 
 	// TODO: 在Tick里周期生成
 	void GenerateBatmans();
+
+	void GenerateTowers();
 	
 	AMixBatman* SpawnBatman(const AActor* SpawnPoint, const FGameplayTag& Type);
+
+	AMixTower* SpawnTower(const AActor* SpawnPoint, const FGameplayTag& Type);
 
 	// 通过SpawnedHeros保证不被GC
 	UPROPERTY()
@@ -37,6 +43,9 @@ private:
 
 	UPROPERTY()
 	TArray<AMixBatman*> SpawnedBatmans;
+
+	UPROPERTY()
+	TArray<AMixTower*> SpawnedTowers;
 
 public:
 	UFUNCTION(BlueprintCallable)

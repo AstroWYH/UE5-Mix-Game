@@ -41,5 +41,7 @@ namespace MixGameplayTags
 	// Hero
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Name_Ashe, "Creature.Name.Ashe", "");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Name_Lucian, "Creature.Name.Lucian", "");
+	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Name_Batman, "Creature.Name.Batman", "");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Creature_Name_Tower, "Creature.Name.Tower", "");
 }

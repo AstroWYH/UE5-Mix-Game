@@ -45,6 +45,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	int32 AttackSpeed;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	int32 HeadUILen;
+
 public:
 	template <typename DataClass>
 	void Init(AMixCreature* Creature, const TSoftObjectPtr<UDataTable>& DataTablePtr)
@@ -70,6 +73,7 @@ public:
 		AttackVal = AttributeData->AttackVal;
 		AttackRange = AttributeData->AttackRange;
 		AttackSpeed = AttributeData->AttackSpeed;
+		HeadUILen = AttributeData->HeadUILen;
 
 		if (TIsSame<DataClass, FMixHeroAttributeData>::Value)
 		{

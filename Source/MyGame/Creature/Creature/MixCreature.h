@@ -47,7 +47,7 @@ public:
 		return AttackComponent;
 	}
 
-private:
+protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	TObjectPtr<UMixHeadUIWidget> HeadUI;
 

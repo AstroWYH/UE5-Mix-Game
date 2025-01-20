@@ -66,13 +66,19 @@ namespace MixGlobalData
 	const FName SpawnPoint_Batman_Blue = TEXT("SpawnPoint_Batman_Blue");
 	const FName SpawnPoint_Batman_Red = TEXT("SpawnPoint_Batman_Red");
 	const FName PathPoint_Batman = TEXT("PathPoint_Batman");
+	
 	const FName SpawnPoint_Tower_Blue = TEXT("SpawnPoint_Tower_Blue");
 	const FName SpawnPoint_Tower_Red = TEXT("SpawnPoint_Tower_Red");
 
+	const FName AttackRangeComponent = TEXT("AttackRangeComponent");
+
 	constexpr float CapsuleDetectionHalfHeight = 1000.0f;
-	constexpr float BatmanPerceptionRadius = 800.0f;
+	constexpr float FriendCampPerceptionRadius = 800.0f;
 
 	constexpr float RotationBias = 5.0f;
 	constexpr float RotateYawPerFrameBase = 10.0f;
 	constexpr float RotateDeltaTimeBase = 0.016f;
+
+	constexpr float AmmoHiddenDistance = 20.0f;
+	const FName LaunchPoint = TEXT("LaunchPoint");
 }

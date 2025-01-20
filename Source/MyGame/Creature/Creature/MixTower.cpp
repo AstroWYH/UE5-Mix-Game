@@ -3,6 +3,8 @@
 
 #include "MixTower.h"
 
+#include "UI/HeadUI/MixHeadUIWidget.h"
+
 
 // Sets default values
 AMixTower::AMixTower()
@@ -28,5 +30,12 @@ void AMixTower::Tick(float DeltaTime)
 void AMixTower::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+
+void AMixTower::PostRegisterAllComponents()
+{
+	Super::PostRegisterAllComponents();
+
+	// HeadUI->SetDesiredSizeInViewport(FVector2d(200.0f, 200.0f));
 }
 

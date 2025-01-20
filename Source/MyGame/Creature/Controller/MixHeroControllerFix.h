@@ -44,9 +44,9 @@ public:
 
 	virtual void OnTargetPerceptionUpdated(AActor* Actor, struct FAIStimulus Stimulus) override;
 
-	virtual void UnderHeroAttack(AMixCreature* InAttacker) override;
+	virtual void UnderEnemyHeroAttack(AMixCreature* InAttacker) override;
 
 private:
-	void NotifyNearbyFriendBatman() const;
+	void NotifyNearbyFriendCamp() const;
 
 };

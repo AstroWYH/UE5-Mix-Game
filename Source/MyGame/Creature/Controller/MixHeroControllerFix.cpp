@@ -10,6 +10,7 @@
 #include "Creature/Creature/MixAttribute.h"
 #include "Creature/Creature/MixCreature.h"
 #include "Creature/Creature/MixHeroAttribute.h"
+#include "Creature/Creature/MixTower.h"
 #include "Creature/Creature/Batman/MixBatman.h"
 #include "Creature/Creature/Hero/MixHero.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -75,10 +76,10 @@ void AMixHeroControllerFix::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus
 				CreaturesInSight.Remove(FindCreature->GetId());
 			}
 
-			// 优先目标为Attacker
-			if (Attacker)
+			// 优先目标为EnemyHero
+			if (EnemyHero)
 			{
-				TargetCreature = Attacker;
+				TargetCreature = EnemyHero;
 			}
 			// TargetCreature为空，则选择视野里最近的人
 			else if (!TargetCreature)
@@ -99,16 +100,16 @@ void AMixHeroControllerFix::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus
 	}
 }
 
-void AMixHeroControllerFix::UnderHeroAttack(AMixCreature* InAttacker)
+void AMixHeroControllerFix::UnderEnemyHeroAttack(AMixCreature* InAttacker)
 {
-	Super::UnderHeroAttack(InAttacker);
+	Super::UnderEnemyHeroAttack(InAttacker);
 
 	Blackboard->SetValueAsBool(MixGlobalData::BB_bUnderAttack, true);
-	TargetCreature = Attacker;
+	TargetCreature = EnemyHero;
 	Blackboard->SetValueAsObject(MixGlobalData::BB_TargetCreature, TargetCreature);
 
 	// 通知附近友方Batman, Tower
-	NotifyNearbyFriendBatman();
+	NotifyNearbyFriendCamp();
 
 	// 如果未受到Hero攻击，则3s后脱战
 	if (UnderAttackTimerHandle.IsValid())
@@ -119,7 +120,7 @@ void AMixHeroControllerFix::UnderHeroAttack(AMixCreature* InAttacker)
 	GetWorld()->GetTimerManager().SetTimer(UnderAttackTimerHandle, [this]()
 	{
 		Blackboard->SetValueAsBool(MixGlobalData::BB_bUnderAttack, false);
-		Attacker = nullptr;
+		EnemyHero = nullptr;
 		TargetCreature = GetClosestTarget();
 		Blackboard->SetValueAsObject(MixGlobalData::BB_TargetCreature, TargetCreature);
 
@@ -127,21 +128,21 @@ void AMixHeroControllerFix::UnderHeroAttack(AMixCreature* InAttacker)
 	}, MixGlobalData::UnderAttackTime, false);
 }
 
-void AMixHeroControllerFix::NotifyNearbyFriendBatman() const
+void AMixHeroControllerFix::NotifyNearbyFriendCamp() const
 {
-	// 通知己方阵营Batman & Tower，Hero受到攻击
+	// 通知友方阵营Batman & Tower，Hero受到攻击
 	TArray<FHitResult> OutHits;
-	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes{UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel1)};
-	UKismetSystemLibrary::CapsuleTraceMultiForObjects(GetWorld(), Creature->GetActorLocation(), Creature->GetActorLocation(), MixGlobalData::BatmanPerceptionRadius, MixGlobalData::CapsuleDetectionHalfHeight, ObjectTypes, false, TArray<AActor*>(), EDrawDebugTrace::None, OutHits, true);
+	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes{UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel1), UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel5)};
+	UKismetSystemLibrary::CapsuleTraceMultiForObjects(GetWorld(), Creature->GetActorLocation(), Creature->GetActorLocation(), MixGlobalData::FriendCampPerceptionRadius, MixGlobalData::CapsuleDetectionHalfHeight, ObjectTypes, false, TArray<AActor*>(), EDrawDebugTrace::None, OutHits, true);
 	for (const FHitResult& Hit : OutHits)
 	{
 		AActor* HitActor = Hit.GetActor();
 		if (!ensure(HitActor)) continue;
-		AMixBatman* HitBatman = Cast<AMixBatman>(HitActor);
-		if (!ensure(HitBatman)) continue;
+		AMixCreature* HitCreature = Cast<AMixCreature>(HitActor);
 		// 仅通知友方阵营
-		if (HitBatman->GetCreatureCamp() != Creature->GetCreatureCamp()) continue;
-		AMixAIBatmanController* BatmanController = Cast<AMixAIBatmanController>(HitBatman->GetController());
-		BatmanController->FriendHeroUnderAttack(Attacker, Creature);
+		if (HitCreature->GetCreatureCamp() != Creature->GetCreatureCamp()) continue;
+		
+		AMixAIController* AIController = Cast<AMixAIController>(HitCreature->GetController());
+		AIController->FriendHeroUnderAttack(EnemyHero, Creature);
 	}
 }

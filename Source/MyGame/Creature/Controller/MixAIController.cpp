@@ -92,3 +92,7 @@ void AMixAIController::OnDelayFinished()
 {
 	UMixAttackComponent::FindAttackComponent(Creature)->PrepareAttack(TargetCreature);
 }
+
+void AMixAIController::FriendHeroUnderAttack(AMixCreature* InEnemyHero, AMixCreature* InFriendHero)
+{
+}

@@ -30,4 +30,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	int32 AttackSpeed;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	int32 HeadUILen;
+
 };

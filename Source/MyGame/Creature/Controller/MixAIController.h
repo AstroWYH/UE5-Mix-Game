@@ -44,18 +44,20 @@ public:
 	
 	void OnDelayFinished();
 
+	virtual void FriendHeroUnderAttack(AMixCreature* InEnemyHero, AMixCreature* InFriendHero);
+
 protected:
-	AMixCreature* Attacker = nullptr;
+	AMixCreature* EnemyHero = nullptr;
 
 public:
-	AMixCreature* GetAttacker() const
+	AMixCreature* GetEnemyHero() const
 	{
-		return Attacker;
+		return EnemyHero;
 	}
 
-	virtual void UnderHeroAttack(AMixCreature* InAttacker)
+	virtual void UnderEnemyHeroAttack(AMixCreature* InAttacker)
 	{
-		this->Attacker = InAttacker;
+		this->EnemyHero = InAttacker;
 	}
 
 protected:

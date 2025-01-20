@@ -6,6 +6,7 @@
 #include "MixTrackRangedAmmo.h"
 #include "Creature/Ammo/Hero/MixHeroAmmo.h"
 #include "Creature/Creature/MixCreature.h"
+#include "Utils/MixGameplayTags.h"
 
 void AMixTrackRangedController::BeginPlay()
 {
@@ -46,7 +47,7 @@ void AMixTrackRangedController::Tick(float DeltaTime)
 		MoveToLocation(TargetLocation, 1.0f, true, false, false);
 
 		float Distance = FVector::Distance(TargetLocation, Ammo->GetActorLocation());
-		if (Distance < 20.0f) // TODO: 配置
+		if (Distance < MixGlobalData::AmmoHiddenDistance) // TODO: 配置
 		{
 			bTrack = false;
 			Ammo->CauseDamage();

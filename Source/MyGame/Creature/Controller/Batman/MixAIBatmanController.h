@@ -46,9 +46,6 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TArray<FVector> PathPointsPos_Red;
 
-	AMixCreature* EnmeyHero;
-
 public:
-	void FriendHeroUnderAttack(AMixCreature* EnemyHero, AMixCreature* FriendHero);
-
+	virtual void FriendHeroUnderAttack(AMixCreature* InEnemyHero, AMixCreature* InFriendHero) override;
 };

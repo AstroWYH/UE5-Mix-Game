@@ -40,7 +40,7 @@ void UMixAttackComponent::SetAttackRangeHidden(bool bHidden) const
 	AMixHero* HeroSelf = Cast<AMixHero>(Creature);
 	if (!ensure(HeroSelf)) return;
 
-	TArray<UActorComponent*> TaggedComponents = HeroSelf->GetComponentsByTag(UActorComponent::StaticClass(), "AttackRangeComponent");
+	TArray<UActorComponent*> TaggedComponents = HeroSelf->GetComponentsByTag(UActorComponent::StaticClass(), MixGlobalData::AttackRangeComponent);
 	for (UActorComponent* AttackRangeComponent : TaggedComponents)
 	{
 		if (!ensure(AttackRangeComponent)) continue;
@@ -244,19 +244,18 @@ void UMixAttackComponent::PerformMeleeAttack()
 
 void UMixAttackComponent::OnRangedMontageNofify()
 {
-	FName LaunchPoint("LaunchPoint");
 	FTransform AmmoTransform;
 
 	TSubclassOf<AActor> AmmoClass;
 	if (Creature->GetCreatureType().MatchesTag(MixGameplayTags::Creature_Type_Hero))
 	{
 		AmmoClass = UMixAssetManager::Get().HeroModelInfo[Creature->GetCreatureName()].Ammo;
-		AmmoTransform = Creature->GetMesh()->GetSocketTransform(LaunchPoint);
+		AmmoTransform = Creature->GetMesh()->GetSocketTransform(MixGlobalData::LaunchPoint);
 	}
 	else if (Creature->GetCreatureType().MatchesTag(MixGameplayTags::Creature_Type_Batman))
 	{
 		AmmoClass = UMixAssetManager::Get().BatmanModelInfo[Creature->GetCreatureName()].Ammo;
-		TArray<UActorComponent*> TaggedComponents = Creature->GetComponentsByTag(UActorComponent::StaticClass(), LaunchPoint);
+		TArray<UActorComponent*> TaggedComponents = Creature->GetComponentsByTag(UActorComponent::StaticClass(), MixGlobalData::LaunchPoint);
 		USceneComponent* AmmoPointComponent = Cast<USceneComponent>(TaggedComponents[0]);
 		AmmoTransform = AmmoPointComponent->GetComponentToWorld();
 	}

@@ -79,9 +79,9 @@ void AMixAIBatmanController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulu
 			}
 
 			// 优先目标为EnmeyHero
-			if (EnmeyHero)
+			if (EnemyHero)
 			{
-				TargetCreature = EnmeyHero;
+				TargetCreature = EnemyHero;
 			}
 			// TargetCreature为空，则选择视野里最近的人
 			else if (!TargetCreature)
@@ -102,11 +102,11 @@ void AMixAIBatmanController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulu
 	}
 }
 
-void AMixAIBatmanController::FriendHeroUnderAttack(AMixCreature* EnemyHero, AMixCreature* FriendHero)
+void AMixAIBatmanController::FriendHeroUnderAttack(AMixCreature* InEnemyHero, AMixCreature* InFriendHero)
 {
 	Blackboard->SetValueAsBool(MixGlobalData::BB_bFriendHeroUnderAttack, true);
-	TargetCreature = EnemyHero;
-	EnmeyHero = EnemyHero;
+	TargetCreature = InEnemyHero;
+	EnemyHero = InEnemyHero;
 	Blackboard->SetValueAsObject(MixGlobalData::BB_TargetCreature, TargetCreature);
 
 	// 如果友方Hero未受到Hero攻击，则3s后脱战
@@ -118,7 +118,7 @@ void AMixAIBatmanController::FriendHeroUnderAttack(AMixCreature* EnemyHero, AMix
 	GetWorld()->GetTimerManager().SetTimer(UnderAttackTimerHandle, [this]()
 	{
 		Blackboard->SetValueAsBool(MixGlobalData::BB_bFriendHeroUnderAttack, false);
-		EnmeyHero = nullptr;
+		EnemyHero = nullptr;
 		TargetCreature = GetClosestTarget();
 		Blackboard->SetValueAsObject(MixGlobalData::BB_TargetCreature, TargetCreature);
 

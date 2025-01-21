@@ -3,8 +3,11 @@
 
 #include "MixTowerController.h"
 
+#include "Algo/MinElement.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Creature/Creature/MixCreature.h"
+#include "Creature/Creature/Batman/MixBatman.h"
+#include "Creature/Creature/Hero/MixHero.h"
 #include "Utils/MixGameplayTags.h"
 
 AMixTowerController::AMixTowerController()
@@ -28,13 +31,6 @@ void AMixTowerController::FriendHeroUnderAttack(AMixCreature* InEnemyHero, AMixC
 	TargetCreature = InEnemyHero;
 	EnemyHero = InEnemyHero;
 	Blackboard->SetValueAsObject(MixGlobalData::BB_TargetCreature, TargetCreature);
-
-	// Blackboard->SetValueAsBool(MixGlobalData::BB_bFriendHeroUnderAttack, false);
-	// EnemyHero = nullptr;
-	// TargetCreature = GetClosestTarget();
-	// Blackboard->SetValueAsObject(MixGlobalData::BB_TargetCreature, TargetCreature);
-	//
-	// UnderAttackTimerHandle.Invalidate();
 }
 
 void AMixTowerController::OnPossess(APawn* InPawn)
@@ -87,6 +83,80 @@ void AMixTowerController::OnCreatureStepOut(UPrimitiveComponent* OverlappedCompo
 		if (!(FindCreature->GetCreatureCamp() == Creature->GetCreatureCamp()))
 		{
 			CreaturesInSight.Remove(FindCreature->GetId());
+			if (FindCreature->GetId() == EnemyHero->GetId())
+			{
+				Blackboard->SetValueAsBool(MixGlobalData::BB_bFriendHeroUnderAttack, false);
+				EnemyHero = nullptr;
+				TargetCreature = GetClosestTarget();
+				Blackboard->SetValueAsObject(MixGlobalData::BB_TargetCreature, TargetCreature);
+			}
+
+			// 优先目标为EnemyHero
+			if (EnemyHero)
+			{
+				TargetCreature = EnemyHero;
+			}
+			// TargetCreature为空，则选择视野里最近的人
+			else if (!TargetCreature)
+			{
+				TargetCreature = GetClosestTarget();
+			}
+			// TargetCreature不为空，视野里没有TargetCreature，则更新追踪单位
+			else if (TargetCreature && !CreaturesInSight.Contains(TargetCreature->GetId()))
+			{
+				TargetCreature = GetClosestTarget();
+			}
+			else
+			{
+				// TargetCreature不为空，视野里有TargetCreature，则保持追踪
+			}
+			Blackboard->SetValueAsObject(MixGlobalData::BB_TargetCreature, TargetCreature);
 		}
+	}
+}
+
+AMixCreature* AMixTowerController::GetClosestTarget() const
+{
+	FVector SelfLocation = Creature->GetActorLocation();
+	TArray<AMixBatman*> Batmans;
+	TArray<AMixHero*> Heros;
+	for (const auto& [Id, InCreature] : CreaturesInSight)
+	{
+		if (AMixBatman* Batman = Cast<AMixBatman>(InCreature))
+		{
+			Batmans.Add(Batman);
+		}
+		else if (AMixHero* Hero = Cast<AMixHero>(InCreature))
+		{
+			Heros.Add(Hero);
+		}
+	}
+
+	// 优先选择最近的Batman
+	AMixBatman** ClosestBatman = Algo::MinElementBy(Batmans, [SelfLocation, this](const AMixBatman* InBatman)
+	{
+		return FVector::Distance(SelfLocation, InBatman->GetActorLocation());
+	});
+	
+	if (!ClosestBatman)
+	{
+		// 其次选择最近的Hero
+		AMixHero** ClosestHero = Algo::MinElementBy(Heros, [SelfLocation, this](const AMixHero* InHero)
+		{
+			return FVector::Distance(SelfLocation, InHero->GetActorLocation());
+		});
+		
+		if (!ClosestHero)
+		{
+			return nullptr;
+		}
+		else
+		{
+			return *ClosestHero;
+		}
+	}
+	else
+	{
+		return *ClosestBatman;
 	}
 }

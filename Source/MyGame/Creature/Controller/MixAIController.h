@@ -31,7 +31,7 @@ public:
 	UFUNCTION() // AddDynamic
 	virtual void OnTargetPerceptionUpdated(AActor* Actor, struct FAIStimulus Stimulus);
 	
-	AMixCreature* GetClosestTarget() const;
+	virtual AMixCreature* GetClosestTarget() const;
 
 	UFUNCTION(BlueprintCallable)
 	void MoveToTarget();
@@ -42,8 +42,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void AttackTarget();
 	
-	void OnDelayFinished();
-
 	virtual void FriendHeroUnderAttack(AMixCreature* InEnemyHero, AMixCreature* InFriendHero);
 
 protected:

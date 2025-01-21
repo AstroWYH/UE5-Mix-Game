@@ -80,16 +80,6 @@ bool AMixAIController::IsTargetInRange()
 
 void AMixAIController::AttackTarget()
 {
-	// FLatentActionInfo LatentInfo;
-	// LatentInfo.CallbackTarget = this;
-	// LatentInfo.ExecutionFunction = FName("OnDelayFinished");
-	// UKismetSystemLibrary::Delay(GetWorld(), 1.0f, LatentInfo);
-
-	UMixAttackComponent::FindAttackComponent(Creature)->PrepareAttack(TargetCreature);
-}
-
-void AMixAIController::OnDelayFinished()
-{
 	UMixAttackComponent::FindAttackComponent(Creature)->PrepareAttack(TargetCreature);
 }
 
